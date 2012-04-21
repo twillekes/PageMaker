@@ -73,6 +73,9 @@ public class Picture {
 	public void setRating(float rating) {
 		this.rating = rating;
 	}
+	public void setRating(String rating) {
+		
+	}
 
 	public Metadata getMetadata() {
 		return metadata;

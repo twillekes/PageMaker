@@ -44,6 +44,16 @@ public class Metadata {
 	public void setOrientation(Orientation orientation) {
 		this.orientation = orientation;
 	}
+	public void setOrientation(String orientation) throws Exception {
+		this.orientation = Orientation.LANDSCAPE;
+		if (orientation.equals("portrait")) {
+			this.orientation = Orientation.PORTRAIT;
+		} else if (orientation.equals("landscape")) {
+			this.orientation = Orientation.LANDSCAPE;
+		} else {
+			throw new Exception("Unrecognized orientation: "+orientation);
+		}
+	}
 	public String getSubject() {
 		return subject;
 	}
@@ -56,17 +66,45 @@ public class Metadata {
 	public void setSeason(Season season) {
 		this.season = season;
 	}
+	public void setSeason(String season) throws Exception {
+		this.season = Season.SUMMER;
+		if (season.equals("Winter")) {
+			this.season = Season.WINTER;
+		} else if (season.equals("Spring")) {
+			this.season = Season.SPRING;
+		} else if (season.equals("Autumn")) {
+			this.season = Season.AUTUMN;
+		} else if (season.equals("Summer")) {
+			this.season = Season.SUMMER;
+		} else {
+			throw new Exception("Unrecognized season: " + season);
+		}
+	}
 	public Camera getCamera() {
 		return camera;
 	}
 	public void setCamera(Camera camera) {
 		this.camera = camera;
 	}
+	public void setCamera(String camera) throws Exception {
+		if (camera.equals("Ebony 45S")) {
+			this.camera = Camera.EBONY;
+		} else {
+			throw new Exception("Unrecognized camera: " + camera);
+		}
+	}
 	public Lens getLens() {
 		return lens;
 	}
 	public void setLens(Lens lens) {
 		this.lens = lens;
+	}
+	public void setLens(String lens) throws Exception {
+		if (lens.equals("90mm")) {
+			this.lens = Lens._90;
+		} else {
+			throw new Exception("Unrecognized lens: " + lens);
+		}
 	}
 	public Film getFilm() {
 		return film;
