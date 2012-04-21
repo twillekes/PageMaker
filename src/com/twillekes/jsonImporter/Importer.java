@@ -84,6 +84,30 @@ public class Importer {
 						metadata.setCamera(val);
 					} else if (key.equals("lens")) {
 						metadata.setLens(val);
+					} else if (key.equals("film")) {
+						metadata.setFilm(val);
+					} else if (key.equals("chrome")) {
+						metadata.setIsColor(val);
+					} else if (key.equals("format")) {
+						metadata.setFormat(val);
+					} else if (key.equals("year")) {
+						;
+					} else if (key.equals("month")) {
+						;
+					} else if (key.equals("date")) {
+						metadata.setDate(val);
+					} else if (key.equals("direction")) {
+						metadata.setDirection(val);
+					} else if (key.equals("filters")) {
+						metadata.setFilters(val);
+					} else if (key.equals("doNotShow")) {
+						metadata.setDoNotShow(val);
+					} else if (key.equals("isDiscarded")) {
+						;
+					} else if (key.equals("isNew")) {
+						;
+					} else if (key.equals("isFavorite")) {
+						;
 					} else {
 						throw new ParseException("Unknown JSON key ('" + key + "') in items array", 0);
 					}
