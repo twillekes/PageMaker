@@ -24,13 +24,18 @@ public class Exporter {
 	public void export(Portfolio portfolio) {
 		Gson gson = new Gson();
 		String json = gson.toJson(portfolio.getPictures());
-		json = "var imageList=" + json;
+		json = "var imageList=" + json + ";";
 		System.out.println(json);
+		portfolio.findAllCategories();
+		String cats = gson.toJson(portfolio.getCategoryDictionary());
+		cats = "var categoryDictionary=" + cats + ";";
+		System.out.println(cats);
 		
 		try {
 			FileWriter fstream = new FileWriter("imageList.js");
 			BufferedWriter out = new BufferedWriter(fstream);
 			out.write(json);
+			out.write(cats);
 			out.close();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

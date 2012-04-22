@@ -450,4 +450,34 @@ public class Metadata {
 	public void setIsFavorite(String isFavorite) {
 		this.isFavorite = isFavorite;
 	}
+	
+	public String getCategoryValue(String categoryName) throws Exception {
+		if (categoryName.equals("subject")) {
+			return this.subject;
+		} else if (categoryName.equals("orientation")) {
+			return this.orientation;
+		} else if (categoryName.equals("season")) {
+			return this.season;
+		} else if (categoryName.equals("camera")) {
+			return this.camera;
+		} else if (categoryName.equals("lens")) {
+			return this.lens;
+		} else if (categoryName.equals("film")) {
+			return this.film;
+		} else if (categoryName.equals("chrome")) {
+			return this.chrome;
+		} else if (categoryName.equals("format")) {
+			return this.format;
+		} else if (categoryName.equals("year")) {
+			return this.year;
+		} else if (categoryName.equals("month")) {
+			return this.month;
+		} else if (categoryName.equals("direction")) {
+			return this.direction;
+		} else if (categoryName.equals("rating")) {
+			return this.rating;
+		} else {
+			throw new Exception("Unrecognized category name: " + categoryName);
+		}
+	}
 }
