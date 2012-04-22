@@ -8,48 +8,51 @@ import java.util.Date;
 public class Metadata {
 	private String title;
 	private String description;
-	private float rating;
+	private String rating;
 	
 	// orientation
 	public enum Orientation {
 		PORTRAIT, LANDSCAPE, SQUARE, PANORAMA
 	}
-	private Orientation orientation;
+	private String orientation;
 	private String subject;
 	public enum Season {
 		WINTER, SPRING, SUMMER, AUTUMN
 	}
-	private Season season;
+	private String season;
 	public enum Camera {
 		EBONY, NIKON_F3, NIKON_F6, NIKON_FM3A, HASSELBLAD_500CM, HASSELBLAD_SWCM, HASSELBLAD_503CW,
 		MAMIYA_7II, MAMIYA_645_PRO_TL, MAMIYA_6, LEICA_M3, LEICA_M2, ROLLEIFLEX_MX_EVS
 	}
-	private Camera camera;
+	private String camera;
 	public enum Lens {
 		_17_35, _35, _70_300, _28_70,
 		_47, _58, _75, _90, _135, _180, _270,
 		_38, _40, _50, _60, _80, _100, _120, _150, _250,
 		_43, _65, _45, _55
 	}
-	private Lens lens;
+	private String lens;
 	public enum Film {
 		VELVIA50, VELVIA100, PROVIA100F, ILFORD_DELTA100, ILFORD_DELTA400, ILFORD_PANF, KODAK_TRIX
 	}
-	private Film film;
-	private Boolean isColor;
+	private String film;
+	private String chrome;
 	public enum Format {
 		_35MM, _6x45, _6x6, _6x7, _6x9, _6x12, _4x5
 	}
-	private Format format;
-	private Date date;
+	private String format;
+	private String date;
+	private String year;
+	private String month;
 	public enum Direction {
 		NORTH, WEST, EAST, SOUTH, NORTH_WEST, NORTH_EAST, SOUTH_WEST, SOUTH_EAST, NONE
 	}
-	private Direction direction;
+	private String direction;
 	private String filters;
-	private Boolean doNotShow;
-	private Boolean isNew;
-	private Boolean isDiscarded;
+	private String doNotShow;
+	private String isNew;
+	private String isDiscarded;
+	private String isFavorite;
 	
 	public String toString() {
 		return "Title: " + this.title +
@@ -61,28 +64,30 @@ public class Metadata {
 			   " Format: " + this.format +
 			   " Date: " + this.date + 
 			   " Season: " + this.season +
-			   " Subject: " + this.subject;
+			   " Subject: " + this.subject +
+			   " Rating: " + this.rating;
 	}
 	
-	public Orientation getOrientation() {
+	public String getOrientation() {
 		return orientation;
 	}
-	public void setOrientation(Orientation orientation) {
+	public void setOrientation(String orientation) {
 		this.orientation = orientation;
 	}
-	public void setOrientation(String orientation) throws Exception {
-		this.orientation = Orientation.LANDSCAPE;
+	public Orientation validateOrientation(String orientation) throws Exception {
+		Orientation orient = Orientation.LANDSCAPE;
 		if (orientation.equals("Portrait")) {
-			this.orientation = Orientation.PORTRAIT;
+			orient = Orientation.PORTRAIT;
 		} else if (orientation.equals("Landscape")) {
-			this.orientation = Orientation.LANDSCAPE;
+			orient = Orientation.LANDSCAPE;
 		} else if (orientation.equals("Square")) {
-			this.orientation = Orientation.SQUARE;
+			orient = Orientation.SQUARE;
 		} else if (orientation.equals("Panorama")) {
-			this.orientation = Orientation.PANORAMA;
+			orient = Orientation.PANORAMA;
 		} else {
 			throw new Exception("Unrecognized orientation: "+orientation);
 		}
+		return orient;
 	}
 	public String getSubject() {
 		return subject;
@@ -90,244 +95,258 @@ public class Metadata {
 	public void setSubject(String subject) {
 		this.subject = subject;
 	}
-	public Season getSeason() {
+	public String getSeason() {
 		return season;
 	}
-	public void setSeason(Season season) {
+	public void setSeason(String season) {
 		this.season = season;
 	}
-	public void setSeason(String season) throws Exception {
-		this.season = Season.SUMMER;
+	public Season validateSeason(String season) throws Exception {
+		Season sea = Season.SUMMER;
 		if (season.equals("Winter")) {
-			this.season = Season.WINTER;
+			sea = Season.WINTER;
 		} else if (season.equals("Spring")) {
-			this.season = Season.SPRING;
+			sea = Season.SPRING;
 		} else if (season.equals("Autumn")) {
-			this.season = Season.AUTUMN;
+			sea = Season.AUTUMN;
 		} else if (season.equals("Summer")) {
-			this.season = Season.SUMMER;
+			sea = Season.SUMMER;
 		} else {
 			throw new Exception("Unrecognized season: " + season);
 		}
+		return sea;
 	}
-	public Camera getCamera() {
+	public String getCamera() {
 		return camera;
 	}
-	public void setCamera(Camera camera) {
+	public void setCamera(String camera) {
 		this.camera = camera;
 	}
-	public void setCamera(String camera) throws Exception {
+	public Camera validateCamera(String camera) throws Exception {
+		Camera cam;
 		if (camera.equals("Ebony 45S")) {
-			this.camera = Camera.EBONY;
+			cam = Camera.EBONY;
 		} else if (camera.equals("Mamiya 7ii")) {
-			this.camera = Camera.MAMIYA_7II;
+			cam = Camera.MAMIYA_7II;
 		} else if (camera.equals("Hasselblad SWC/M")) {
-			this.camera = Camera.HASSELBLAD_SWCM;
+			cam = Camera.HASSELBLAD_SWCM;
 		} else if (camera.equals("Hasselblad 501CM")) {
-			this.camera = Camera.HASSELBLAD_500CM;
+			cam = Camera.HASSELBLAD_500CM;
 		} else if (camera.equals("Hasselblad 503CW")) {
-			this.camera = Camera.HASSELBLAD_503CW;
+			cam = Camera.HASSELBLAD_503CW;
 		} else if (camera.equals("Nikon F3")) {
-			this.camera = Camera.NIKON_F3;
+			cam = Camera.NIKON_F3;
 		} else if (camera.equals("Nikon F6")) {
-			this.camera = Camera.NIKON_F6;
+			cam = Camera.NIKON_F6;
 		} else if (camera.equals("Nikon FM3a")) {
-			this.camera = Camera.NIKON_FM3A;
+			cam = Camera.NIKON_FM3A;
 		} else if (camera.equals("Mamiya 645 Pro-TL")) {
-			this.camera = Camera.MAMIYA_645_PRO_TL;
+			cam = Camera.MAMIYA_645_PRO_TL;
 		} else if (camera.equals("Mamiya 6")) {
-			this.camera = Camera.MAMIYA_6;
+			cam = Camera.MAMIYA_6;
 		} else if (camera.equals("Leica M3")) {
-			this.camera = Camera.LEICA_M3;
+			cam = Camera.LEICA_M3;
 		} else if (camera.equals("Leica M2")) {
-			this.camera = Camera.LEICA_M2;
+			cam = Camera.LEICA_M2;
 		} else if (camera.equals("Rolleiflex mx-evs")) {
-			this.camera = Camera.ROLLEIFLEX_MX_EVS;
+			cam = Camera.ROLLEIFLEX_MX_EVS;
 		} else {
 			throw new Exception("Unrecognized camera: " + camera);
 		}
+		return cam;
 	}
-	public Lens getLens() {
+	public String getLens() {
 		return lens;
 	}
-	public void setLens(Lens lens) {
+	public void setLens(String lens) {
 		this.lens = lens;
 	}
-	public void setLens(String lens) throws Exception {
+	public Lens validateLens(String lens) throws Exception {
+		Lens len;
 		if (lens.equals("47mm")) {
-			this.lens = Lens._47;
+			len = Lens._47;
 		} else if (lens.equals("58mm")) {
-			this.lens = Lens._58;
+			len = Lens._58;
 		} else if (lens.equals("75mm")) {
-			this.lens = Lens._75;
+			len = Lens._75;
 		} else if (lens.equals("90mm")) {
-			this.lens = Lens._90;
+			len = Lens._90;
 		} else if (lens.equals("135mm")) {
-			this.lens = Lens._135;
+			len = Lens._135;
 		} else if (lens.equals("180mm")) {
-			this.lens = Lens._180;
+			len = Lens._180;
 		} else if (lens.equals("270mm")) {
-			this.lens = Lens._270;
+			len = Lens._270;
 		} else if (lens.equals("43mm")) {
-			this.lens = Lens._43;
+			len = Lens._43;
 		} else if (lens.equals("65mm")) {
-			this.lens = Lens._65;
+			len = Lens._65;
 		} else if (lens.equals("150mm")) {
-			this.lens = Lens._150;
+			len = Lens._150;
 		} else if (lens.equals("17-35mm")) {
-			this.lens = Lens._17_35;
+			len = Lens._17_35;
 		} else if (lens.equals("28-70mm")) {
-			this.lens = Lens._28_70;
+			len = Lens._28_70;
 		} else if (lens.equals("70-300mm")) {
-			this.lens = Lens._70_300;
+			len = Lens._70_300;
 		} else if (lens.equals("35mm")) {
-			this.lens = Lens._35;
+			len = Lens._35;
 		} else if (lens.equals("38mm")) {
-			this.lens = Lens._38;
+			len = Lens._38;
 		} else if (lens.equals("40mm")) {
-			this.lens = Lens._40;
+			len = Lens._40;
 		} else if (lens.equals("50mm")) {
-			this.lens = Lens._50;
+			len = Lens._50;
 		} else if (lens.equals("60mm")) {
-			this.lens = Lens._60;
+			len = Lens._60;
 		} else if (lens.equals("80mm")) {
-			this.lens = Lens._80;
+			len = Lens._80;
 		} else if (lens.equals("100mm")) {
-			this.lens = Lens._100;
+			len = Lens._100;
 		} else if (lens.equals("120mm")) {
-			this.lens = Lens._120;
+			len = Lens._120;
 		} else if (lens.equals("250mm")) {
-			this.lens = Lens._250;
+			len = Lens._250;
 		} else if (lens.equals("45mm")) {
-			this.lens = Lens._45;
+			len = Lens._45;
 		} else if (lens.equals("55mm")) {
-			this.lens = Lens._55;
+			len = Lens._55;
 		} else {
 			throw new Exception("Unrecognized lens: " + lens);
 		}
+		return len;
 	}
-	public Film getFilm() {
+	public String getFilm() {
 		return film;
 	}
-	public void setFilm(Film film) {
+	public void setFilm(String film) {
 		this.film = film;
 	}
-	public void setFilm(String film) throws Exception {
+	public Film validateFilm(String film) throws Exception {
+		Film fil;
 		if (film.equals("Fuji Provia 100F")) {
-			this.film = Film.PROVIA100F;
+			fil = Film.PROVIA100F;
 		} else if (film.equals("Fuji Velvia 50")) {
-			this.film = Film.VELVIA50;
+			fil = Film.VELVIA50;
 		} else if (film.equals("Fuji Velvia 100")) {
-			this.film = Film.VELVIA100;
+			fil = Film.VELVIA100;
 		} else if (film.equals("Ilford Delta 100")) {
-			this.film = Film.ILFORD_DELTA100;
+			fil = Film.ILFORD_DELTA100;
 		} else if (film.equals("Ilford Delta 400")) {
-			this.film = Film.ILFORD_DELTA400;
+			fil = Film.ILFORD_DELTA400;
 		} else if (film.equals("Ilford Pan-F")) {
-			this.film = Film.ILFORD_PANF;
+			fil = Film.ILFORD_PANF;
 		} else if (film.equals("Kodak Tri-X")) {
-			this.film = Film.KODAK_TRIX;
+			fil = Film.KODAK_TRIX;
 		} else {
 			throw new Exception("Unrecognized film: " + film);
 		}
+		return fil;
 	}
-	public Boolean getIsColor() {
-		return isColor;
+	public String getChrome() {
+		return chrome;
 	}
-	public void setIsColor(Boolean isColor) {
-		this.isColor = isColor;
+	public void setChrome(String chrome) {
+		this.chrome = chrome;
 	}
-	public void setIsColor(String isColor) throws Exception {
-		if (isColor.equals("Monochrome")) {
-			this.isColor = false;
-		} else if (isColor.equals("Polychrome")) {
-			this.isColor = true;
+	public Boolean validateChrome(String chrome) throws Exception {
+		Boolean is;
+		if (chrome.equals("Monochrome")) {
+			is = false;
+		} else if (chrome.equals("Polychrome")) {
+			is = true;
 		} else {
-			throw new Exception("Unknown isColor: " + isColor);
+			throw new Exception("Unknown isColor: " + chrome);
 		}
+		return is;
 	}
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
-	public void setDate(Date date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
-	public void setDate(String date) throws Exception {
-		this.date = null;
+	public Date validateDate(String date) throws Exception {
+		Date dat = null;
 		if (date.equals("Unknown")) {
-			return;
+			throw new Exception("No date provided");
 		}
 		DateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyyy");
 		try {
-			this.date = (Date)dateFormat.parse(date);
+			dat = (Date)dateFormat.parse(date);
 		} catch (ParseException e) {
 			this.date = null;
 			//System.out.println("Date parse exception: " + e.getMessage());
 			//throw e;
 		}
-		if (this.date != null) {
-			return;
+		if (dat != null) {
+			return dat;
 		}
 		dateFormat = new SimpleDateFormat("MMM, yyyy");
 		try {
-			this.date = (Date)dateFormat.parse(date);
+			dat = (Date)dateFormat.parse(date);
 		} catch (ParseException e) {
 			System.out.println("Date/month parse exception: " + e.getMessage());
 		}
+		return dat;
 	}
-	public Direction getDirection() {
+	public String getDirection() {
 		return direction;
 	}
-	public void setDirection(Direction direction) {
+	public void setDirection(String direction) {
 		this.direction = direction;
 	}
-	public void setDirection(String direction) throws Exception {
+	public Direction validateDirection(String direction) throws Exception {
+		Direction dir;
 		if (direction.equals("North")) {
-			this.direction = Direction.NORTH;
+			dir = Direction.NORTH;
 		} else if (direction.equals("Northeast")) {
-			this.direction = Direction.NORTH_EAST;
+			dir = Direction.NORTH_EAST;
 		} else if (direction.equals("East")) {
-			this.direction = Direction.EAST;
+			dir = Direction.EAST;
 		} else if (direction.equals("Southeast")) {
-			this.direction = Direction.SOUTH_EAST;
+			dir = Direction.SOUTH_EAST;
 		} else if (direction.equals("South")) {
-			this.direction = Direction.SOUTH;
+			dir = Direction.SOUTH;
 		} else if (direction.equals("Southwest") || direction.equals("SouthWest")) {
-			this.direction = Direction.SOUTH_WEST;
+			dir = Direction.SOUTH_WEST;
 		} else if (direction.equals("West")) {
-			this.direction = Direction.WEST;
+			dir = Direction.WEST;
 		} else if (direction.equals("Northwest")) {
-			this.direction = Direction.NORTH_WEST;
+			dir = Direction.NORTH_WEST;
 		} else if (direction.equals("None")) {
-			this.direction = Direction.NONE;
+			dir = Direction.NONE;
 		} else {
 			throw new Exception("Unrecognized direction: " + direction);
 		}
+		return dir;
 	}
-	public Format getFormat() {
+	public String getFormat() {
 		return format;
 	}
-	public void setFormat(Format format) {
+	public void setFormat(String format) {
 		this.format = format;
 	}
-	public void setFormat(String format) throws Exception {
+	public Format validateFormat(String format) throws Exception {
+		Format form;
 		if (format.equals("4x5")) {
-			this.format = Format._4x5;
+			form = Format._4x5;
 		} else if (format.equals("6x4.5")) {
-			this.format = Format._6x45;
+			form = Format._6x45;
 		} else if (format.equals("6x6")) {
-			this.format = Format._6x6;
+			form = Format._6x6;
 		} else if (format.equals("6x7")) {
-			this.format = Format._6x7;
+			form = Format._6x7;
 		} else if (format.equals("6x9")) {
-			this.format = Format._6x9;
+			form = Format._6x9;
 		} else if (format.equals("6x12")) {
-			this.format = Format._6x12;
+			form = Format._6x12;
 		} else if (format.equals("35mm")) {
-			this.format = Format._35MM;
+			form = Format._35MM;
 		} else {
 			throw new Exception("Unrecognized format: " + format);
 		}
+		return form;
 	}
 	public String getFilters() {
 		return filters;
@@ -335,50 +354,56 @@ public class Metadata {
 	public void setFilters(String filters) {
 		this.filters = filters;
 	}
-	public Boolean getDoNotShow() {
+	public String getDoNotShow() {
 		return doNotShow;
 	}
-	public void setDoNotShow(Boolean doNotShow) {
+	public void setDoNotShow(String doNotShow) {
 		this.doNotShow = doNotShow;
 	}
-	public void setDoNotShow(String doNotShow) throws Exception {
+	public Boolean validateDoNotShow(String doNotShow) throws Exception {
+		Boolean doNot;
 		if (doNotShow.equals("1")) {
-			this.doNotShow = true;
+			doNot = true;
 		} else if (doNotShow.equals("0")) {
-			this.doNotShow = false;
+			doNot = false;
 		} else {
 			throw new Exception("Unrecognized doNotShow: " + doNotShow);
 		}
+		return doNot;
 	}
-	public Boolean getIsNew() {
+	public String getIsNew() {
 		return isNew;
 	}
-	public void setIsNew(Boolean isNew) {
+	public void setIsNew(String isNew) {
 		this.isNew = isNew;
 	}
-	public void setIsNew(String isNew) throws Exception {
+	public Boolean validateIsNew(String isNew) throws Exception {
+		Boolean is;
 		if (isNew.equals("0")) {
-			this.isNew = false;
+			is = false;
 		} else if (isNew.equals("1")) {
-			this.isNew = true;
+			is = true;
 		} else {
 			throw new Exception("Unrecognized isNew: " + isNew);
 		}
+		return is;
 	}
-	public Boolean getIsDiscarded() {
+	public String getIsDiscarded() {
 		return isDiscarded;
 	}
-	public void setIsDiscarded(Boolean isDiscarded) {
+	public void setIsDiscarded(String isDiscarded) {
 		this.isDiscarded = isDiscarded;
 	}
-	public void setIsDiscarded(String isDiscarded) throws Exception {
+	public Boolean validateIsDiscarded(String isDiscarded) throws Exception {
+		Boolean is;
 		if (isDiscarded.equals("0")) {
-			this.isDiscarded = false;
+			is = false;
 		} else if (isDiscarded.equals("1")) {
-			this.isDiscarded = true;
+			is = true;
 		} else {
 			throw new Exception("Unrecognized isDiscarded: " + isDiscarded);
 		}
+		return is;
 	}
 	public String getTitle() {
 		return title;
@@ -392,13 +417,37 @@ public class Metadata {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public float getRating() {
+	public String getRating() {
 		return rating;
 	}
-	public void setRating(float rating) {
+	public void setRating(String rating) {
 		this.rating = rating;
 	}
-	public void setRating(String rating) {
-		this.rating = java.lang.Float.valueOf(rating);
+	public Float validateRating(String rating) {
+		return java.lang.Float.valueOf(rating);
+	}
+
+	public String getYear() {
+		return year;
+	}
+
+	public void setYear(String year) {
+		this.year = year;
+	}
+
+	public String getMonth() {
+		return month;
+	}
+
+	public void setMonth(String month) {
+		this.month = month;
+	}
+
+	public String getIsFavorite() {
+		return isFavorite;
+	}
+
+	public void setIsFavorite(String isFavorite) {
+		this.isFavorite = isFavorite;
 	}
 }

@@ -11,7 +11,7 @@ import java.util.List;
 public class Picture {
 	// Fields
 	private String fileName;
-	private String remoteFileName;
+	private String filePath; // I.e. in web, with http://
 	private Metadata metadata;
 	private List<String> tags;
 	
@@ -45,15 +45,15 @@ public class Picture {
 		this.tags = tags;
 	}
 
-	public String getRemoteFileName() {
-		return remoteFileName;
+	public String getFilePath() {
+		return filePath;
 	}
 
-	public void setRemoteFileName(String remoteFileName) {
-		this.remoteFileName = remoteFileName;
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
 	}
 	
 	public String toString() {
-		return "File name: " + this.fileName + " Remote file name: " + this.remoteFileName + " Metadata: " + this.metadata.toString();
+		return "File name: " + this.fileName + " File Path: " + this.filePath + " Metadata: " + this.metadata.toString();
 	}
 }

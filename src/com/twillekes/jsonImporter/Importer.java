@@ -66,8 +66,8 @@ public class Importer {
 				final String val = entry.getValue().getAsString();
 				try {
 					if (key.equals("filename")) {
-						picture.setFileName(this.path + "/" + val);
-						picture.setRemoteFileName(this.url + "/" + val);
+						picture.setFileName(this.url + "/" + val);
+						picture.setFilePath(this.path + "/" + val);
 					} else if (key.equals("title")) {
 						metadata.setTitle(val);
 					} else if (key.equals("caption")) {
@@ -87,13 +87,13 @@ public class Importer {
 					} else if (key.equals("film")) {
 						metadata.setFilm(val);
 					} else if (key.equals("chrome")) {
-						metadata.setIsColor(val);
+						metadata.setChrome(val);
 					} else if (key.equals("format")) {
 						metadata.setFormat(val);
 					} else if (key.equals("year")) {
-						;
+						metadata.setYear(val);;
 					} else if (key.equals("month")) {
-						;
+						metadata.setMonth(val);
 					} else if (key.equals("date")) {
 						metadata.setDate(val);
 					} else if (key.equals("direction")) {
@@ -107,7 +107,7 @@ public class Importer {
 					} else if (key.equals("isNew")) {
 						metadata.setIsNew(val);
 					} else if (key.equals("isFavorite")) {
-						;
+						metadata.setIsFavorite(val);
 					} else {
 						throw new ParseException("Unknown JSON key ('" + key + "') in items array", 0);
 					}
@@ -165,6 +165,8 @@ public class Importer {
 				portfolioDeserializer.url = "http://members.shaw.ca/tjwillekes";
 			} else if (rec.path.equals("images_2")) {
 				portfolioDeserializer.url = "http://members.shaw.ca/tomjwillekes";
+			} else if (rec.path.equals("words")) {
+				continue;
 			} else {
 				portfolioDeserializer.url = rec.path;
 			}
