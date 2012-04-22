@@ -8,7 +8,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -54,6 +53,7 @@ public class Importer {
 	}
 	public class PortfolioDeserializer implements Deserializer {
 		public String path;
+		public String url;
 		public Portfolio portfolio;
 		public PortfolioDeserializer(Portfolio portfolio) {
 			this.portfolio = portfolio;
@@ -66,14 +66,14 @@ public class Importer {
 				final String val = entry.getValue().getAsString();
 				try {
 					if (key.equals("filename")) {
-						picture.setFileName(val);
-						//picture.setThumbFileName(thumbFileName);
+						picture.setFileName(this.path + "/" + val);
+						picture.setRemoteFileName(this.url + "/" + val);
 					} else if (key.equals("title")) {
-						picture.setTitle(val);
+						metadata.setTitle(val);
 					} else if (key.equals("caption")) {
-						picture.setDescription(val);
+						metadata.setDescription(val);
 					} else if (key.equals("rating")) {
-						picture.setRating(val);
+						metadata.setRating(val);
 					} else if (key.equals("orientation")) {
 						metadata.setOrientation(val);
 					} else if (key.equals("subject")) {
@@ -103,9 +103,9 @@ public class Importer {
 					} else if (key.equals("doNotShow")) {
 						metadata.setDoNotShow(val);
 					} else if (key.equals("isDiscarded")) {
-						;
+						metadata.setIsDiscarded(val);
 					} else if (key.equals("isNew")) {
-						;
+						metadata.setIsNew(val);
 					} else if (key.equals("isFavorite")) {
 						;
 					} else {
@@ -117,6 +117,7 @@ public class Importer {
 			}
 			picture.setMetadata(metadata);
 			this.portfolio.addPicture(picture);
+			System.out.println("Added picture: " + picture.toString());
 		}
 		public String getFileName() {
 			return this.path + "/metadata.json";
@@ -147,7 +148,7 @@ public class Importer {
 	}
 	
 	public Importer() {
-		this.basePath = "/Users/twillekes/Documents/code/My-personal-web-page/page/";
+		this.basePath = "/Users/twillekes/Documents/workspace/Page/My-personal-web-page/page/";
 	}
 	public void populate(Portfolio portfolio) {
 		LocationDeserializer locationDeserializer = new LocationDeserializer();
@@ -160,6 +161,13 @@ public class Importer {
 				continue;
 			}
 			portfolioDeserializer.path = rec.path;
+			if (rec.path.equals("images")) {
+				portfolioDeserializer.url = "http://members.shaw.ca/tjwillekes";
+			} else if (rec.path.equals("images_2")) {
+				portfolioDeserializer.url = "http://members.shaw.ca/tomjwillekes";
+			} else {
+				portfolioDeserializer.url = rec.path;
+			}
 			this.importJson(portfolioDeserializer);
 		}
 	}

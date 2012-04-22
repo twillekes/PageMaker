@@ -10,38 +10,17 @@ import java.util.List;
 
 public class Picture {
 	// Fields
-	private String title;
 	private String fileName;
-	private String thumbFileName;
-	private String description;
-	private float rating;
+	private String remoteFileName;
 	private Metadata metadata;
 	private List<String> tags;
 	
 	// Constructor
 	public Picture() {
 		fileName = "undefined";
-		thumbFileName = "undefined";
-		title = "Untitled";
-		description = "none";
 	}
 	
-	public String toString() {
-		return "title: " + this.getTitle() +
-			   ", fileName: " + this.getFileName() +
-			   ", thumbFileName: " + this.getThumbFileName() +
-			   ", description: " + this.getDescription();
-	}
-
 	// Methods
-	public String getThumbFileName() {
-		return thumbFileName;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-	
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
@@ -50,33 +29,6 @@ public class Picture {
 		return fileName;
 	}
 	
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public void setThumbFileName(String thumbFileName) {
-		this.thumbFileName = thumbFileName;
-	}
-
-	public float getRating() {
-		return rating;
-	}
-
-	public void setRating(float rating) {
-		this.rating = rating;
-	}
-	public void setRating(String rating) {
-		
-	}
-
 	public Metadata getMetadata() {
 		return metadata;
 	}
@@ -91,5 +43,17 @@ public class Picture {
 
 	public void setTags(List<String> tags) {
 		this.tags = tags;
+	}
+
+	public String getRemoteFileName() {
+		return remoteFileName;
+	}
+
+	public void setRemoteFileName(String remoteFileName) {
+		this.remoteFileName = remoteFileName;
+	}
+	
+	public String toString() {
+		return "File name: " + this.fileName + " Remote file name: " + this.remoteFileName + " Metadata: " + this.metadata.toString();
 	}
 }

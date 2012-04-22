@@ -6,6 +6,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Metadata {
+	private String title;
+	private String description;
+	private float rating;
+	
 	// orientation
 	public enum Orientation {
 		PORTRAIT, LANDSCAPE, SQUARE, PANORAMA
@@ -44,6 +48,21 @@ public class Metadata {
 	private Direction direction;
 	private String filters;
 	private Boolean doNotShow;
+	private Boolean isNew;
+	private Boolean isDiscarded;
+	
+	public String toString() {
+		return "Title: " + this.title +
+			   " Camera: " + this.camera +
+			   " Film: " + this.film +
+			   " Orientation: " + this.orientation +
+			   " Direction: " + this.direction +
+			   " Filters: " + this.filters +
+			   " Format: " + this.format +
+			   " Date: " + this.date + 
+			   " Season: " + this.season +
+			   " Subject: " + this.subject;
+	}
 	
 	public Orientation getOrientation() {
 		return orientation;
@@ -330,5 +349,56 @@ public class Metadata {
 		} else {
 			throw new Exception("Unrecognized doNotShow: " + doNotShow);
 		}
+	}
+	public Boolean getIsNew() {
+		return isNew;
+	}
+	public void setIsNew(Boolean isNew) {
+		this.isNew = isNew;
+	}
+	public void setIsNew(String isNew) throws Exception {
+		if (isNew.equals("0")) {
+			this.isNew = false;
+		} else if (isNew.equals("1")) {
+			this.isNew = true;
+		} else {
+			throw new Exception("Unrecognized isNew: " + isNew);
+		}
+	}
+	public Boolean getIsDiscarded() {
+		return isDiscarded;
+	}
+	public void setIsDiscarded(Boolean isDiscarded) {
+		this.isDiscarded = isDiscarded;
+	}
+	public void setIsDiscarded(String isDiscarded) throws Exception {
+		if (isDiscarded.equals("0")) {
+			this.isDiscarded = false;
+		} else if (isDiscarded.equals("1")) {
+			this.isDiscarded = true;
+		} else {
+			throw new Exception("Unrecognized isDiscarded: " + isDiscarded);
+		}
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public float getRating() {
+		return rating;
+	}
+	public void setRating(float rating) {
+		this.rating = rating;
+	}
+	public void setRating(String rating) {
+		this.rating = java.lang.Float.valueOf(rating);
 	}
 }
