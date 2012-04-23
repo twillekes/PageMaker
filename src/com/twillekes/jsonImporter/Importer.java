@@ -164,9 +164,9 @@ public class Importer {
 			}
 			portfolioDeserializer.path = rec.path;
 			if (rec.path.equals("images")) {
-				portfolioDeserializer.url = "http://members.shaw.ca/tjwillekes";
+				portfolioDeserializer.url = "http://members.shaw.ca/tjwillekes/images";
 			} else if (rec.path.equals("images_2")) {
-				portfolioDeserializer.url = "http://members.shaw.ca/tomjwillekes";
+				portfolioDeserializer.url = "http://members.shaw.ca/tomjwillekes/images_2";
 			} else if (rec.path.equals("words")) {
 				continue;
 			} else {
