@@ -8,7 +8,7 @@ import java.util.List;
 // Metadata is fixed information that won't change (e.g. focal length)
 // Tags are information added later
 
-public class Picture {
+public class Picture implements Comparable<Picture> {
 	// Fields
 	private String fileName;
 	private String filePath; // I.e. in web, with http://
@@ -55,5 +55,16 @@ public class Picture {
 	
 	public String toString() {
 		return "File name: " + this.fileName + " File Path: " + this.filePath + " Metadata: " + this.metadata.toString();
+	}
+
+	public int compareTo(Picture o) {
+		if (!(o instanceof Picture)) {
+			throw new ClassCastException("A picture object was expected");
+		}
+		if (this.metadata.getRealDate() == null || o.metadata.getRealDate() == null) {
+			return 0;
+		}
+//		System.out.println("Comparing "+o.metadata.getRealDate()+" to "+this.metadata.getRealDate());
+		return o.metadata.getRealDate().compareTo(this.metadata.getRealDate());
 	}
 }

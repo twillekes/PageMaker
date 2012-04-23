@@ -1,10 +1,13 @@
 package com.twillekes.portfolio;
 
 import java.util.ArrayList;
+//import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class Portfolio {
 	public class CategoryRecord {
@@ -16,26 +19,17 @@ public class Portfolio {
 		}
 	}
 
-	private List<Album> albums;  // Built up from tags in the pictures' metadata
-	private List<Picture> pictures; // The complete list of pictures in the portfolio
+	//private List<Album> albums;  // Built up from tags in the pictures' metadata
+	private SortedSet<Picture> pictures; // The complete list of pictures in the portfolio
 	private Map<String, List<CategoryRecord>> categoryDictionary;
 	private String[] categories = {"subject", "orientation", "season", "camera", "lens", "film", "chrome",
             "format", "year", "month", "direction", "rating"};
 	
 	public Portfolio() {
-		pictures = new ArrayList<Picture>();
-		albums = new ArrayList<Album>();
+		pictures = new TreeSet<Picture>();
 	}
 
-	public List<Album> getAlbums() {
-		return albums;
-	}
-
-	public void addAlbum(Album album) {
-		albums.add(album);
-	}
-
-	public List<Picture> getPictures() {
+	public SortedSet<Picture> getPictures() {
 		return pictures;
 	}
 
@@ -46,7 +40,6 @@ public class Portfolio {
 	// Top level is a map of string (category name: subject, season, etc.) to...
 	// Next level is a map of string (category value: houses, winter, etc.) = 'categoryValue' to...
 	// List<Integer> that are the picture indexes  = 'imageIndexes'
-	// Map<String, Map<String, List<Integer>>>
 	public void findAllCategories() {
 		categoryDictionary = new HashMap<String, List<CategoryRecord>>();
 		CategoryRecord newCatRecord = new CategoryRecord("New");
@@ -103,7 +96,7 @@ public class Portfolio {
 			firstTime = false;
 		}
 	}
-
+	
 	public Map<String, List<CategoryRecord>> getCategoryDictionary() {
 		return categoryDictionary;
 	}

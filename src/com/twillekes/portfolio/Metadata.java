@@ -42,6 +42,7 @@ public class Metadata {
 	}
 	private String format;
 	private String date;
+	private Date realDate;
 	private String year;
 	private String month;
 	public enum Direction {
@@ -265,6 +266,12 @@ public class Metadata {
 	}
 	public void setDate(String date) {
 		this.date = date;
+		
+		try {
+			this.realDate = this.validateDate(date);
+		} catch (Exception e) {
+			this.realDate = null;
+		}
 	}
 	public Date validateDate(String date) throws Exception {
 		Date dat = null;
@@ -276,8 +283,6 @@ public class Metadata {
 			dat = (Date)dateFormat.parse(date);
 		} catch (ParseException e) {
 			this.date = null;
-			//System.out.println("Date parse exception: " + e.getMessage());
-			//throw e;
 		}
 		if (dat != null) {
 			return dat;
@@ -289,6 +294,9 @@ public class Metadata {
 			System.out.println("Date/month parse exception: " + e.getMessage());
 		}
 		return dat;
+	}
+	public Date getRealDate() {
+		return this.realDate;
 	}
 	public String getDirection() {
 		return direction;
