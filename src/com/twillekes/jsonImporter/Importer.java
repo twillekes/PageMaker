@@ -66,8 +66,8 @@ public class Importer {
 				final String val = entry.getValue().getAsString();
 				try {
 					if (key.equals("filename")) {
-						picture.setFileName(this.url + "/" + val);
-						picture.setFilePath(this.path + "/" + val);
+						picture.setFilePath(this.url + "/" + val);
+						picture.setLocalFilePath(this.path + "/" + val);
 					} else if (key.equals("title")) {
 						metadata.setTitle(val);
 					} else if (key.equals("caption")) {
@@ -117,7 +117,7 @@ public class Importer {
 			}
 			picture.setMetadata(metadata);
 			this.portfolio.addPicture(picture);
-			System.out.println("Added picture: " + picture.toString());
+			//System.out.println("Added picture: " + picture.toString());
 		}
 		public String getFileName() {
 			return this.path + "/metadata.json";
@@ -144,7 +144,7 @@ public class Importer {
 		importer = new Importer();
 		importer.populate(portfolio);
 		
-		System.out.println("Created portfolio");
+		System.out.println(portfolio.toString());
 	}
 	
 	public Importer() {
@@ -153,6 +153,8 @@ public class Importer {
 	public void populate(Portfolio portfolio) {
 		LocationDeserializer locationDeserializer = new LocationDeserializer();
 		this.importJson(locationDeserializer);
+		System.out.println("There are " + locationDeserializer.metadataRecords.size() + " metadata records");
+		
 		PortfolioDeserializer portfolioDeserializer = new PortfolioDeserializer(portfolio);
 		final Iterator<MetadataRecord> it = locationDeserializer.metadataRecords.iterator();
 		while(it.hasNext()) {
@@ -171,6 +173,8 @@ public class Importer {
 				portfolioDeserializer.url = rec.path;
 			}
 			this.importJson(portfolioDeserializer);
+			// S/b 67 images in newImages!
+			System.out.println("After loading " + rec.path + " the portfolio is: " + portfolio.toString());
 		}
 	}
 	public void importJson(Deserializer deserializer) {
@@ -207,7 +211,12 @@ public class Importer {
 		final JsonArray jsonArray = itemsEntry.getValue().getAsJsonArray();
 		final Iterator<JsonElement> it = jsonArray.iterator();
 		while (it.hasNext()) {
-			deserializer.handleJsonObject(it.next().getAsJsonObject());
+			JsonObject obj = it.next().getAsJsonObject();
+			try {
+				deserializer.handleJsonObject(obj);
+			} catch (ParseException e) {
+				System.out.println("Exception: " + e.getMessage());
+			}
 		}
 	}
 }

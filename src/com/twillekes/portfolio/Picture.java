@@ -10,23 +10,23 @@ import java.util.List;
 
 public class Picture implements Comparable<Picture> {
 	// Fields
-	private String fileName;
-	private String filePath; // I.e. in web, with http://
+	private String filePath;
+	private String localFilePath;
 	private Metadata metadata;
 	private List<String> tags;
 	
 	// Constructor
 	public Picture() {
-		fileName = "undefined";
+		filePath = "undefined";
 	}
 	
 	// Methods
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
+	public void setFilePath(String fileName) {
+		this.filePath = fileName;
 	}
 	
-	public String getFileName() {
-		return fileName;
+	public String getFilePath() {
+		return filePath;
 	}
 	
 	public Metadata getMetadata() {
@@ -45,16 +45,16 @@ public class Picture implements Comparable<Picture> {
 		this.tags = tags;
 	}
 
-	public String getFilePath() {
-		return filePath;
+	public String getLocalFilePath() {
+		return localFilePath;
 	}
 
-	public void setFilePath(String filePath) {
-		this.filePath = filePath;
+	public void setLocalFilePath(String filePath) {
+		this.localFilePath = filePath;
 	}
 	
 	public String toString() {
-		return "File name: " + this.fileName + " File Path: " + this.filePath + " Metadata: " + this.metadata.toString();
+		return "File name: " + this.filePath + " File Path: " + this.localFilePath + " Metadata: " + this.metadata.toString();
 	}
 
 	public int compareTo(Picture o) {
@@ -62,9 +62,12 @@ public class Picture implements Comparable<Picture> {
 			throw new ClassCastException("A picture object was expected");
 		}
 		if (this.metadata.getRealDate() == null || o.metadata.getRealDate() == null) {
-			return 0;
+			return -1;
 		}
-//		System.out.println("Comparing "+o.metadata.getRealDate()+" to "+this.metadata.getRealDate());
-		return o.metadata.getRealDate().compareTo(this.metadata.getRealDate());
+		int result = o.metadata.getRealDate().compareTo(this.metadata.getRealDate());
+		if (result == 0) {
+			return -1;
+		}
+		return result;
 	}
 }

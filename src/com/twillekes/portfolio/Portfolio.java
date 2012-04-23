@@ -28,6 +28,10 @@ public class Portfolio {
 	public Portfolio() {
 		pictures = new TreeSet<Picture>();
 	}
+	
+	public String toString() {
+		return "There are " + pictures.size() + " images";
+	}
 
 	public SortedSet<Picture> getPictures() {
 		return pictures;

@@ -66,7 +66,8 @@ public class Metadata {
 			   " Date: " + this.date + 
 			   " Season: " + this.season +
 			   " Subject: " + this.subject +
-			   " Rating: " + this.rating;
+			   " Rating: " + this.rating +
+			   " isNew: " + this.isNew;
 	}
 	
 	public String getOrientation() {
