@@ -64,15 +64,13 @@ public class Portfolio {
 				try {
 					String catValue = pic.getMetadata().getCategoryValue(categories[i]);
 					
+					if (pic.getMetadata().getIsDiscarded() != null) {
+						continue;
+					}
+					
 					if (pic.getMetadata().getIsNew() != null) {
 						if (firstTime) {
 							newCatRecord.imageIndexes.add(picIndex);
-						}
-						continue;
-					}
-					if (pic.getMetadata().getIsFavorite() != null) {
-						if (firstTime) {
-							favCatRecord.imageIndexes.add(picIndex);
 						}
 						continue;
 					}
@@ -92,6 +90,12 @@ public class Portfolio {
 						categoryList.add(catRecord);
 					}
 					catRecord.imageIndexes.add(picIndex);
+					
+					if (pic.getMetadata().getIsFavorite() != null) {
+						if (firstTime) {
+							favCatRecord.imageIndexes.add(picIndex);
+						}
+					}
 				} catch (Exception e) {
 					System.out.println("Exception finding all categories: " + e.getMessage());
 				}

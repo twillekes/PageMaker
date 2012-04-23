@@ -62,11 +62,11 @@ public class Picture implements Comparable<Picture> {
 			throw new ClassCastException("A picture object was expected");
 		}
 		if (this.metadata.getRealDate() == null || o.metadata.getRealDate() == null) {
-			return -1;
+			return 1;
 		}
 		int result = o.metadata.getRealDate().compareTo(this.metadata.getRealDate());
 		if (result == 0) {
-			return -1;
+			return 1;
 		}
 		return result;
 	}
