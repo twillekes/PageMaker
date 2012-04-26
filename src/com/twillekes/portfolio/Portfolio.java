@@ -21,12 +21,14 @@ public class Portfolio {
 
 	//private List<Album> albums;  // Built up from tags in the pictures' metadata
 	private SortedSet<Picture> pictures; // The complete list of pictures in the portfolio
+	private SortedSet<Words> words;
 	private Map<String, List<CategoryRecord>> categoryDictionary;
 	private String[] categories = {"subject", "orientation", "season", "camera", "lens", "film", "chrome",
             "format", "year", "month", "direction", "rating"};
 	
 	public Portfolio() {
 		pictures = new TreeSet<Picture>();
+		words = new TreeSet<Words>();
 	}
 	
 	public String toString() {
@@ -107,5 +109,13 @@ public class Portfolio {
 	
 	public Map<String, List<CategoryRecord>> getCategoryDictionary() {
 		return categoryDictionary;
+	}
+
+	public SortedSet<Words> getWords() {
+		return words;
+	}
+
+	public void addWords(Words words) {
+		this.words.add(words);
 	}
 }

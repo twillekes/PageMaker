@@ -16,6 +16,7 @@ import com.google.gson.JsonParser;
 import com.twillekes.portfolio.Metadata;
 import com.twillekes.portfolio.Picture;
 import com.twillekes.portfolio.Portfolio;
+import com.twillekes.portfolio.Words;
 
 public class Importer {
 	public interface Deserializer {
@@ -55,10 +56,37 @@ public class Importer {
 		public String path;
 		public String url;
 		public Portfolio portfolio;
+		public boolean isWords;
 		public PortfolioDeserializer(Portfolio portfolio) {
 			this.portfolio = portfolio;
 		}
 		public void handleJsonObject(JsonObject obj) throws ParseException {
+			if (this.isWords) {
+				handleJsonWordsObject(obj);
+			} else {
+				handleJsonPictureObject(obj);
+			}
+		}
+		public void handleJsonWordsObject(JsonObject obj) throws ParseException {
+			Words words = new Words();
+			for (final Entry<String, JsonElement> entry : obj.entrySet()) {
+				final String key = entry.getKey();
+				final String val = entry.getValue().getAsString();
+				try {
+					if (key.equals("filename")) {
+						words.setFilePath(this.path + "/" + val);
+					} else if (key.equals("title")) {
+						words.setTitle(val);
+					} else if (key.equals("doNotShow")) {
+						words.setDoNotShow(val);
+					}
+				} catch (Exception e) {
+					System.out.println("Encounted exception in file " + this.getFileName() + " error: " + e.getMessage());
+				}
+			}
+			portfolio.addWords(words);
+		}
+		public void handleJsonPictureObject(JsonObject obj) throws ParseException {
 			Picture picture = new Picture();
 			Metadata metadata = new Metadata();
 			for (final Entry<String, JsonElement> entry : obj.entrySet()) {
@@ -162,18 +190,17 @@ public class Importer {
 			if (rec.type == RecordType.REMOTE){
 				continue;
 			}
+			portfolioDeserializer.isWords = false;
 			portfolioDeserializer.path = rec.path;
+			portfolioDeserializer.url = rec.path;
 			if (rec.path.equals("images")) {
 				portfolioDeserializer.url = "http://members.shaw.ca/tjwillekes/images";
 			} else if (rec.path.equals("images_2")) {
 				portfolioDeserializer.url = "http://members.shaw.ca/tomjwillekes/images_2";
 			} else if (rec.path.equals("words")) {
-				continue;
-			} else {
-				portfolioDeserializer.url = rec.path;
+				portfolioDeserializer.isWords = true;
 			}
 			this.importJson(portfolioDeserializer);
-			// S/b 67 images in newImages!
 			System.out.println("After loading " + rec.path + " the portfolio is: " + portfolio.toString());
 		}
 	}
