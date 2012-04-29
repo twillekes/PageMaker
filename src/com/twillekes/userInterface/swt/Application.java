@@ -35,7 +35,7 @@ public class Application {
 		
         //PortfolioUserInterface portfolioUserInterface = 
 		new PortfolioUserInterface(display, shell, portfolio);
-		
+		shell.layout();
 		shell.pack();
 
         while (!shell.isDisposed()) {

@@ -30,11 +30,14 @@ public class PortfolioUserInterface {
 //		portfolioScroll.setExpandHorizontal(true);
 
 		portfolioGroup = new Group(portfolioScroll, SWT.SHADOW_ETCHED_OUT);
+//		portfolioGroup.setText("portfolioGroup");
 		RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
 		//rowLayout.wrap = false;
-		this.portfolioGroup.setLayout(rowLayout);
+		portfolioGroup.setLayout(rowLayout);
+		//portfolioGroup.setSize(250,250);
 
 		portfolioScroll.setContent(portfolioGroup);
+		//portfolioScroll.setSize(250,250);
 
 		//		Picture picture = portfolio.getPictures().first();
 //		new PictureUserInterface(device, this.portfolioGroup, picture);
@@ -48,8 +51,12 @@ public class PortfolioUserInterface {
 				break;
 			}
 		}
+		portfolioGroup.layout();
 		portfolioGroup.pack();
+		System.out.println("Portfolio group width is "+portfolioGroup.getBounds().width+" height is "+portfolioGroup.getBounds().height);
+		portfolioScroll.layout();
 		portfolioScroll.pack();
+		System.out.println("Portfolio scroll width is "+portfolioScroll.getBounds().width+" height is "+portfolioScroll.getBounds().height);
 	}
 
 }
