@@ -166,6 +166,7 @@ public class Importer {
 		}
 	}
 	private String basePath;
+	public static String PATH_TO_IMAGES = "../Page/My-personal-web-page/page/";
 	
 	public static void main(String[] args) {
 		portfolio = new Portfolio();
@@ -176,7 +177,7 @@ public class Importer {
 	}
 	
 	public Importer() {
-		this.basePath = "/Users/twillekes/Documents/workspace/Page/My-personal-web-page/page/";
+		this.basePath = PATH_TO_IMAGES;
 	}
 	public void populate(Portfolio portfolio) {
 		LocationDeserializer locationDeserializer = new LocationDeserializer();
