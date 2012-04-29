@@ -22,10 +22,14 @@ public class PortfolioUserInterface extends ScrollPane {
 		middlePanel.setLayout(new BoxLayout(middlePanel, BoxLayout.Y_AXIS));
 		
 		Iterator<Picture> it = portfolio.getPictures().iterator();
+//		int count = 0;
 		while(it.hasNext()) {
 			Picture pic = it.next();
 			PictureUserInterface picUi = new PictureUserInterface(pic);
 			middlePanel.add(picUi);
+//			if (count++ == 8) {
+//				break;
+//			}
 		}
 		middlePanel.doLayout();
 		this.add(middlePanel);

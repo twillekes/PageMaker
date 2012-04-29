@@ -1,33 +1,27 @@
 package com.twillekes.userInterface;
 
 import java.awt.BorderLayout;
-import java.awt.Button;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Frame;
-import java.awt.LayoutManager;
-import java.awt.Panel;
-import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Iterator;
 
-import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import com.twillekes.jsonImporter.Importer;
-import com.twillekes.portfolio.Picture;
 import com.twillekes.portfolio.Portfolio;
 
-public class MainFrame extends Frame {
+public class MainFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	
 	// Object fields
-    private Button copyButton;
-    private Button cutButton;
-    private Button pasteButton;
-    private Button exitButton;
+    private JButton copyButton;
+    private JButton cutButton;
+    private JButton pasteButton;
+    private JButton exitButton;
 
 
     /**
@@ -65,27 +59,27 @@ public class MainFrame extends Frame {
 
 
         // Toolbar Panel
-        Panel toolbarPanel = new Panel();
+        JPanel toolbarPanel = new JPanel();
         toolbarPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-        copyButton = new Button("Copy");
+        copyButton = new JButton("Copy");
         copyButton.addActionListener(buttonListener);
         toolbarPanel.add(copyButton);
 
-        cutButton = new Button("Cut");
+        cutButton = new JButton("Cut");
         cutButton.addActionListener(buttonListener);
         toolbarPanel.add(cutButton);
 
-        pasteButton = new Button("Paste");
+        pasteButton = new JButton("Paste");
         pasteButton.addActionListener(buttonListener);
         toolbarPanel.add(pasteButton);
 
         add(toolbarPanel, BorderLayout.NORTH);
 
         // Bottom Panel
-        Panel bottomPanel = new Panel();
+        JPanel bottomPanel = new JPanel();
 
-        exitButton = new Button("Exit");
+        exitButton = new JButton("Exit");
         exitButton.addActionListener(buttonListener);
         bottomPanel.add(exitButton);
         
