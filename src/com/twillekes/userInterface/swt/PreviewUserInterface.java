@@ -6,7 +6,8 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 
@@ -14,7 +15,7 @@ import com.twillekes.jsonImporter.Importer;
 
 public class PreviewUserInterface {
 	private Image previewImage;
-	private static int WIDTH = 100;
+	private static int WIDTH = 125;
 	private static int HEIGHT = 125;
 	public PreviewUserInterface(Device device, Composite parent, String filePath) {
 		int dotPos = filePath.lastIndexOf(".");
@@ -31,10 +32,13 @@ public class PreviewUserInterface {
 		if (rect.height > HEIGHT) {
 			height = rect.height;
 		}
-		//System.out.println("Width is "+width+" height is "+height);
 		
-		Canvas canvas = new Canvas(parent, SWT.NONE);
-		//canvas.setLayout(new FillLayout());
+		Canvas canvas = new Canvas(parent, SWT.NO_REDRAW_RESIZE);
+		canvas.setLayout(new GridLayout(1, false));
+		RowData layoutData = new RowData();
+		layoutData.width = width;
+		layoutData.height = height;
+		canvas.setLayoutData(layoutData);
 		canvas.setSize(width, height);
 		canvas.addPaintListener (new PaintListener () {
 			public void paintControl (PaintEvent e) {
@@ -50,7 +54,5 @@ public class PreviewUserInterface {
 			}
 		});
 		canvas.layout();
-		System.out.println("Width is "+canvas.getBounds().width+" height is "+canvas.getBounds().height);
-		//canvas.pack();
 	}
 }
