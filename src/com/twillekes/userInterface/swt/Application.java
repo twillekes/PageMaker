@@ -25,7 +25,7 @@ public class Application {
         shell.setText("Page Maker");
         shell.setSize(250, 200);
 
-        center(shell);
+        //center(shell);
 
         shell.open();
         

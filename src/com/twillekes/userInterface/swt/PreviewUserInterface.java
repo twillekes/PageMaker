@@ -34,6 +34,7 @@ public class PreviewUserInterface {
 		//System.out.println("Width is "+width+" height is "+height);
 		
 		Canvas canvas = new Canvas(parent, SWT.NONE);
+		//canvas.setLayout(new FillLayout());
 		canvas.setSize(width, height);
 		canvas.addPaintListener (new PaintListener () {
 			public void paintControl (PaintEvent e) {
@@ -49,6 +50,7 @@ public class PreviewUserInterface {
 			}
 		});
 		canvas.layout();
+		System.out.println("Width is "+canvas.getBounds().width+" height is "+canvas.getBounds().height);
 		//canvas.pack();
 	}
 }

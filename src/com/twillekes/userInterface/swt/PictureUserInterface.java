@@ -59,12 +59,11 @@ public class PictureUserInterface {
 	}
 	private Group pictureGroup;
 	private Group metadataGroup;
-	private PreviewUserInterface previewUserInterface;
 	public PictureUserInterface(Device device, Composite parent, Picture picture) {
 		pictureGroup = new Group(parent, SWT.SHADOW_ETCHED_OUT);
 		pictureGroup.setLayout(new RowLayout(SWT.HORIZONTAL));
 		
-		previewUserInterface = new PreviewUserInterface(device, pictureGroup, picture.getLocalFilePath());
+		new PreviewUserInterface(device, pictureGroup, picture.getLocalFilePath());
 		
 		metadataGroup = new Group(pictureGroup, SWT.SHADOW_ETCHED_OUT);
 		GridLayout gridLayout = new GridLayout();
