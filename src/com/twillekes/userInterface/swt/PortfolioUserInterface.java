@@ -47,7 +47,7 @@ public class PortfolioUserInterface {
 			Picture pic = it.next();
 			//PictureUserInterface picUi = 
 			new PictureUserInterface(device, portfolioGroup, pic);
-			if (count++ == 20) {
+			if (count++ == 10) {
 				break;
 			}
 		}

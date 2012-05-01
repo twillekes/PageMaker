@@ -83,34 +83,45 @@ public class PictureUserInterface {
 				}
 			}
 			if (selectedItem == items.length){
-				throw new Exception("Could not find initial string");
+				System.out.println("Could not find initial string (" + initialText + ") in " + sLabel);
+				return;
 			}
 			combo.select(selectedItem);
 		}
 	}
 	private Group pictureGroup;
 	private Group metadataGroup;
+	private Group textGroup;
+	private Group uberGroup;
 	public PictureUserInterface(Device device, Composite parent, Picture picture) {
-		pictureGroup = new Group(parent, SWT.SHADOW_ETCHED_OUT);
+		pictureGroup = new Group(parent, SWT.NONE);
 		pictureGroup.setLayout(new RowLayout(SWT.HORIZONTAL));
 		
 		new PreviewUserInterface(device, pictureGroup, picture.getLocalFilePath());
 		
-		metadataGroup = new Group(pictureGroup, SWT.SHADOW_ETCHED_OUT);
+		uberGroup = new Group(pictureGroup, SWT.NONE);
+		uberGroup.setLayout(new RowLayout(SWT.VERTICAL));
+		
+		textGroup = new Group(uberGroup, SWT.NONE);
+		textGroup.setLayout(new RowLayout(SWT.HORIZONTAL));
+		
+		metadataGroup = new Group(uberGroup, SWT.NONE);
 		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 3;
+		gridLayout.numColumns = 6;
 		metadataGroup.setLayout(gridLayout);
 		
-		new PictureTextField(metadataGroup, picture, "Title:", picture.getMetadata().getTitle(), 30, new TextChangeHandler(){
+		new PictureTextField(textGroup, picture, "Title:", picture.getMetadata().getTitle(), 30, new TextChangeHandler(){
 			@Override
 			public void textChanged(Picture picture, String value) {
 				picture.getMetadata().setTitle(value);
+				uberGroup.layout();
 			}
 		});
-		new PictureTextField(metadataGroup, picture, "Description:", picture.getMetadata().getDescription(), 30, new TextChangeHandler(){
+		new PictureTextField(textGroup, picture, "Description:", picture.getMetadata().getDescription(), 30, new TextChangeHandler(){
 			@Override
 			public void textChanged(Picture picture, String value) {
 				picture.getMetadata().setDescription(value);
+				uberGroup.layout();
 			}
 		});
 		try {
@@ -147,6 +158,13 @@ public class PictureUserInterface {
 				@Override
 				public void textChanged(Picture picture, String value) {
 					picture.getMetadata().setLens(value);
+				}
+			});
+			new PictureComboBox(metadataGroup, picture, "Filters:", picture.getMetadata().getFilters(),
+					Metadata.schema.filterss.toArray(new String[Metadata.schema.filterss.size()]), new TextChangeHandler(){
+				@Override
+				public void textChanged(Picture picture, String value) {
+					picture.getMetadata().setFilters(value);
 				}
 			});
 			new PictureComboBox(metadataGroup, picture, "Film:", picture.getMetadata().getFilm(),
@@ -196,6 +214,34 @@ public class PictureUserInterface {
 				@Override
 				public void textChanged(Picture picture, String value) {
 					picture.getMetadata().setRating(value);
+				}
+			});
+			new PictureComboBox(metadataGroup, picture, "Is new:", picture.getMetadata().getIsNew(),
+					Metadata.schema.isNews.toArray(new String[Metadata.schema.isNews.size()]), new TextChangeHandler(){
+				@Override
+				public void textChanged(Picture picture, String value) {
+					picture.getMetadata().setIsNew(value);
+				}
+			});
+			new PictureComboBox(metadataGroup, picture, "Is Favorite:", picture.getMetadata().getIsFavorite(),
+					Metadata.schema.isFavorites.toArray(new String[Metadata.schema.isFavorites.size()]), new TextChangeHandler(){
+				@Override
+				public void textChanged(Picture picture, String value) {
+					picture.getMetadata().setIsFavorite(value);
+				}
+			});
+			new PictureComboBox(metadataGroup, picture, "Do Not Show:", picture.getMetadata().getDoNotShow(),
+					Metadata.schema.doNotShows.toArray(new String[Metadata.schema.doNotShows.size()]), new TextChangeHandler(){
+				@Override
+				public void textChanged(Picture picture, String value) {
+					picture.getMetadata().setDoNotShow(value);
+				}
+			});
+			new PictureComboBox(metadataGroup, picture, "Is Discarded:", picture.getMetadata().getIsDiscarded(),
+					Metadata.schema.isDiscardeds.toArray(new String[Metadata.schema.isDiscardeds.size()]), new TextChangeHandler(){
+				@Override
+				public void textChanged(Picture picture, String value) {
+					picture.getMetadata().setIsDiscarded(value);
 				}
 			});
 		} catch (Exception e) {
