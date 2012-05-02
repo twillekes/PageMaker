@@ -45,6 +45,35 @@ public class Metadata {
 			}
 			arr.add(newEntry);
 		}
+		public List<String> getCategoryValues(String categoryName) throws Exception {
+			if (categoryName.equals("subject")) {
+				return this.subjects;
+			} else if (categoryName.equals("orientation")) {
+				return this.orientations;
+			} else if (categoryName.equals("season")) {
+				return this.seasons;
+			} else if (categoryName.equals("camera")) {
+				return this.cameras;
+			} else if (categoryName.equals("lens")) {
+				return this.lenses;
+			} else if (categoryName.equals("film")) {
+				return this.films;
+			} else if (categoryName.equals("chrome")) {
+				return this.chromes;
+			} else if (categoryName.equals("format")) {
+				return this.formats;
+			} else if (categoryName.equals("year")) {
+				return this.years;
+			} else if (categoryName.equals("month")) {
+				return this.months;
+			} else if (categoryName.equals("direction")) {
+				return this.directions;
+			} else if (categoryName.equals("rating")) {
+				return this.ratings;
+			} else {
+				throw new Exception("Unrecognized category name: " + categoryName);
+			}
+		}
 	}
 	public static MetadataSchema schema;
 	public Metadata() {

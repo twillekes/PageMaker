@@ -110,6 +110,9 @@ public class PictureUserInterface {
 		gridLayout.numColumns = 6;
 		metadataGroup.setLayout(gridLayout);
 		
+		Label filePathLabel = new Label(textGroup, SWT.SHADOW_OUT);
+		filePathLabel.setText(picture.getLocalFilePath());
+		
 		new PictureTextField(textGroup, picture, "Title:", picture.getMetadata().getTitle(), 30, new TextChangeHandler(){
 			@Override
 			public void textChanged(Picture picture, String value) {
