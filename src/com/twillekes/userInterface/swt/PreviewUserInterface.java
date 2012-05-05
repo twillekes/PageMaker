@@ -6,6 +6,7 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Canvas;
@@ -35,9 +36,9 @@ public class PreviewUserInterface {
 		
 		Canvas canvas = new Canvas(parent, SWT.NO_REDRAW_RESIZE);
 		canvas.setLayout(new GridLayout(1, false));
-		RowData layoutData = new RowData();
-		layoutData.width = width;
-		layoutData.height = height;
+		GridData layoutData = new GridData();
+		layoutData.widthHint = width;
+		layoutData.heightHint = height;
 		canvas.setLayoutData(layoutData);
 		canvas.setSize(width, height);
 		canvas.addPaintListener (new PaintListener () {
@@ -53,6 +54,6 @@ public class PreviewUserInterface {
 				e.gc.drawImage(previewImage, (int)xOffset, (int)yOffset);
 			}
 		});
-		canvas.layout();
+		//canvas.layout();
 	}
 }

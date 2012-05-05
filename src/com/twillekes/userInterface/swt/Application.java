@@ -23,21 +23,18 @@ public class Application {
         Shell shell = new Shell(display);
         shell.setLayout(new FillLayout());
         shell.setText("Page Maker");
-        shell.setSize(250, 200);
 
         //center(shell);
 
-        shell.open();
-        
         Portfolio portfolio = new Portfolio();
 		Importer importer = new Importer();
 		importer.populate(portfolio);
-		
-        //PortfolioUserInterface portfolioUserInterface = 
 		new PortfolioUserInterface(display, shell, portfolio);
+
 		shell.layout();
 		shell.pack();
-
+        shell.open();
+        
         while (!shell.isDisposed()) {
           if (!display.readAndDispatch()) {
             display.sleep();

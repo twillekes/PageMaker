@@ -26,14 +26,8 @@ public class PortfolioUserInterface {
 		
 		Group group = new Group(scroll, SWT.HORIZONTAL);
 		RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
-		rowLayout.wrap = true;
 		group.setLayout(rowLayout);
-		
-//		RowData layoutData = new RowData();
-//		layoutData.width = 400;
-//		layoutData.height = 130;
-//		group.setLayoutData(layoutData);
-		
+				
 		scroll.setContent(group);
 		
 		List<String> catValues;
@@ -65,9 +59,9 @@ public class PortfolioUserInterface {
 		group.layout();
 		group.pack();
 		scroll.layout();
-		scroll.pack();
+//		scroll.pack();
 	}
-	public void FullPortfolioUserInterface(Device device, Composite parent, Portfolio portfolio) {
+	public void setupFullPortfolioUserInterface(Device device, Composite parent, Portfolio portfolio) {
 		ScrolledComposite portfolioScroll = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 
 		Group portfolioGroup = new Group(portfolioScroll, SWT.SHADOW_ETCHED_OUT);
