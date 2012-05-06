@@ -8,6 +8,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -93,11 +94,13 @@ public class PictureUserInterface {
 	private Group metadataGroup;
 	private Group textGroup;
 	private Group uberGroup;
-	public PictureUserInterface(Device device, Composite parent, Picture picture) {
+	public PictureUserInterface(Composite parent, Picture picture) {
 		pictureGroup = new Group(parent, SWT.NONE);
-		pictureGroup.setLayout(new RowLayout(SWT.HORIZONTAL));
+		GridLayout gLayout = new GridLayout();
+		gLayout.numColumns = 2;
+		pictureGroup.setLayout(gLayout);
 		
-		new PreviewUserInterface(device, pictureGroup, picture.getLocalFilePath());
+		new PreviewUserInterface(pictureGroup, picture);
 		
 		uberGroup = new Group(pictureGroup, SWT.NONE);
 		uberGroup.setLayout(new RowLayout(SWT.VERTICAL));
@@ -107,7 +110,7 @@ public class PictureUserInterface {
 		
 		metadataGroup = new Group(uberGroup, SWT.NONE);
 		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 6;
+		gridLayout.numColumns = 3;
 		metadataGroup.setLayout(gridLayout);
 		
 		Label filePathLabel = new Label(textGroup, SWT.SHADOW_OUT);

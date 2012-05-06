@@ -4,6 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -19,8 +20,13 @@ import com.twillekes.portfolio.Portfolio;
 import com.twillekes.userInterface.swt.PortfolioUserInterface;
 
 public class Application {
-	public Application(Display display) {
-        Shell shell = new Shell(display);
+	private static Shell shell;
+	private static Display display;
+	public Application() {
+        Display.setAppName("Page Maker");
+        display = new Display();
+
+        shell = new Shell(display);
         shell.setLayout(new FillLayout());
         shell.setText("Page Maker");
 
@@ -29,7 +35,7 @@ public class Application {
         Portfolio portfolio = new Portfolio();
 		Importer importer = new Importer();
 		importer.populate(portfolio);
-		new PortfolioUserInterface(display, shell, portfolio);
+		new PortfolioUserInterface(shell, portfolio);
 
 		shell.layout();
 		shell.pack();
@@ -42,8 +48,15 @@ public class Application {
         }
         
         shell.dispose();
+        display.dispose();
     }
 
+	public static Device getDevice() {
+		return display;
+	}
+	public static Shell getShell() {
+		return shell;
+	}
 
     public void center(Shell shell) {
 
@@ -59,9 +72,6 @@ public class Application {
 
 
     public static void main(String[] args) {
-        Display.setAppName("Page Maker");
-        Display display = new Display();
-        new Application(display);
-        display.dispose();
+        new Application();
     }
 }

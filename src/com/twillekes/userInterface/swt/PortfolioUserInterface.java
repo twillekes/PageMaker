@@ -10,6 +10,7 @@ import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 
 import com.twillekes.portfolio.Metadata;
@@ -18,10 +19,11 @@ import com.twillekes.portfolio.Portfolio;
 import com.twillekes.userInterface.swt.PictureUserInterface;
 
 public class PortfolioUserInterface {
-	public PortfolioUserInterface(Device device, Composite parent, Portfolio portfolio) {
-		setupCategoryUserInterface("subject", device, parent, portfolio);
+	public PortfolioUserInterface(Composite parent, Portfolio portfolio) {
+		setupCategoryUserInterface("subject", parent, portfolio);
+		//setupFullPortfolioUserInterface(parent, portfolio);
 	}
-	public void setupCategoryUserInterface(String category, Device device, Composite parent, Portfolio portfolio) {
+	public void setupCategoryUserInterface(String category, Composite parent, Portfolio portfolio) {
 		ScrolledComposite scroll = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		
 		Group group = new Group(scroll, SWT.HORIZONTAL);
@@ -54,14 +56,14 @@ public class PortfolioUserInterface {
 					list.add(pic);
 				}
 			}
-			new CategoryUserInterface(device, group, list, subject);
+			new CategoryUserInterface(group, list, subject);
 		}
 		group.layout();
 		group.pack();
 		scroll.layout();
 //		scroll.pack();
 	}
-	public void setupFullPortfolioUserInterface(Device device, Composite parent, Portfolio portfolio) {
+	public void setupFullPortfolioUserInterface(Composite parent, Portfolio portfolio) {
 		ScrolledComposite portfolioScroll = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 
 		Group portfolioGroup = new Group(portfolioScroll, SWT.SHADOW_ETCHED_OUT);
@@ -76,7 +78,7 @@ public class PortfolioUserInterface {
 		while(it.hasNext()) {
 			Picture pic = it.next();
 			//PictureUserInterface picUi = 
-			new PictureUserInterface(device, portfolioGroup, pic);
+			new PictureUserInterface(portfolioGroup, pic);
 			if (count++ == 10) {
 				break;
 			}
