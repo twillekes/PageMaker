@@ -4,13 +4,18 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 public class Metadata {
-	private String title;
-	private String description;
+	public static MetadataSchema schema;
+	public Metadata() {
+		if (schema == null) {
+			schema = new MetadataSchema();
+		}
+	}
 	
 	public class MetadataSchema {
 		public List<String> orientations, subjects, seasons, cameras, lenses, films,
@@ -70,16 +75,85 @@ public class Metadata {
 				return this.directions;
 			} else if (categoryName.equals("rating")) {
 				return this.ratings;
+			} else if (categoryName.equals("rating")) {
+				return this.ratings;
+			} else if (categoryName.equals("filters")) {
+				return this.filterss;
+			} else if (categoryName.equals("doNotShow")) {
+				return this.doNotShows;
+			} else if (categoryName.equals("isNew")) {
+				return this.isNews;
+			} else if (categoryName.equals("isDiscarded")) {
+				return this.isDiscardeds;
+			} else if (categoryName.equals("isFavorite")) {
+				return this.isFavorites;
 			} else {
 				throw new Exception("Unrecognized category name: " + categoryName);
 			}
 		}
 	}
-	public static MetadataSchema schema;
-	public Metadata() {
-		if (schema == null) {
-			schema = new MetadataSchema();
+	
+	public static List<String> getCategories() {
+		return Arrays.asList(
+			"subject", "orientation","season", "camera", "lens", "film", "chrome",
+			"format", "year", "month", "direction", "rating");
+		//	"filters", "doNotShow", "isNew", "isDiscarded", "isFavorite"
+	}
+	
+	public String getCategoryValue(String categoryName) throws Exception {
+		if (categoryName.equals("subject")) {
+			return this.subject;
+		} else if (categoryName.equals("orientation")) {
+			return this.orientation;
+		} else if (categoryName.equals("season")) {
+			return this.season;
+		} else if (categoryName.equals("camera")) {
+			return this.camera;
+		} else if (categoryName.equals("lens")) {
+			return this.lens;
+		} else if (categoryName.equals("film")) {
+			return this.film;
+		} else if (categoryName.equals("chrome")) {
+			return this.chrome;
+		} else if (categoryName.equals("format")) {
+			return this.format;
+		} else if (categoryName.equals("year")) {
+			return this.year;
+		} else if (categoryName.equals("month")) {
+			return this.month;
+		} else if (categoryName.equals("direction")) {
+			return this.direction;
+		} else if (categoryName.equals("rating")) {
+			return this.rating;
+		} else if (categoryName.equals("filters")) {
+			return this.filters;
+		} else if (categoryName.equals("doNotShow")) {
+			return this.doNotShow;
+		} else if (categoryName.equals("isNew")) {
+			return this.isNew;
+		} else if (categoryName.equals("isDiscarded")) {
+			return this.isDiscarded;
+		} else if (categoryName.equals("isFavorite")) {
+			return this.isFavorite;
+		} else {
+			throw new Exception("Unrecognized category name: " + categoryName);
 		}
+	}
+	
+	private String title;
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	
+	private String description;
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	
 	private String rating;
@@ -290,48 +364,4 @@ public class Metadata {
 			   " Rating: " + this.rating +
 			   " isNew: " + this.isNew;
 	}
-	
-
-	public String getTitle() {
-		return title;
-	}
-	public void setTitle(String title) {
-		this.title = title;
-	}
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	public String getCategoryValue(String categoryName) throws Exception {
-		if (categoryName.equals("subject")) {
-			return this.subject;
-		} else if (categoryName.equals("orientation")) {
-			return this.orientation;
-		} else if (categoryName.equals("season")) {
-			return this.season;
-		} else if (categoryName.equals("camera")) {
-			return this.camera;
-		} else if (categoryName.equals("lens")) {
-			return this.lens;
-		} else if (categoryName.equals("film")) {
-			return this.film;
-		} else if (categoryName.equals("chrome")) {
-			return this.chrome;
-		} else if (categoryName.equals("format")) {
-			return this.format;
-		} else if (categoryName.equals("year")) {
-			return this.year;
-		} else if (categoryName.equals("month")) {
-			return this.month;
-		} else if (categoryName.equals("direction")) {
-			return this.direction;
-		} else if (categoryName.equals("rating")) {
-			return this.rating;
-		} else {
-			throw new Exception("Unrecognized category name: " + categoryName);
-		}
-	}
-
 }

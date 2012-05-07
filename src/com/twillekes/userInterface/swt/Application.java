@@ -10,6 +10,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
@@ -26,8 +28,12 @@ public class Application {
         Display.setAppName("Page Maker");
         display = new Display();
 
-        shell = new Shell(display);
-        shell.setLayout(new FillLayout());
+        shell = new Shell(display, SWT.SHELL_TRIM);
+        GridLayout layout = new GridLayout();
+        layout.numColumns = 1;
+//        FillLayout layout = new FillLayout();
+//        RowLayout layout = new RowLayout(SWT.VERTICAL);
+        shell.setLayout(layout);
         shell.setText("Page Maker");
 
         //center(shell);
