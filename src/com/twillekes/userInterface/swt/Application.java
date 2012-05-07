@@ -29,9 +29,9 @@ public class Application {
         display = new Display();
 
         shell = new Shell(display, SWT.SHELL_TRIM);
-        GridLayout layout = new GridLayout();
-        layout.numColumns = 1;
-//        FillLayout layout = new FillLayout();
+//        GridLayout layout = new GridLayout();
+//        layout.numColumns = 1;
+        FillLayout layout = new FillLayout();
 //        RowLayout layout = new RowLayout(SWT.VERTICAL);
         shell.setLayout(layout);
         shell.setText("Page Maker");

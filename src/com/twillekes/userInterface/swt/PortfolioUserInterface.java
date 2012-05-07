@@ -35,17 +35,14 @@ public class PortfolioUserInterface {
 		//setupFullPortfolioUserInterface(parent, portfolio);
 	}
 	public void setupCategoryUserInterface(String categorization, Composite parent) {
-//		Group topLevelGroup = new Group(parent, SWT.NONE);
-//		topLevelGroup.setLayout(new RowLayout(SWT.HORIZONTAL));
-			
-		setupCategoryButtons(parent);
-		
 		ScrolledComposite scroll = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-		scroll.setLayout(new RowLayout(SWT.HORIZONTAL));
+		scroll.setLayout(new FillLayout());
 		
 		Group group = new Group(scroll, SWT.NONE);
 		RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
 		group.setLayout(rowLayout);
+		
+		setupCategoryButtons(group);
 		
 		scroll.setContent(group);
 		setupCategories(categorization, group);
@@ -54,9 +51,6 @@ public class PortfolioUserInterface {
 		group.pack();
 		scroll.layout();
 		scroll.pack();
-//		topLevelGroup.layout();
-//		topLevelGroup.pack();
-//		System.out.println("V bar: "+group.getVerticalBar().toString());
 	}
 	public void setupCategoryButtons(Composite parent) {
 		final Group group = new Group(parent, SWT.NONE);
