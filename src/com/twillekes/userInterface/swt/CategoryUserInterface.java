@@ -17,9 +17,9 @@ public class CategoryUserInterface {
 	public CategoryUserInterface(Composite parent, List<Picture> pictures, String categoryValue) {
 		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
 		GridLayout groupLayout = new GridLayout();
-		groupLayout.numColumns = 8;
+		groupLayout.numColumns = 10;
 		group.setLayout(groupLayout);
-		group.setText(categoryValue);
+		group.setText(categoryValue + " (" + pictures.size() + " images)");
 		Iterator<Picture> it = pictures.iterator();
 		while(it.hasNext()) {
 			Picture pic = it.next();

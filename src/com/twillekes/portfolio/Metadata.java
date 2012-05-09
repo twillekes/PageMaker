@@ -75,8 +75,6 @@ public class Metadata {
 				return this.directions;
 			} else if (categoryName.equals("rating")) {
 				return this.ratings;
-			} else if (categoryName.equals("rating")) {
-				return this.ratings;
 			} else if (categoryName.equals("filters")) {
 				return this.filterss;
 			} else if (categoryName.equals("doNotShow")) {
@@ -97,7 +95,27 @@ public class Metadata {
 		return Arrays.asList(
 			"subject", "orientation","season", "camera", "lens", "film", "chrome",
 			"format", "year", "month", "direction", "rating");
-		//	"filters", "doNotShow", "isNew", "isDiscarded", "isFavorite"
+	}
+	
+	public static List<String> getFlagCategories() {
+		List<String> categories = Arrays.asList("doNotShow", "isNew", "isDiscarded", "isFavorite");
+		List<String> populated = new ArrayList<String>();
+		Iterator<String> it = categories.iterator();
+		while(it.hasNext()) {
+			String cat = it.next();
+			try {
+				if (Metadata.schema.getCategoryValues(cat).size() > 0) {
+					populated.add(cat);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return populated;
+	}
+	
+	public static List<String> getFreeformCategories() {
+		return Arrays.asList("filters", "title", "description");
 	}
 	
 	public String getCategoryValue(String categoryName) throws Exception {
