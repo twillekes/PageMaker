@@ -89,7 +89,7 @@ public class MainFrame extends JFrame {
 
         Portfolio portfolio = new Portfolio();
 		Importer importer = new Importer();
-		importer.populate(portfolio);
+		importer.populateFromMasterList(portfolio);
 		
         PortfolioUserInterface portfolioUserInterface = new PortfolioUserInterface(portfolio);
         

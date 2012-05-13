@@ -1,6 +1,12 @@
 package com.twillekes.userInterface.swt;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DropTarget;
+import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.swt.dnd.DropTargetListener;
+import org.eclipse.swt.events.DragDetectEvent;
+import org.eclipse.swt.events.DragDetectListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
@@ -40,12 +46,41 @@ public class Application {
 
         Portfolio portfolio = new Portfolio();
 		Importer importer = new Importer();
-		importer.populate(portfolio);
+		importer.populateFromMasterList(portfolio);
 		new PortfolioUserInterface(shell, portfolio);
 
 		shell.layout();
 		shell.pack();
         shell.open();
+        
+//        shell.addDragDetectListener(new DragDetectListener() {
+//			@Override
+//			public void dragDetected(DragDetectEvent e) {
+//				System.out.println("Drag! "+e);
+//			}
+//        });
+        DropTarget dt = new DropTarget(shell, DND.DROP_COPY);
+        dt.addDropListener(new DropTargetListener(){
+			@Override
+			public void dragEnter(DropTargetEvent event) {
+			}
+			@Override
+			public void dragLeave(DropTargetEvent event) {
+			}
+			@Override
+			public void dragOperationChanged(DropTargetEvent event) {
+			}
+			@Override
+			public void dragOver(DropTargetEvent event) {
+			}
+			@Override
+			public void drop(DropTargetEvent event) {
+				System.out.println("Drop! "+event);
+			}
+			@Override
+			public void dropAccept(DropTargetEvent event) {
+			}
+        });
         
         while (!shell.isDisposed()) {
           if (!display.readAndDispatch()) {

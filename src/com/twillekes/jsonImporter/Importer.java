@@ -89,63 +89,81 @@ public class Importer {
 		public void handleJsonPictureObject(JsonObject obj) throws ParseException {
 			Picture picture = new Picture();
 			Metadata metadata = new Metadata();
+			picture.setMetadata(metadata);
 			for (final Entry<String, JsonElement> entry : obj.entrySet()) {
-				final String key = entry.getKey();
-				final String val = entry.getValue().getAsString();
-				try {
-					if (key.equals("filename")) {
-						picture.setFilePath(this.url + "/" + val);
-						picture.setLocalFilePath(this.path + "/" + val);
-					} else if (key.equals("title")) {
-						metadata.setTitle(val);
-					} else if (key.equals("caption")) {
-						metadata.setDescription(val);
-					} else if (key.equals("rating")) {
-						metadata.setRating(val);
-					} else if (key.equals("orientation")) {
-						metadata.setOrientation(val);
-					} else if (key.equals("subject")) {
-						metadata.setSubject(val);
-					} else if (key.equals("season")) {
-						metadata.setSeason(val);
-					} else if (key.equals("camera")) {
-						metadata.setCamera(val);
-					} else if (key.equals("lens")) {
-						metadata.setLens(val);
-					} else if (key.equals("film")) {
-						metadata.setFilm(val);
-					} else if (key.equals("chrome")) {
-						metadata.setChrome(val);
-					} else if (key.equals("format")) {
-						metadata.setFormat(val);
-					} else if (key.equals("year")) {
-						metadata.setYear(val);;
-					} else if (key.equals("month")) {
-						metadata.setMonth(val);
-					} else if (key.equals("date")) {
-						metadata.setDate(val);
-					} else if (key.equals("direction")) {
-						metadata.setDirection(val);
-					} else if (key.equals("filters")) {
-						metadata.setFilters(val);
-					} else if (key.equals("doNotShow")) {
-						metadata.setDoNotShow(val);
-					} else if (key.equals("isDiscarded")) {
-						metadata.setIsDiscarded(val);
-					} else if (key.equals("isNew")) {
-						metadata.setIsNew(val);
-					} else if (key.equals("isFavorite")) {
-						metadata.setIsFavorite(val);
-					} else {
-						throw new ParseException("Unknown JSON key ('" + key + "') in items array", 0);
+				if (entry.getValue().isJsonObject()) {
+					for (final Entry<String, JsonElement> entr : ((JsonObject)entry.getValue()).entrySet()) {
+						this.setPictureProperty(entr, picture);
 					}
-				} catch (Exception e) {
-					System.out.println("Encounted exception in file " + this.getFileName() + " error: " + e.getMessage());
+				} else {
+					this.setPictureProperty(entry, picture);
 				}
 			}
-			picture.setMetadata(metadata);
 			this.portfolio.addPicture(picture);
 			//System.out.println("Added picture: " + picture.toString());
+		}
+		public void setPictureProperty(Entry<String, JsonElement> entry, Picture picture) {
+			final String key = entry.getKey();
+			final String val = entry.getValue().getAsString();
+			Metadata metadata = picture.getMetadata();
+			try {
+				if (key.equals("filename")) { // Original metadata used "filename"
+					picture.setFilePath(this.url + "/" + val);
+					picture.setLocalFilePath(this.path + "/" + val);
+				} else if (key.equals("filePath")) {
+					picture.setFilePath(this.url + "/" + val);
+				} else if (key.equals("localFilePath")) {
+					picture.setLocalFilePath(this.path + "/" + val);
+				} else if (key.equals("title")) {
+					metadata.setTitle(val);
+				} else if (key.equals("caption")) { // Original metadata used "caption"
+					metadata.setDescription(val);
+				} else if (key.equals("description")) { // Javascript uses "description"
+					metadata.setDescription(val);
+				} else if (key.equals("rating")) {
+					metadata.setRating(val);
+				} else if (key.equals("orientation")) {
+					metadata.setOrientation(val);
+				} else if (key.equals("subject")) {
+					metadata.setSubject(val);
+				} else if (key.equals("season")) {
+					metadata.setSeason(val);
+				} else if (key.equals("camera")) {
+					metadata.setCamera(val);
+				} else if (key.equals("lens")) {
+					metadata.setLens(val);
+				} else if (key.equals("film")) {
+					metadata.setFilm(val);
+				} else if (key.equals("chrome")) {
+					metadata.setChrome(val);
+				} else if (key.equals("format")) {
+					metadata.setFormat(val);
+				} else if (key.equals("year")) {
+					metadata.setYear(val);;
+				} else if (key.equals("month")) {
+					metadata.setMonth(val);
+				} else if (key.equals("date")) {
+					metadata.setDate(val);
+				} else if (key.equals("realDate")) {
+					// This is derived from date in the metadata class
+				} else if (key.equals("direction")) {
+					metadata.setDirection(val);
+				} else if (key.equals("filters")) {
+					metadata.setFilters(val);
+				} else if (key.equals("doNotShow")) {
+					metadata.setDoNotShow(val);
+				} else if (key.equals("isDiscarded")) {
+					metadata.setIsDiscarded(val);
+				} else if (key.equals("isNew")) {
+					metadata.setIsNew(val);
+				} else if (key.equals("isFavorite")) {
+					metadata.setIsFavorite(val);
+				} else {
+					throw new ParseException("Unknown JSON key ('" + key + "') in items array", 0);
+				}
+			} catch (Exception e) {
+				System.out.println("Encounted exception in file " + this.getFileName() + " error: " + e.getMessage());
+			}
 		}
 		public String getFileName() {
 			return this.path + "/metadata.json";
@@ -171,7 +189,8 @@ public class Importer {
 	public static void main(String[] args) {
 		portfolio = new Portfolio();
 		importer = new Importer();
-		importer.populate(portfolio);
+//		importer.populateFromMetadata(portfolio);
+		importer.populateFromMasterList(portfolio);
 		
 		System.out.println(portfolio.toString());
 	}
@@ -179,7 +198,16 @@ public class Importer {
 	public Importer() {
 		this.basePath = PATH_TO_IMAGES;
 	}
-	public void populate(Portfolio portfolio) {
+	public void populateFromMasterList(Portfolio portfolio) {
+		this.basePath = ".";
+		PortfolioDeserializer portfolioDeserializer = new PortfolioDeserializer(portfolio);
+		portfolioDeserializer.isWords = false;
+		portfolioDeserializer.path = "";
+		portfolioDeserializer.url = "";
+		this.importJson(portfolioDeserializer);
+		System.out.println("After loading the portfolio is: " + portfolio.toString());
+	}
+	public void populateFromMetadata(Portfolio portfolio) {
 		LocationDeserializer locationDeserializer = new LocationDeserializer();
 		this.importJson(locationDeserializer);
 		System.out.println("There are " + locationDeserializer.metadataRecords.size() + " metadata records");
@@ -209,17 +237,24 @@ public class Importer {
 		final JsonParser parser = new JsonParser();
 		final FileReader fileReader;
 		try {
-			fileReader = new FileReader(this.basePath + deserializer.getFileName());
+			fileReader = new FileReader(this.basePath + "/" + deserializer.getFileName());
 		} catch (FileNotFoundException err) {
-			System.out.println(err.getMessage());
+			err.printStackTrace();
 			return;
 		}
-		final JsonElement jsonElement = parser.parse(fileReader);
-		final JsonObject jsonObject = jsonElement.getAsJsonObject();
 		try {
-			this.importJsonRecords(jsonObject, deserializer);
+			final JsonElement jsonElement = parser.parse(fileReader);
+			if (jsonElement.isJsonObject()) {
+				final JsonObject jsonObject = jsonElement.getAsJsonObject();
+				this.importJsonRecords(jsonObject, deserializer);
+			} else if (jsonElement.isJsonArray()) {
+				final JsonArray jsonArray = jsonElement.getAsJsonArray();
+				this.importJsonRecords(jsonArray, deserializer);
+			} else {
+				throw new ParseException("Unhandled JSON data type", 0);
+			}
 		} catch(ParseException e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 			return;
 		}
 	}
@@ -237,6 +272,9 @@ public class Importer {
 			throw new ParseException("Could not find items list in JSON", 0);
 		}
 		final JsonArray jsonArray = itemsEntry.getValue().getAsJsonArray();
+		importJsonRecords(jsonArray, deserializer);
+	}
+	public void importJsonRecords(JsonArray jsonArray, Deserializer deserializer) throws ParseException {
 		final Iterator<JsonElement> it = jsonArray.iterator();
 		while (it.hasNext()) {
 			JsonObject obj = it.next().getAsJsonObject();

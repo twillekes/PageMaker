@@ -11,9 +11,10 @@ public class Exporter {
 	public static void main(String[] args) {
 		Portfolio portfolio = new Portfolio();
 		Importer importer = new Importer();
-		importer.populate(portfolio);
+		importer.populateFromMetadata(portfolio);
 		Exporter exporter = new Exporter();
 		exporter.export(portfolio);
+		exporter.exportToJS(portfolio);
 		
 		System.out.println("Created portfolio");
 	}
@@ -22,6 +23,18 @@ public class Exporter {
 		
 	}
 	public void export(Portfolio portfolio) {
+		Gson gson = new Gson();
+		String json = gson.toJson(portfolio.getPictures());
+		try {
+			FileWriter fstream = new FileWriter("metadata.json");
+			BufferedWriter out = new BufferedWriter(fstream);
+			out.write(json);
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	public void exportToJS(Portfolio portfolio) {
 		Gson gson = new Gson();
 		String json = gson.toJson(portfolio.getPictures());
 		json = "var imageList=" + json + ";";
