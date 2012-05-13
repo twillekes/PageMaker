@@ -10,27 +10,27 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Metadata {
-	private String title = "Untitled";
-	private String description = "";
-	private String rating = "";
-	private String orientation = "";
-	private String subject = "";
-	private String season = "";
-	private String camera = "";
-	private String lens = "";
-	private String film = "";
-	private String chrome = "";
-	private String format = "";
-	private String date = "";
+	private String title;
+	private String description;
+	private String rating;
+	private String orientation;
+	private String subject;
+	private String season;
+	private String camera;
+	private String lens;
+	private String film;
+	private String chrome;
+	private String format;
+	private String date;
 	private Date realDate;
-	private String year = "2012";
-	private String month = "";
-	private String direction = "";
-	private String filters = "";
-	private String doNotShow = "";
-	private String isNew = "1";
-	private String isDiscarded = "";
-	private String isFavorite = "";
+	private String year;
+	private String month;
+	private String direction;
+	private String filters;
+	private String doNotShow;
+	private String isNew;
+	private String isDiscarded;
+	private String isFavorite;
 	public static MetadataSchema schema = null;
 	
 	public Metadata() {

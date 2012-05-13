@@ -45,6 +45,8 @@ public class ImportPicture {
         Picture pic = new Picture();
         pic.setLocalFilePath(NEW_IMAGES_FOLDER + fileName);
         pic.setFilePath(NEW_IMAGES_FOLDER + fileName); // URL is relative
+        pic.getMetadata().setIsNew("1");
+        Application.getPortfolio().addPicture(pic);
 		
 		Shell shell = new Shell(Application.getShell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell.setLayout(new GridLayout());

@@ -3,21 +3,17 @@ package com.twillekes.userInterface.swt;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.MessageBox;
 
-import com.twillekes.portfolio.Picture;
 import com.twillekes.userInteraction.ImportPicture;
+import com.twillekes.userInteraction.SavePortfolio;
 
 public class ApplicationMenu {
 	public Menu menuBar;
 	public ApplicationMenu() {
-		final Display display = (Display)Application.getDevice();
 		final Shell shell = Application.getShell();
 	    menuBar = new Menu(shell, SWT.BAR);
 
@@ -31,9 +27,12 @@ public class ApplicationMenu {
 	    fileImportItem.setText("&Import");
 	    fileImportItem.addSelectionListener(new ImportFileListener());
 	    
+	    MenuItem saveItem = new MenuItem(fileMenu, SWT.NONE);
+	    saveItem.setText("&Save");
+	    saveItem.addSelectionListener(new SaveListener());
+	    
 	    MenuItem fileExitItem = new MenuItem(fileMenu, SWT.NONE);
 	    fileExitItem.setText("E&xit");
-	    
 	    fileExitItem.addSelectionListener(new ExitListener());
 	}
 	class ImportFileListener implements SelectionListener {
@@ -45,6 +44,15 @@ public class ApplicationMenu {
             fd.setFilterExtensions(filterExt);
             String selected = fd.open();
 			new ImportPicture(selected);
+		}
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+		}
+	}
+	class SaveListener implements SelectionListener {
+    	@Override
+		public void widgetSelected(SelectionEvent e) {
+    		new SavePortfolio();
 		}
 		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {

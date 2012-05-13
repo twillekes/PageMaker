@@ -5,22 +5,11 @@ import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.DropTargetListener;
-import org.eclipse.swt.events.DragDetectEvent;
-import org.eclipse.swt.events.DragDetectListener;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 
 import com.twillekes.jsonImporter.Importer;
@@ -50,6 +39,7 @@ public class Application {
         portfolio = new Portfolio();
 		Importer importer = new Importer();
 		importer.populateFromMasterList(portfolio);
+		//importer.populateFromMetadata(portfolio);
 		new PortfolioUserInterface(shell, portfolio);
 
         shell.setMenuBar(applicationMenu.menuBar);
