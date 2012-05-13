@@ -30,6 +30,7 @@ import com.twillekes.userInterface.swt.PortfolioUserInterface;
 public class Application {
 	private static Shell shell;
 	private static Display display;
+	private static Portfolio portfolio;
 	public Application() {
         Display.setAppName("Page Maker");
         display = new Display();
@@ -46,7 +47,7 @@ public class Application {
 
         //center(shell);
 
-        Portfolio portfolio = new Portfolio();
+        portfolio = new Portfolio();
 		Importer importer = new Importer();
 		importer.populateFromMasterList(portfolio);
 		new PortfolioUserInterface(shell, portfolio);
@@ -94,12 +95,17 @@ public class Application {
         shell.dispose();
         display.dispose();
     }
-
+	public static Display getDisplay() {
+		return display;
+	}
 	public static Device getDevice() {
 		return display;
 	}
 	public static Shell getShell() {
 		return shell;
+	}
+	public static Portfolio getPortfolio() {
+		return portfolio;
 	}
 
     public void center(Shell shell) {

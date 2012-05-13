@@ -1,5 +1,6 @@
 package com.twillekes.portfolio;
 
+import java.io.File;
 import java.util.ArrayList;
 //import java.util.Collections;
 import java.util.HashMap;
@@ -19,7 +20,6 @@ public class Portfolio {
 		}
 	}
 
-	//private List<Album> albums;  // Built up from tags in the pictures' metadata
 	private SortedSet<Picture> pictures; // The complete list of pictures in the portfolio
 	private SortedSet<Words> words;
 	private Map<String, List<CategoryRecord>> categoryDictionary;
@@ -30,19 +30,15 @@ public class Portfolio {
 		pictures = new TreeSet<Picture>();
 		words = new TreeSet<Words>();
 	}
-	
 	public String toString() {
 		return "There are " + pictures.size() + " images";
 	}
-
 	public SortedSet<Picture> getPictures() {
 		return pictures;
 	}
-
 	public void addPicture(Picture p) {
 		pictures.add(p);
 	}
-	
 	// Top level is a map of string (category name: subject, season, etc.) to...
 	// Next level is a map of string (category value: houses, winter, etc.) = 'categoryValue' to...
 	// List<Integer> that are the picture indexes  = 'imageIndexes'
@@ -105,16 +101,13 @@ public class Portfolio {
 			categoryDictionary.put(categories[i], categoryList);
 			firstTime = false;
 		}
-	}
-	
+	}	
 	public Map<String, List<CategoryRecord>> getCategoryDictionary() {
 		return categoryDictionary;
 	}
-
 	public SortedSet<Words> getWords() {
 		return words;
 	}
-
 	public void addWords(Words words) {
 		this.words.add(words);
 	}

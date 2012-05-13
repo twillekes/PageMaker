@@ -10,5 +10,10 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.swt"/>
+	<classpathentry kind="lib" path="/Users/twillekes/Documents/workspace/PageMaker/lib/commons-io-2.3/commons-io-2.3.jar" sourcepath="/Users/twillekes/Documents/workspace/PageMaker/lib/commons-io-2.3/commons-io-2.3-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/Users/twillekes/Documents/workspace/PageMaker/lib/commons-io-2.3/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

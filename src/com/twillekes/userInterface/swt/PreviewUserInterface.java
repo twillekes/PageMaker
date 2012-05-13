@@ -62,9 +62,7 @@ public class PreviewUserInterface {
 	public void createPreviewUserInterface(Composite parent, Picture picture, boolean preview) {
 		String filePath = picture.getLocalFilePath();
 		if (preview) {
-			int dotPos = filePath.lastIndexOf(".");
-			String thumbExt = filePath.substring(dotPos);
-			filePath = filePath.substring(0, dotPos) + "_thumb" + thumbExt;
+			filePath = Picture.getThumbName(filePath);
 		}
 		
 		previewImage = new Image(Application.getDevice(), Importer.PATH_TO_IMAGES + filePath);

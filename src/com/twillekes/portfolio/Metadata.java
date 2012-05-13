@@ -10,7 +10,29 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Metadata {
-	public static MetadataSchema schema;
+	private String title = "Untitled";
+	private String description = "";
+	private String rating = "";
+	private String orientation = "";
+	private String subject = "";
+	private String season = "";
+	private String camera = "";
+	private String lens = "";
+	private String film = "";
+	private String chrome = "";
+	private String format = "";
+	private String date = "";
+	private Date realDate;
+	private String year = "2012";
+	private String month = "";
+	private String direction = "";
+	private String filters = "";
+	private String doNotShow = "";
+	private String isNew = "1";
+	private String isDiscarded = "";
+	private String isFavorite = "";
+	public static MetadataSchema schema = null;
+	
 	public Metadata() {
 		if (schema == null) {
 			schema = new MetadataSchema();
@@ -158,7 +180,6 @@ public class Metadata {
 		}
 	}
 	
-	private String title;
 	public String getTitle() {
 		return title;
 	}
@@ -166,7 +187,6 @@ public class Metadata {
 		this.title = title;
 	}
 	
-	private String description;
 	public String getDescription() {
 		return description;
 	}
@@ -174,7 +194,6 @@ public class Metadata {
 		this.description = description;
 	}
 	
-	private String rating;
 	public String getRating() {
 		return rating;
 	}
@@ -183,7 +202,6 @@ public class Metadata {
 		schema.update(rating, schema.ratings);
 	}
 	
-	private String orientation;
 	public String getOrientation() {
 		return orientation;
 	}
@@ -192,7 +210,6 @@ public class Metadata {
 		schema.update(orientation, schema.orientations);
 	}
 
-	private String subject;
 	public String getSubject() {
 		return subject;
 	}
@@ -201,7 +218,6 @@ public class Metadata {
 		schema.update(subject, schema.subjects);
 	}
 
-	private String season;
 	public String getSeason() {
 		return season;
 	}
@@ -210,7 +226,6 @@ public class Metadata {
 		schema.update(season, schema.seasons);
 	}
 	
-	private String camera;
 	public String getCamera() {
 		return camera;
 	}
@@ -219,7 +234,6 @@ public class Metadata {
 		schema.update(camera, schema.cameras);
 	}
 	
-	private String lens;
 	public String getLens() {
 		return lens;
 	}
@@ -228,7 +242,6 @@ public class Metadata {
 		schema.update(lens, schema.lenses);
 	}
 	
-	private String film;
 	public String getFilm() {
 		return film;
 	}
@@ -237,7 +250,6 @@ public class Metadata {
 		schema.update(film, schema.films);
 	}
 
-	private String chrome;
 	public String getChrome() {
 		return chrome;
 	}
@@ -246,7 +258,6 @@ public class Metadata {
 		schema.update(chrome, schema.chromes);
 	}
 
-	private String format;
 	public String getFormat() {
 		return format;
 	}
@@ -255,8 +266,6 @@ public class Metadata {
 		schema.update(format, schema.formats);
 	}
 	
-	private String date;
-	private Date realDate;
 	public String getDate() {
 		return date;
 	}
@@ -294,7 +303,6 @@ public class Metadata {
 	public Date getRealDate() {
 		return this.realDate;
 	}
-	private String year;
 	public String getYear() {
 		return year;
 	}
@@ -303,7 +311,6 @@ public class Metadata {
 		schema.update(year, schema.years);
 	}
 	
-	private String month;
 	public String getMonth() {
 		return month;
 	}
@@ -315,7 +322,6 @@ public class Metadata {
 	public enum Direction {
 		NORTH, WEST, EAST, SOUTH, NORTH_WEST, NORTH_EAST, SOUTH_WEST, SOUTH_EAST, NONE
 	}
-	private String direction;
 	public String getDirection() {
 		return direction;
 	}
@@ -324,7 +330,6 @@ public class Metadata {
 		schema.update(direction, schema.directions);
 	}
 
-	private String filters;
 	public String getFilters() {
 		return filters;
 	}
@@ -333,7 +338,6 @@ public class Metadata {
 		schema.update(filters, schema.filterss);
 	}
 
-	private String doNotShow;
 	public String getDoNotShow() {
 		return doNotShow;
 	}
@@ -342,7 +346,6 @@ public class Metadata {
 		schema.update(doNotShow, schema.doNotShows);
 	}
 
-	private String isNew;
 	public String getIsNew() {
 		return isNew;
 	}
@@ -351,7 +354,6 @@ public class Metadata {
 		schema.update(isNew, schema.isNews);
 	}
 
-	private String isDiscarded;
 	public String getIsDiscarded() {
 		return isDiscarded;
 	}
@@ -359,7 +361,6 @@ public class Metadata {
 		this.isDiscarded = isDiscarded;
 		schema.update(isDiscarded, schema.isDiscardeds);
 	}
-	private String isFavorite;
 	public String getIsFavorite() {
 		return isFavorite;
 	}

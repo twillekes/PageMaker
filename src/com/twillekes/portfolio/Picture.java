@@ -18,45 +18,36 @@ public class Picture implements Comparable<Picture> {
 	// Constructor
 	public Picture() {
 		filePath = "undefined";
+		this.metadata = new Metadata();
 	}
-	
 	// Methods
 	public void setFilePath(String fileName) {
 		this.filePath = fileName;
 	}
-	
 	public String getFilePath() {
 		return filePath;
 	}
-	
 	public Metadata getMetadata() {
 		return metadata;
 	}
-
 	public void setMetadata(Metadata metadata) {
 		this.metadata = metadata;
 	}
-
 	public List<String> getTags() {
 		return tags;
 	}
-
 	public void setTags(List<String> tags) {
 		this.tags = tags;
 	}
-
 	public String getLocalFilePath() {
 		return localFilePath;
 	}
-
 	public void setLocalFilePath(String filePath) {
 		this.localFilePath = filePath;
 	}
-	
 	public String toString() {
 		return "File name: " + this.filePath + " File Path: " + this.localFilePath + " Metadata: " + this.metadata.toString();
 	}
-
 	public int compareTo(Picture o) {
 		if (!(o instanceof Picture)) {
 			throw new ClassCastException("A picture object was expected");
@@ -69,5 +60,10 @@ public class Picture implements Comparable<Picture> {
 			return 1;
 		}
 		return result;
+	}
+	public static String getThumbName(String filePath) {
+		int dotPos = filePath.lastIndexOf(".");
+		String thumbExt = filePath.substring(dotPos);
+		return filePath.substring(0, dotPos) + "_thumb" + thumbExt;
 	}
 }
