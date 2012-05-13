@@ -194,6 +194,13 @@ public class PictureUserInterface {
 					picture.getMetadata().setFormat(value);
 				}
 			});
+			new PictureTextField(metadataGroup, picture, "Date:", picture.getMetadata().getDate(), 10, new TextChangeHandler(){
+				@Override
+				public void textChanged(Picture picture, String value) {
+					picture.getMetadata().setDate(value);
+					uberGroup.layout();
+				}
+			});
 			new PictureComboBox(metadataGroup, picture, "Year:", picture.getMetadata().getYear(),
 					Metadata.schema.years.toArray(new String[Metadata.schema.years.size()]), new TextChangeHandler(){
 				@Override

@@ -35,7 +35,6 @@ public class PreviewUserInterface {
 		public void mouseDown(MouseEvent e) {
 			Shell shell = new Shell(Application.getShell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 			shell.setLayout(new GridLayout());
-			System.out.println("Button is "+e.button);
 			if (e.button != 1) {
 				shell.setText("Edit Picture Metadata");
 				new PictureUserInterface(shell, picture);

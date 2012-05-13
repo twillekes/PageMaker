@@ -41,6 +41,8 @@ public class Application {
 //        RowLayout layout = new RowLayout(SWT.VERTICAL);
         shell.setLayout(layout);
         shell.setText("Page Maker");
+        
+        ApplicationMenu applicationMenu = new ApplicationMenu();
 
         //center(shell);
 
@@ -49,6 +51,7 @@ public class Application {
 		importer.populateFromMasterList(portfolio);
 		new PortfolioUserInterface(shell, portfolio);
 
+        shell.setMenuBar(applicationMenu.menuBar);
 		shell.layout();
 		shell.pack();
         shell.open();
