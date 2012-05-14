@@ -13,8 +13,8 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 
-import com.twillekes.jsonImporter.Importer;
 import com.twillekes.portfolio.Picture;
+import com.twillekes.portfolio.Repository;
 
 public class PreviewUserInterface {
 	private class ClickHandler implements MouseListener {
@@ -59,7 +59,7 @@ public class PreviewUserInterface {
 			filePath = Picture.getThumbName(filePath);
 		}
 		
-		previewImage = new Image(Application.getDevice(), Importer.PATH_TO_IMAGES + filePath);
+		previewImage = new Image(Application.getDevice(), Repository.BASE_PATH + filePath);
 		final Rectangle rect = previewImage.getBounds();
 		int width = WIDTH;
 		if (rect.width > WIDTH) {

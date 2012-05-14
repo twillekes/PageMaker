@@ -6,14 +6,15 @@ import java.io.FileWriter;
 import com.google.gson.Gson;
 import com.twillekes.jsonImporter.Importer;
 import com.twillekes.portfolio.Portfolio;
+import com.twillekes.portfolio.Repository;
 
 public class Exporter {
 	public static void main(String[] args) {
-		Portfolio portfolio = new Portfolio();
 		Importer importer = new Importer();
-		importer.populateFromMetadata(portfolio);
+		Portfolio portfolio = importer.createPortfolioFromMetadata();
 		Exporter exporter = new Exporter();
-		exporter.export(portfolio);
+		exporter.export();
+		//exporter.export(portfolio);
 		exporter.exportToJS(portfolio);
 		
 		System.out.println("Created portfolio");
@@ -34,21 +35,33 @@ public class Exporter {
 			e.printStackTrace();
 		}
 	}
+	public void export() {
+		Gson gson = new Gson();
+		String json = gson.toJson(Repository.get());
+		try {
+			FileWriter fstream = new FileWriter(Repository.FILE_NAME);
+			BufferedWriter out = new BufferedWriter(fstream);
+			out.write(json);
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	public void exportToJS(Portfolio portfolio) {
 		Gson gson = new Gson();
 		String json = gson.toJson(portfolio.getPictures());
 		json = "var imageList=" + json + ";";
-		System.out.println(json);
+//		System.out.println(json);
 		portfolio.findAllCategories();
 		String cats = gson.toJson(portfolio.getCategoryDictionary());
 		cats = "var categoryDictionary=" + cats + ";";
-		System.out.println(cats);
+//		System.out.println(cats);
 		String words = gson.toJson(portfolio.getWords());
 		words = "var articleList=" + words + ";";
-		System.out.println(words);
+//		System.out.println(words);
 		
 		try {
-			FileWriter fstream = new FileWriter("imageList.js");
+			FileWriter fstream = new FileWriter(Repository.BASE_PATH + "imageList.js");
 			BufferedWriter out = new BufferedWriter(fstream);
 			out.write(json);
 			out.write(cats);

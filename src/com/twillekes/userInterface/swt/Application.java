@@ -25,10 +25,7 @@ public class Application {
         display = new Display();
 
         shell = new Shell(display, SWT.SHELL_TRIM);
-//        GridLayout layout = new GridLayout();
-//        layout.numColumns = 1;
         FillLayout layout = new FillLayout();
-//        RowLayout layout = new RowLayout(SWT.VERTICAL);
         shell.setLayout(layout);
         shell.setText("Page Maker");
         
@@ -36,10 +33,9 @@ public class Application {
 
         //center(shell);
 
-        portfolio = new Portfolio();
 		Importer importer = new Importer();
-		importer.populateFromMasterList(portfolio);
-		//importer.populateFromMetadata(portfolio);
+		portfolio = importer.createPortfolioFromRepository();
+        //portfolio = importer.createPortfolioFromMetadata();
 		new PortfolioUserInterface(shell, portfolio);
 
         shell.setMenuBar(applicationMenu.menuBar);

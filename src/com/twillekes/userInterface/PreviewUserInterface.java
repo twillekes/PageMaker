@@ -9,6 +9,7 @@ import java.io.File;
 import javax.imageio.ImageIO;
 
 import com.twillekes.jsonImporter.Importer;
+import com.twillekes.portfolio.Repository;
 
 public class PreviewUserInterface extends Component {
 	private static final long serialVersionUID = 1L;
@@ -22,7 +23,7 @@ public class PreviewUserInterface extends Component {
 		String thumbName = filePath.substring(0, dotPos) + "_thumb" + thumbExt;
 		image = null;
         try {
-        	image = ImageIO.read(new File(Importer.PATH_TO_IMAGES + thumbName));
+        	image = ImageIO.read(new File(Repository.BASE_PATH + thumbName));
         } catch (Exception e) {
         	System.out.println(e.getMessage());
         }

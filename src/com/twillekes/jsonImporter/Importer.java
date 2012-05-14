@@ -16,21 +16,36 @@ import com.google.gson.JsonParser;
 import com.twillekes.portfolio.Metadata;
 import com.twillekes.portfolio.Picture;
 import com.twillekes.portfolio.Portfolio;
+import com.twillekes.portfolio.Repository;
 import com.twillekes.portfolio.Words;
 
 public class Importer {
-	public interface Deserializer {
+	private static Portfolio portfolio;
+	private static Importer importer;
+	private enum RecordType {
+		LOCAL, REMOTE
+	}
+	private class MetadataRecord {
+		public RecordType type;
+		public String path;
+		public MetadataRecord(RecordType type, String path) {
+			this.type = type;
+			this.path = path;
+		}
+	}
+	
+	private interface Deserializer {
 		public String getFileName();
 		public void handleJsonObject(JsonObject obj) throws ParseException;
 	}
 	
-	public class LocationDeserializer implements Deserializer {
+	private class LocationDeserializer implements Deserializer {
 		public List<MetadataRecord> metadataRecords;
 		public LocationDeserializer() {
 			this.metadataRecords = new ArrayList<MetadataRecord>();
 		}
 		public String getFileName() {
-			return "locations.json";
+			return Repository.BASE_PATH + "locations.json";
 		}
 		public void handleJsonObject(JsonObject obj) throws ParseException {
 			RecordType type = RecordType.LOCAL;
@@ -52,9 +67,43 @@ public class Importer {
 			System.out.println("Adding type "+type+" value "+path);
 		}
 	}
-	public class PortfolioDeserializer implements Deserializer {
-		public String path;
-		public String url;
+	private class RepositoryDeserializer implements Deserializer {
+		public Portfolio portfolio;
+		public RepositoryDeserializer() {
+			this.portfolio = new Portfolio();
+		}
+		public String getFileName() {
+			return Repository.FILE_NAME;
+		}
+		public void handleJsonObject(JsonObject obj) throws ParseException {
+			String account = null;
+			String path = null;
+			for (final Entry<String, JsonElement> entry : obj.entrySet()) {
+				if (entry.getValue().isJsonArray()) {
+					if (account != null && path != null) {
+						Repository repository = new Repository(account, path);
+						PortfolioDeserializer portfolioDeserializer = new PortfolioDeserializer(this.portfolio);
+						portfolioDeserializer.repository = repository;
+						importJsonRecords(entry.getValue().getAsJsonArray(), portfolioDeserializer);
+					} else {
+						throw new ParseException("Unable to parse, missing account/path", 0);
+					}
+				} else {
+					final String key = entry.getKey();
+					final String val = entry.getValue().getAsString();
+					if (key.equals("account")) {
+						account = val;
+					} else if (key.equals("path")) {
+						path = val;
+					} else {
+						throw new ParseException("Unknown key (" + key + ")", 0);
+					}
+				}
+			}
+		}
+	}
+	private class PortfolioDeserializer implements Deserializer {
+		public Repository repository;
 		public Portfolio portfolio;
 		public boolean isWords;
 		public PortfolioDeserializer(Portfolio portfolio) {
@@ -74,7 +123,7 @@ public class Importer {
 				final String val = entry.getValue().getAsString();
 				try {
 					if (key.equals("filename")) {
-						words.setFilePath(this.path + "/" + val);
+						words.setFilePath(this.repository.getPath() + val);
 					} else if (key.equals("title")) {
 						words.setTitle(val);
 					} else if (key.equals("doNotShow")) {
@@ -90,6 +139,7 @@ public class Importer {
 			Picture picture = new Picture();
 			Metadata metadata = new Metadata();
 			picture.setMetadata(metadata);
+			this.repository.add(picture);
 			for (final Entry<String, JsonElement> entry : obj.entrySet()) {
 				if (entry.getValue().isJsonObject()) {
 					for (final Entry<String, JsonElement> entr : ((JsonObject)entry.getValue()).entrySet()) {
@@ -108,12 +158,12 @@ public class Importer {
 			Metadata metadata = picture.getMetadata();
 			try {
 				if (key.equals("filename")) { // Original metadata used "filename"
-					picture.setFilePath(this.url + "/" + val);
-					picture.setLocalFilePath(this.path + "/" + val);
+					picture.setFilePath(this.repository.getBaseUrl() + this.repository.getRelativeUrl() + val);
+					picture.setLocalFilePath(this.repository.getRelativeUrl() + val);
 				} else if (key.equals("filePath")) {
-					picture.setFilePath(this.url + "/" + val);
+					picture.setFilePath(val);
 				} else if (key.equals("localFilePath")) {
-					picture.setLocalFilePath(this.path + "/" + val);
+					picture.setLocalFilePath(val);
 				} else if (key.equals("title")) {
 					metadata.setTitle(val);
 				} else if (key.equals("caption")) { // Original metadata used "caption"
@@ -166,48 +216,27 @@ public class Importer {
 			}
 		}
 		public String getFileName() {
-			return this.path + "/metadata.json";
+			return this.repository.getPath() + "/metadata.json";
 		}
 	}
-	
-	private static Portfolio portfolio;
-	private static Importer importer;
-	private enum RecordType {
-		LOCAL, REMOTE
-	}
-	private class MetadataRecord {
-		public RecordType type;
-		public String path;
-		public MetadataRecord(RecordType type, String path) {
-			this.type = type;
-			this.path = path;
-		}
-	}
-	private String basePath;
-	public static String PATH_TO_IMAGES = "../Page/My-personal-web-page/page/";
 	
 	public static void main(String[] args) {
-		portfolio = new Portfolio();
 		importer = new Importer();
-//		importer.populateFromMetadata(portfolio);
-		importer.populateFromMasterList(portfolio);
-		
+		portfolio = importer.createPortfolioFromMetadata();
+//		portfolio = importer.createPortfolioFromRepository();
 		System.out.println(portfolio.toString());
 	}
 	
 	public Importer() {
-		this.basePath = PATH_TO_IMAGES;
 	}
-	public void populateFromMasterList(Portfolio portfolio) {
-		this.basePath = ".";
-		PortfolioDeserializer portfolioDeserializer = new PortfolioDeserializer(portfolio);
-		portfolioDeserializer.isWords = false;
-		portfolioDeserializer.path = "";
-		portfolioDeserializer.url = "";
-		this.importJson(portfolioDeserializer);
-		System.out.println("After loading the portfolio is: " + portfolio.toString());
+	public Portfolio createPortfolioFromRepository() {
+		RepositoryDeserializer repositoryDeserializer = new RepositoryDeserializer();
+		this.importJson(repositoryDeserializer);
+//		System.out.println("After loading the portfolio is: " + repositoryDeserializer.portfolio.toString());
+		return repositoryDeserializer.portfolio;
 	}
-	public void populateFromMetadata(Portfolio portfolio) {
+	public Portfolio createPortfolioFromMetadata() {
+		portfolio = new Portfolio();
 		LocationDeserializer locationDeserializer = new LocationDeserializer();
 		this.importJson(locationDeserializer);
 		System.out.println("There are " + locationDeserializer.metadataRecords.size() + " metadata records");
@@ -220,24 +249,32 @@ public class Importer {
 				continue;
 			}
 			portfolioDeserializer.isWords = false;
-			portfolioDeserializer.path = rec.path;
-			portfolioDeserializer.url = rec.path;
+			Repository repository = null;
+			//portfolioDeserializer.path = rec.path;
+			//portfolioDeserializer.url = rec.path;
 			if (rec.path.equals("images")) {
-				portfolioDeserializer.url = "http://members.shaw.ca/tjwillekes/images";
+				repository = new Repository("tjwillekes", "images");
+				//portfolioDeserializer.url = "http://members.shaw.ca/tjwillekes/images";
 			} else if (rec.path.equals("images_2")) {
-				portfolioDeserializer.url = "http://members.shaw.ca/tomjwillekes/images_2";
+				repository = new Repository("tomjwillekes", "images_2");
+				//portfolioDeserializer.url = "http://members.shaw.ca/tomjwillekes/images_2";
+			} else if (rec.path.equals("newImages")) {
+				repository = new Repository("twillekes", "newImages");
 			} else if (rec.path.equals("words")) {
-				portfolioDeserializer.isWords = true;
+				continue;
+//				portfolioDeserializer.isWords = true;
 			}
+			portfolioDeserializer.repository = repository;
 			this.importJson(portfolioDeserializer);
-			System.out.println("After loading " + rec.path + " the portfolio is: " + portfolio.toString());
+//			System.out.println("After loading " + rec.path + " the portfolio is: " + portfolio.toString());
 		}
+		return portfolio;
 	}
 	public void importJson(Deserializer deserializer) {
 		final JsonParser parser = new JsonParser();
 		final FileReader fileReader;
 		try {
-			fileReader = new FileReader(this.basePath + "/" + deserializer.getFileName());
+			fileReader = new FileReader(deserializer.getFileName());
 		} catch (FileNotFoundException err) {
 			err.printStackTrace();
 			return;
@@ -246,10 +283,10 @@ public class Importer {
 			final JsonElement jsonElement = parser.parse(fileReader);
 			if (jsonElement.isJsonObject()) {
 				final JsonObject jsonObject = jsonElement.getAsJsonObject();
-				this.importJsonRecords(jsonObject, deserializer);
+				importJsonRecords(jsonObject, deserializer);
 			} else if (jsonElement.isJsonArray()) {
 				final JsonArray jsonArray = jsonElement.getAsJsonArray();
-				this.importJsonRecords(jsonArray, deserializer);
+				importJsonRecords(jsonArray, deserializer);
 			} else {
 				throw new ParseException("Unhandled JSON data type", 0);
 			}
@@ -258,7 +295,7 @@ public class Importer {
 			return;
 		}
 	}
-	public void importJsonRecords(JsonObject jsonObject, Deserializer deserializer) throws ParseException {
+	public static void importJsonRecords(JsonObject jsonObject, Deserializer deserializer) throws ParseException {
 		final Iterator<Map.Entry<String,JsonElement>> iter = jsonObject.entrySet().iterator();
 		Entry<String, JsonElement> itemsEntry = null;
 		while(iter.hasNext()) {
@@ -274,7 +311,7 @@ public class Importer {
 		final JsonArray jsonArray = itemsEntry.getValue().getAsJsonArray();
 		importJsonRecords(jsonArray, deserializer);
 	}
-	public void importJsonRecords(JsonArray jsonArray, Deserializer deserializer) throws ParseException {
+	public static void importJsonRecords(JsonArray jsonArray, Deserializer deserializer) throws ParseException {
 		final Iterator<JsonElement> it = jsonArray.iterator();
 		while (it.hasNext()) {
 			JsonObject obj = it.next().getAsJsonObject();

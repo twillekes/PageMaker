@@ -9,7 +9,7 @@ public class SavePortfolio {
 		Portfolio portfolio = Application.getPortfolio();
 		portfolio.findAllCategories();
 		Exporter exporter = new Exporter();
-		exporter.export(portfolio);
+		exporter.export();
 		exporter.exportToJS(portfolio);
 	}
 }

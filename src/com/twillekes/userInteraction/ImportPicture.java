@@ -9,8 +9,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
-import com.twillekes.jsonImporter.Importer;
 import com.twillekes.portfolio.Picture;
+import com.twillekes.portfolio.Repository;
 import com.twillekes.userInterface.swt.Application;
 import com.twillekes.userInterface.swt.PictureUserInterface;
 
@@ -28,10 +28,10 @@ public class ImportPicture {
         // Copy the files into the "new" folder
         File pictureFile = new File(filePath);
         String fileName = pictureFile.getName();
-        File destPictureFile = new File(Importer.PATH_TO_IMAGES + NEW_IMAGES_FOLDER + fileName);
+        File destPictureFile = new File(Repository.BASE_PATH + NEW_IMAGES_FOLDER + fileName);
         File thumbFile = new File(thumbPath);
         String thumbFileName = thumbFile.getName();
-        File destThumbFile = new File(Importer.PATH_TO_IMAGES + NEW_IMAGES_FOLDER + thumbFileName);
+        File destThumbFile = new File(Repository.BASE_PATH + NEW_IMAGES_FOLDER + thumbFileName);
         try {
 			FileUtils.copyFile(pictureFile, destPictureFile);
 			FileUtils.copyFile(thumbFile, destThumbFile);
