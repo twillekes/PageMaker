@@ -1,4 +1,4 @@
-package com.twillekes.userInterface.swt;
+package com.twillekes.userInterface;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;

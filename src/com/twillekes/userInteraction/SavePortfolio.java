@@ -2,7 +2,7 @@ package com.twillekes.userInteraction;
 
 import com.twillekes.jsonExporter.Exporter;
 import com.twillekes.portfolio.Portfolio;
-import com.twillekes.userInterface.swt.Application;
+import com.twillekes.userInterface.Application;
 
 public class SavePortfolio {
 	public SavePortfolio() {

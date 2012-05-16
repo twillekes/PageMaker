@@ -1,4 +1,4 @@
-package com.twillekes.userInterface.swt;
+package com.twillekes.userInterface;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
@@ -14,7 +14,6 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.twillekes.jsonImporter.Importer;
 import com.twillekes.portfolio.Portfolio;
-import com.twillekes.userInterface.swt.PortfolioUserInterface;
 
 public class Application {
 	private static Shell shell;

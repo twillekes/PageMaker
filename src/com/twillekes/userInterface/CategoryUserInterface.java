@@ -1,4 +1,4 @@
-package com.twillekes.userInterface.swt;
+package com.twillekes.userInterface;
 
 import java.util.Iterator;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.twillekes.userInterface.swt;
+package com.twillekes.userInterface;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,7 +22,6 @@ import org.eclipse.swt.widgets.Listener;
 import com.twillekes.portfolio.Metadata;
 import com.twillekes.portfolio.Picture;
 import com.twillekes.portfolio.Portfolio;
-import com.twillekes.userInterface.swt.PictureUserInterface;
 
 public class PortfolioUserInterface {
 	Portfolio portfolio;

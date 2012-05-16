@@ -11,8 +11,8 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.twillekes.portfolio.Picture;
 import com.twillekes.portfolio.Repository;
-import com.twillekes.userInterface.swt.Application;
-import com.twillekes.userInterface.swt.PictureUserInterface;
+import com.twillekes.userInterface.Application;
+import com.twillekes.userInterface.PictureUserInterface;
 
 public class ImportPicture {
 	static final String NEW_IMAGES_FOLDER = "newImages/";
