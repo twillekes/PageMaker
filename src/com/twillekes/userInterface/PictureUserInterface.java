@@ -3,12 +3,14 @@ package com.twillekes.userInterface;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.twillekes.portfolio.Metadata;
@@ -88,6 +90,22 @@ public class PictureUserInterface {
 			combo.select(selectedItem);
 		}
 	}
+	private class ClickObserver extends ClickListener {
+		Picture picture;
+		public ClickObserver(Picture picture) {
+			this.picture = picture;
+		}
+		@Override
+		public void click(MouseEvent e) {
+			Shell shell = new Shell(Application.getShell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+			shell.setLayout(new GridLayout());
+			shell.setText("View Image");
+			new PreviewUserInterface(shell, picture, picture.getLocalFilePath(), null);
+			shell.layout();
+			shell.pack();
+			shell.open();
+		}
+	}
 	private Group pictureGroup;
 	private Group metadataGroup;
 	private Group textGroup;
@@ -98,7 +116,7 @@ public class PictureUserInterface {
 		gLayout.numColumns = 2;
 		pictureGroup.setLayout(gLayout);
 		
-		new PreviewUserInterface(pictureGroup, picture);
+		new PreviewUserInterface(pictureGroup, picture, picture.getThumbFilePath(), new ClickObserver(picture));
 		
 		uberGroup = new Group(pictureGroup, SWT.NONE);
 		uberGroup.setLayout(new RowLayout(SWT.VERTICAL));

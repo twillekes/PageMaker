@@ -27,6 +27,9 @@ public class Picture implements Comparable<Picture> {
 	public String getFilePath() {
 		return filePath;
 	}
+	public String getThumbFilePath() {
+		return Picture.getThumbName(this.getLocalFilePath());
+	}
 	public Metadata getMetadata() {
 		return metadata;
 	}
