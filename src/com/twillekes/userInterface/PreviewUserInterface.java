@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.Composite;
 
 import com.twillekes.portfolio.Picture;
 import com.twillekes.portfolio.Repository;
+import com.twillekes.userInteraction.Selection;
 
 public class PreviewUserInterface {
 	private Image previewImage;
@@ -55,7 +56,7 @@ public class PreviewUserInterface {
 				e.gc.drawImage(previewImage, (int)xOffset, (int)yOffset);
 				
 				if (isSelected) {
-				      e.gc.setLineWidth(30);
+				      e.gc.setLineWidth(20);
 				      e.gc.setForeground(Application.getDisplay().getSystemColor(SWT.COLOR_BLUE));
 				      final int PADDING = 0;
 				      e.gc.drawRoundRectangle(PADDING, PADDING, (int)cWidth - PADDING, (int)cHeight - PADDING, 2*PADDING, 2*PADDING);
@@ -70,10 +71,20 @@ public class PreviewUserInterface {
 	}
 	public void setSelected(boolean isSelected) {
 		this.isSelected = isSelected;
+		if (this.isSelected) {
+			Selection.instance.add(this);
+		} else {
+			Selection.instance.remove(this);
+		}
 		this.canvas.redraw();
 	}
 	public void toggleSelected() {
 		this.isSelected = !this.isSelected;
+		if (this.isSelected) {
+			Selection.instance.add(this);
+		} else {
+			Selection.instance.remove(this);
+		}
 		this.canvas.redraw();
 	}
 	public Picture getPicture() {

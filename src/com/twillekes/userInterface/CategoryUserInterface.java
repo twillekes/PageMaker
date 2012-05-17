@@ -8,10 +8,8 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Shell;
 
 import com.twillekes.portfolio.Picture;
-import com.twillekes.userInteraction.Selection;
 
 public class CategoryUserInterface {
 	private class ClickObserver extends ClickListener {
@@ -25,7 +23,6 @@ public class CategoryUserInterface {
 				PictureUserInterface.create(picture);
 			} else {
 				this.getPreviewUserInterface().toggleSelected();
-				Selection.instance.add(this.getPreviewUserInterface());
 			}
 		}
 	}

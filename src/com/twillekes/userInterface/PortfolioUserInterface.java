@@ -8,7 +8,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
@@ -131,12 +133,16 @@ public class PortfolioUserInterface {
 		}
 	}
 	public static Composite create(List<Picture> pictures) {
+		Rectangle rect = Application.getShell().getBounds();
 		Shell shell = new Shell(Application.getShell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell.setLayout(new GridLayout());
 		shell.setText("Edit Picture Metadata");
 
 		ScrolledComposite portfolioScroll = new ScrolledComposite(shell, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		portfolioScroll.setLayout(new FillLayout());
+		GridData layoutData = new GridData();
+		layoutData.heightHint = rect.height - 100;
+		portfolioScroll.setLayoutData(layoutData);
 
 		Group portfolioGroup = new Group(portfolioScroll, SWT.SHADOW_ETCHED_OUT);
 		RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
