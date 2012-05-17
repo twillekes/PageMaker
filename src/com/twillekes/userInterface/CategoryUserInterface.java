@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 
 import com.twillekes.portfolio.Picture;
+import com.twillekes.userInteraction.Selection;
 
 public class CategoryUserInterface {
 	private class ClickObserver extends ClickListener {
@@ -21,15 +22,10 @@ public class CategoryUserInterface {
 		@Override
 		public void click(MouseEvent e) {
 			if (e.button != 1) {
-				Shell shell = new Shell(Application.getShell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-				shell.setLayout(new GridLayout());
-				shell.setText("Edit Picture Metadata");
-				new PictureUserInterface(shell, picture);
-				shell.layout();
-				shell.pack();
-				shell.open();
+				PictureUserInterface.create(picture);
 			} else {
 				this.getPreviewUserInterface().toggleSelected();
+				Selection.instance.add(this.getPreviewUserInterface());
 			}
 		}
 	}

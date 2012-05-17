@@ -19,7 +19,9 @@ public class PreviewUserInterface {
 	private static int WIDTH = 125;
 	private static int HEIGHT = 125;
 	private boolean isSelected = false;
+	private Picture picture;
 	public PreviewUserInterface(Composite parent, Picture picture, String filePath, ClickListener clickListener) {
+		this.picture = picture;
 		previewImage = new Image(Application.getDevice(), Repository.BASE_PATH + filePath);
 		final Rectangle rect = previewImage.getBounds();
 		int width = WIDTH;
@@ -73,5 +75,8 @@ public class PreviewUserInterface {
 	public void toggleSelected() {
 		this.isSelected = !this.isSelected;
 		this.canvas.redraw();
+	}
+	public Picture getPicture() {
+		return this.picture;
 	}
 }

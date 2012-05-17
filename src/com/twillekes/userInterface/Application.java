@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.twillekes.jsonImporter.Importer;
 import com.twillekes.portfolio.Portfolio;
+import com.twillekes.userInteraction.Selection;
 
 public class Application {
 	private static Shell shell;
@@ -29,6 +30,7 @@ public class Application {
         shell.setText("Page Maker");
         
         ApplicationMenu applicationMenu = new ApplicationMenu();
+        new Selection();
 
         //center(shell);
 
