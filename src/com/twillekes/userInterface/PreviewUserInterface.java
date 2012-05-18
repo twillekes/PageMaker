@@ -1,6 +1,8 @@
 package com.twillekes.userInterface;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Image;
@@ -21,7 +23,26 @@ public class PreviewUserInterface {
 	private static int HEIGHT = 125;
 	private boolean isSelected = false;
 	private Picture picture;
-	public PreviewUserInterface(Composite parent, Picture picture, String filePath, ClickListener clickListener) {
+	public interface ClickObserver {
+		void click(MouseEvent mouseEvent);
+	}
+	private class PreviewMouseListener implements MouseListener {
+		private ClickObserver clickObserver;
+		public PreviewMouseListener(ClickObserver clickObserver) {
+			this.clickObserver = clickObserver;
+		}
+		@Override
+		public void mouseDoubleClick(MouseEvent e) {
+		}
+		@Override
+		public void mouseDown(MouseEvent e) {
+			clickObserver.click(e);
+		}
+		@Override
+		public void mouseUp(MouseEvent e) {
+		}
+	}
+	public PreviewUserInterface(Composite parent, Picture picture, String filePath) {
 		this.picture = picture;
 		previewImage = new Image(Application.getDevice(), Repository.BASE_PATH + filePath);
 		final Rectangle rect = previewImage.getBounds();
@@ -63,11 +84,10 @@ public class PreviewUserInterface {
 				}
 			}
 		});
-		if (clickListener != null) {
-			clickListener.setPreviewUserInterface(this);
-			canvas.addMouseListener(clickListener.getMouseListener());
-		}
 		//canvas.layout();
+	}
+	public void setClickObserver(ClickObserver clickObserver) {
+		canvas.addMouseListener(new PreviewMouseListener(clickObserver));
 	}
 	public void setSelected(boolean isSelected) {
 		this.isSelected = isSelected;

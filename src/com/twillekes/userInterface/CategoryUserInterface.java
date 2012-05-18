@@ -12,20 +12,6 @@ import org.eclipse.swt.widgets.Group;
 import com.twillekes.portfolio.Picture;
 
 public class CategoryUserInterface {
-	private class ClickObserver extends ClickListener {
-		Picture picture;
-		public ClickObserver(Picture picture) {
-			this.picture = picture;
-		}
-		@Override
-		public void click(MouseEvent e) {
-			if (e.button != 1) {
-				PictureUserInterface.create(picture);
-			} else {
-				this.getPreviewUserInterface().toggleSelected();
-			}
-		}
-	}
 	public CategoryUserInterface(Composite parent, List<Picture> pictures, String categoryValue) {
 		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
 		GridLayout groupLayout = new GridLayout();
@@ -34,8 +20,18 @@ public class CategoryUserInterface {
 		group.setText(categoryValue + " (" + pictures.size() + " images)");
 		Iterator<Picture> it = pictures.iterator();
 		while(it.hasNext()) {
-			Picture pic = it.next();
-			new PreviewUserInterface(group, pic, pic.getThumbFilePath(), new ClickObserver(pic));
+			final Picture pic = it.next();
+			final PreviewUserInterface prevUi = new PreviewUserInterface(group, pic, pic.getThumbFilePath());
+			prevUi.setClickObserver(new PreviewUserInterface.ClickObserver() {
+				@Override
+				public void click(MouseEvent mouseEvent) {
+					if (mouseEvent.button != 1) {
+						PictureUserInterface.create(pic);
+					} else {
+						prevUi.toggleSelected();
+					}
+				}
+			});
 		}
 		//group.layout();
 		//group.pack();

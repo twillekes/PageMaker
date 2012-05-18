@@ -93,22 +93,6 @@ public class PictureUserInterface {
 			combo.select(selectedItem);
 		}
 	}
-	private class ClickObserver extends ClickListener {
-		Picture picture;
-		public ClickObserver(Picture picture) {
-			this.picture = picture;
-		}
-		@Override
-		public void click(MouseEvent e) {
-			Shell shell = new Shell(Application.getShell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-			shell.setLayout(new GridLayout());
-			shell.setText("View Image");
-			new PreviewUserInterface(shell, picture, picture.getLocalFilePath(), null);
-			shell.layout();
-			shell.pack();
-			shell.open();
-		}
-	}
 	private Group pictureGroup;
 	private Group metadataGroup;
 	private Group textGroup;
@@ -126,13 +110,25 @@ public class PictureUserInterface {
 	public Composite getTopLevel() {
 		return this.pictureGroup;
 	}
-	public PictureUserInterface(Composite parent, Picture picture) {
+	public PictureUserInterface(Composite parent, final Picture picture) {
 		pictureGroup = new Group(parent, SWT.NONE);
 		GridLayout gLayout = new GridLayout();
 		gLayout.numColumns = 2;
 		pictureGroup.setLayout(gLayout);
 		
-		new PreviewUserInterface(pictureGroup, picture, picture.getThumbFilePath(), new ClickObserver(picture));
+		PreviewUserInterface prevUi = new PreviewUserInterface(pictureGroup, picture, picture.getThumbFilePath());
+		prevUi.setClickObserver(new PreviewUserInterface.ClickObserver() {
+			@Override
+			public void click(MouseEvent mouseEvent) {
+				Shell shell = new Shell(Application.getShell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+				shell.setLayout(new GridLayout());
+				shell.setText("View Image");
+				new PreviewUserInterface(shell, picture, picture.getLocalFilePath());
+				shell.layout();
+				shell.pack();
+				shell.open();
+			}
+		});
 		
 		uberGroup = new Group(pictureGroup, SWT.NONE);
 		uberGroup.setLayout(new RowLayout(SWT.VERTICAL));
