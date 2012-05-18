@@ -1,5 +1,6 @@
 package com.twillekes.portfolio;
 
+import java.util.ArrayList;
 import java.util.List;
 
 // Portfolio has albums (defined by tags?)
@@ -8,7 +9,7 @@ import java.util.List;
 // Metadata is fixed information that won't change (e.g. focal length)
 // Tags are information added later
 
-public class Picture implements Comparable<Picture> {
+public class Picture implements Comparable<Picture>, Cloneable {
 	// Fields
 	private String filePath;
 	private String localFilePath;
@@ -20,7 +21,16 @@ public class Picture implements Comparable<Picture> {
 		filePath = "undefined";
 		this.metadata = new Metadata();
 	}
-	// Methods
+	public Picture clone() throws CloneNotSupportedException {
+	    Picture clone = (Picture)super.clone();
+	    if (metadata != null) {
+	    	clone.metadata = metadata.clone();
+	    }
+	    if (tags != null) {
+	    	clone.tags = new ArrayList<String>(tags);;
+	    }
+	    return clone;
+	}
 	public void setFilePath(String fileName) {
 		this.filePath = fileName;
 	}

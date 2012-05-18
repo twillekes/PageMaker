@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-public class Metadata {
+public class Metadata implements Cloneable {
 	private String title;
 	private String description;
 	private String rating;
@@ -37,6 +37,13 @@ public class Metadata {
 		if (schema == null) {
 			schema = new MetadataSchema();
 		}
+	}
+	public Metadata clone() throws CloneNotSupportedException {
+	    Metadata clone = (Metadata)super.clone();
+	    if (realDate != null) {
+	    	clone.realDate = (Date)realDate.clone();
+	    }
+	    return clone;
 	}
 	
 	public class MetadataSchema {

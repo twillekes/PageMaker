@@ -5,6 +5,8 @@ import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
@@ -16,6 +18,7 @@ import com.twillekes.userInterface.PictureUserInterface;
 
 public class ImportPicture {
 	static final String NEW_IMAGES_FOLDER = "newImages/";
+	static private Picture templatePicture = null;
 	public ImportPicture(String filePath){
         String thumbPath = Picture.getThumbName(filePath);
         if (!(new File(thumbPath).isFile())) {
@@ -42,7 +45,17 @@ public class ImportPicture {
 			return;
 		}
         
-        Picture pic = new Picture();
+        final Picture pic;
+        if (templatePicture == null) {
+        	pic = new Picture();
+        } else {
+        	try {
+				pic = templatePicture.clone();
+			} catch (CloneNotSupportedException e) {
+				e.printStackTrace();
+				return;
+			}
+        }
         pic.setLocalFilePath(NEW_IMAGES_FOLDER + fileName);
         pic.setFilePath(NEW_IMAGES_FOLDER + fileName); // URL is relative
         pic.getMetadata().setIsNew("1");
@@ -51,7 +64,17 @@ public class ImportPicture {
 		Shell shell = new Shell(Application.getShell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell.setLayout(new GridLayout());
 		shell.setText("Edit Picture Metadata");
-		new PictureUserInterface(shell, pic);
+		PictureUserInterface picUi = new PictureUserInterface(shell, pic);
+		picUi.getTopLevel().addDisposeListener(new DisposeListener(){
+			@Override
+			public void widgetDisposed(DisposeEvent e) {
+				try {
+					templatePicture = pic.clone();
+				} catch (CloneNotSupportedException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
 		shell.layout();
 		shell.pack();
 		shell.open();

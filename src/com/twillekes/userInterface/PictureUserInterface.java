@@ -56,6 +56,9 @@ public class PictureUserInterface {
 			label.setText(sLabel);
 			
 			text = new Text(group, SWT.LEFT);
+			if (initialText == null) {
+				initialText = "";
+			}
 			text.setText(initialText);
 			text.addModifyListener(new TextModifyListener(text, picture, handler));
 			
@@ -119,6 +122,9 @@ public class PictureUserInterface {
 		shell.pack();
 		shell.open();
 		return picUi;
+	}
+	public Composite getTopLevel() {
+		return this.pictureGroup;
 	}
 	public PictureUserInterface(Composite parent, Picture picture) {
 		pictureGroup = new Group(parent, SWT.NONE);

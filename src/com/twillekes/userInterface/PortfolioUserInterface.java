@@ -140,9 +140,6 @@ public class PortfolioUserInterface {
 
 		ScrolledComposite portfolioScroll = new ScrolledComposite(shell, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		portfolioScroll.setLayout(new FillLayout());
-		GridData layoutData = new GridData();
-		layoutData.heightHint = rect.height - 100;
-		portfolioScroll.setLayoutData(layoutData);
 
 		Group portfolioGroup = new Group(portfolioScroll, SWT.SHADOW_ETCHED_OUT);
 		RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
@@ -165,6 +162,15 @@ public class PortfolioUserInterface {
 		portfolioScroll.pack();
 		shell.layout();
 		shell.pack();
+		Rectangle pRect = portfolioScroll.getBounds();
+		final int HEIGHT_OFFSET = 100;
+		if (pRect.height > rect.height-HEIGHT_OFFSET) {
+			GridData layoutData = new GridData();
+			layoutData.heightHint = rect.height - HEIGHT_OFFSET;
+			portfolioScroll.setLayoutData(layoutData);
+			portfolioScroll.layout();
+			shell.pack();
+		}
 		shell.open();
 		return shell;
 	}
