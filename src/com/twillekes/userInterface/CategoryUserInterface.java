@@ -21,7 +21,7 @@ public class CategoryUserInterface {
 		Iterator<Picture> it = pictures.iterator();
 		while(it.hasNext()) {
 			final Picture pic = it.next();
-			final PreviewUserInterface prevUi = new PreviewUserInterface(group, pic, pic.getThumbFilePath());
+			final PreviewUserInterface prevUi = new PreviewUserInterface(group, pic, pic.getRepositoryThumbFilePath());
 			prevUi.setClickObserver(new PreviewUserInterface.ClickObserver() {
 				@Override
 				public void click(MouseEvent mouseEvent) {

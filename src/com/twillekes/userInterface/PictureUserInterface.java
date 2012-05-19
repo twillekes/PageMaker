@@ -123,14 +123,14 @@ public class PictureUserInterface {
 		gLayout.numColumns = 2;
 		pictureGroup.setLayout(gLayout);
 		
-		PreviewUserInterface prevUi = new PreviewUserInterface(pictureGroup, picture, picture.getThumbFilePath());
+		PreviewUserInterface prevUi = new PreviewUserInterface(pictureGroup, picture, picture.getRepositoryThumbFilePath());
 		prevUi.setClickObserver(new PreviewUserInterface.ClickObserver() {
 			@Override
 			public void click(MouseEvent mouseEvent) {
 				Shell shell = new Shell(Application.getShell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 				shell.setLayout(new GridLayout());
 				shell.setText("View Image");
-				new PreviewUserInterface(shell, picture, picture.getLocalFilePath());
+				new PreviewUserInterface(shell, picture, picture.getRepositoryFilePath());
 				shell.layout();
 				shell.pack();
 				shell.open();

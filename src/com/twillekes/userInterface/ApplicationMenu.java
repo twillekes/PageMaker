@@ -8,6 +8,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.twillekes.userInteraction.EditProperties;
 import com.twillekes.userInteraction.ExitApplication;
+import com.twillekes.userInteraction.ExportRepository;
 import com.twillekes.userInteraction.ImportFile;
 import com.twillekes.userInteraction.SaveRepository;
 
@@ -27,6 +28,12 @@ public class ApplicationMenu {
 	    MenuItem saveItem = new MenuItem(fileMenu, SWT.NONE);
 	    saveItem.setText("&Save");
 	    saveItem.addSelectionListener(new SaveRepository());
+	    
+	    MenuItem exportItem = new MenuItem(fileMenu, SWT.NONE);
+	    exportItem.setText("&Export");
+	    exportItem.addSelectionListener(new ExportRepository());
+	    
+	    new MenuItem(fileMenu, SWT.SEPARATOR);
 	    
 	    MenuItem fileExitItem = new MenuItem(fileMenu, SWT.NONE);
 	    fileExitItem.setText("E&xit");

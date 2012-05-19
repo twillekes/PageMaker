@@ -40,22 +40,28 @@ public class Picture implements Comparable<Picture>, Cloneable {
 			throw new Exception("Must add picture to repository before setting its name");
 		}
 		this.setFilePath(repo.getUrl() + fileName);
-		this.setLocalFilePath(Repository.getBasePath() + fileName);
+		this.setLocalFilePath(Repository.getPathFromJavascript() + fileName);
 	}
+	// "File path" is the one used when the page is served from the web
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
 	}
 	public String getFilePath() {
 		return filePath;
 	}
+	// "Local file path" is the one used when the page is served from the local file system
 	public void setLocalFilePath(String localFilePath) {
 		this.localFilePath = localFilePath;
 	}
 	public String getLocalFilePath() {
 		return localFilePath;
 	}
-	public String getThumbFilePath() {
-		return Picture.getThumbName(this.getLocalFilePath());
+	// "Repository file path" is used when reading files from within this PageMaker application
+	public String getRepositoryFilePath() {
+		return Repository.getBasePath() + getFileName(this.getLocalFilePath());
+	}
+	public String getRepositoryThumbFilePath() {
+		return Picture.getThumbName(this.getRepositoryFilePath());
 	}
 	public Metadata getMetadata() {
 		return metadata;
@@ -89,5 +95,12 @@ public class Picture implements Comparable<Picture>, Cloneable {
 		int dotPos = filePath.lastIndexOf(".");
 		String thumbExt = filePath.substring(dotPos);
 		return filePath.substring(0, dotPos) + "_thumb" + thumbExt;
+	}
+	public static String getFileName(String filePath) {
+		int dotPos = filePath.lastIndexOf("/");
+		if (dotPos == -1) {
+			dotPos = 0;
+		}
+		return filePath.substring(dotPos);
 	}
 }
