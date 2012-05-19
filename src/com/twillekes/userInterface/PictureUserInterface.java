@@ -132,17 +132,11 @@ public class PictureUserInterface {
 		
 		uberGroup = new Group(pictureGroup, SWT.NONE);
 		uberGroup.setLayout(new RowLayout(SWT.VERTICAL));
+		Label filePathLabel = new Label(uberGroup, SWT.SHADOW_OUT);
+		filePathLabel.setText(picture.getLocalFilePath());
 		
 		textGroup = new Group(uberGroup, SWT.NONE);
 		textGroup.setLayout(new RowLayout(SWT.HORIZONTAL));
-		
-		metadataGroup = new Group(uberGroup, SWT.NONE);
-		GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 3;
-		metadataGroup.setLayout(gridLayout);
-		
-		Label filePathLabel = new Label(textGroup, SWT.SHADOW_OUT);
-		filePathLabel.setText(picture.getLocalFilePath());
 		
 		new PictureTextField(textGroup, picture, "Title:", picture.getMetadata().getTitle(), 30, new TextChangeHandler(){
 			@Override
@@ -158,6 +152,12 @@ public class PictureUserInterface {
 				uberGroup.layout();
 			}
 		});
+
+		metadataGroup = new Group(uberGroup, SWT.NONE);
+		GridLayout gridLayout = new GridLayout();
+		gridLayout.numColumns = 3;
+		metadataGroup.setLayout(gridLayout);
+		
 		try {
 			new PictureComboBox(metadataGroup, picture, "Subject:", picture.getMetadata().getSubject(),
 					Metadata.schema.subjects.toArray(new String[Metadata.schema.subjects.size()]), new TextChangeHandler(){
