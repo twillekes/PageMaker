@@ -16,6 +16,11 @@ public class ExportRepository implements SelectionListener  {
 		Portfolio portfolio = Application.getPortfolio();
 		portfolio.findAllCategories();
 		exporter.exportToJS(portfolio);
+		try {
+			exporter.exportRepositoryToFileSystem("export/");
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
 	}
 	@Override
 	public void widgetDefaultSelected(SelectionEvent e) {

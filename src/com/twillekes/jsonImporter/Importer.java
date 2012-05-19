@@ -1,5 +1,6 @@
 package com.twillekes.jsonImporter;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.text.ParseException;
@@ -8,6 +9,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.apache.commons.io.FileUtils;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -314,5 +317,19 @@ public class Importer {
 				System.out.println("Exception: " + e.getMessage());
 			}
 		}
+	}
+	public static void copyFiles(String filePath, String toPath) throws Exception {
+        String thumbPath = Picture.getThumbName(filePath);
+        if (!(new File(thumbPath).isFile())) {
+        	throw new Exception("Expected thumbnail (" + thumbPath + ")");
+        }
+        File pictureFile = new File(filePath);
+        String fileName = pictureFile.getName();
+        File destPictureFile = new File(toPath + fileName);
+        File thumbFile = new File(thumbPath);
+        String thumbFileName = thumbFile.getName();
+        File destThumbFile = new File(toPath + thumbFileName);
+		FileUtils.copyFile(pictureFile, destPictureFile);
+		FileUtils.copyFile(thumbFile, destThumbFile);
 	}
 }

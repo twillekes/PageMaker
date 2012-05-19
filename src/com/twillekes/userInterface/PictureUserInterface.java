@@ -140,7 +140,7 @@ public class PictureUserInterface {
 		uberGroup = new Group(pictureGroup, SWT.NONE);
 		uberGroup.setLayout(new RowLayout(SWT.VERTICAL));
 		Label filePathLabel = new Label(uberGroup, SWT.SHADOW_OUT);
-		filePathLabel.setText(picture.getLocalFilePath());
+		filePathLabel.setText(picture.getRepositoryFilePath());
 		
 		textGroup = new Group(uberGroup, SWT.NONE);
 		textGroup.setLayout(new RowLayout(SWT.HORIZONTAL));

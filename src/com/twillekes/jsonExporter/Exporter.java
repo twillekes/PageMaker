@@ -2,9 +2,11 @@ package com.twillekes.jsonExporter;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.util.Iterator;
 
 import com.google.gson.Gson;
 import com.twillekes.jsonImporter.Importer;
+import com.twillekes.portfolio.Picture;
 import com.twillekes.portfolio.Portfolio;
 import com.twillekes.portfolio.Repository;
 
@@ -69,6 +71,18 @@ public class Exporter {
 			out.close();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
+		}
+	}
+	public void exportRepositoryToFileSystem(String toPath) throws Exception {
+		Iterator<Repository> it = Repository.get().iterator();
+		while(it.hasNext()) {
+			Repository repo = it.next();
+			String repoPath = repo.getRelativeUrl();
+			Iterator<Picture> picIt = repo.getPictures().iterator();
+			while(picIt.hasNext()) {
+				Picture picture = picIt.next();
+				Importer.copyFiles(picture.getRepositoryFilePath(), toPath + "/" + repoPath);
+			}
 		}
 	}
 }

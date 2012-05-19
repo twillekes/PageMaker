@@ -98,9 +98,7 @@ public class Picture implements Comparable<Picture>, Cloneable {
 	}
 	public static String getFileName(String filePath) {
 		int dotPos = filePath.lastIndexOf("/");
-		if (dotPos == -1) {
-			dotPos = 0;
-		}
+		dotPos += 1;
 		return filePath.substring(dotPos);
 	}
 }

@@ -3,7 +3,6 @@ package com.twillekes.userInteraction;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.commons.io.FileUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -11,6 +10,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
+import com.twillekes.jsonImporter.Importer;
 import com.twillekes.portfolio.Picture;
 import com.twillekes.portfolio.Repository;
 import com.twillekes.userInterface.Application;
@@ -20,30 +20,21 @@ public class ImportPicture {
 	static final String NEW_IMAGES_FOLDER = "newImages/";
 	static private Picture templatePicture = null;
 	public ImportPicture(String filePath){
-        String thumbPath = Picture.getThumbName(filePath);
-        if (!(new File(thumbPath).isFile())) {
-			MessageBox mBox = new MessageBox(Application.getShell(), SWT.ICON_ERROR | SWT.OK);
-			mBox.setMessage("Could not find thumbnail file.\n\nThe file you choose should have a peer with \"_thumb.jpg\"");
-			mBox.open();
-			return;
-        }
-        
-        // Copy the files into the "new" folder
-        File pictureFile = new File(filePath);
-        String fileName = pictureFile.getName();
-        File destPictureFile = new File(Repository.getBasePath() + fileName);
-        File thumbFile = new File(thumbPath);
-        String thumbFileName = thumbFile.getName();
-        File destThumbFile = new File(Repository.getBasePath() + thumbFileName);
-        try {
-			FileUtils.copyFile(pictureFile, destPictureFile);
-			FileUtils.copyFile(thumbFile, destThumbFile);
-		} catch (IOException e) {
+		try {
+			Importer.copyFiles(filePath, Repository.getBasePath());
+		} catch (IOException e4) {
 			MessageBox mBox = new MessageBox(Application.getShell(), SWT.ICON_ERROR | SWT.OK);
 			mBox.setMessage("Could not copy image files");
 			mBox.open();
 			return;
+		} catch (Exception e3) {
+			MessageBox mBox = new MessageBox(Application.getShell(), SWT.ICON_ERROR | SWT.OK);
+			mBox.setMessage("Could not find thumbnail file.\n\nThe file you choose should have a peer with \"_thumb.jpg\"");
+			mBox.open();
+			return;
 		}
+        File pictureFile = new File(filePath);
+        String fileName = pictureFile.getName();
         
         final Picture pic;
         if (templatePicture == null) {
