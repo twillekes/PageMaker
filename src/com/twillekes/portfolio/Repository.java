@@ -48,6 +48,15 @@ public class Repository {
 	public static List<Repository> get() {
 		return repositories;
 	}
+	public static List<String> getRepositoryNames() {
+		Iterator<Repository> it = repositories.iterator();
+		List<String> names = new ArrayList<String>();
+		while(it.hasNext()) {
+			Repository repo = it.next();
+			names.add(repo.getRelativeUrl());
+		}
+		return names;
+	}
 	public static Repository get(String path) {
 		Iterator<Repository> it = repositories.iterator();
 		while(it.hasNext()) {

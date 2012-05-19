@@ -12,12 +12,12 @@ import org.eclipse.swt.widgets.Group;
 import com.twillekes.portfolio.Picture;
 
 public class CategoryUserInterface {
-	public CategoryUserInterface(Composite parent, List<Picture> pictures, String categoryValue) {
+	public CategoryUserInterface(Composite parent, List<Picture> pictures, String categoryLabel) {
 		Group group = new Group(parent, SWT.SHADOW_ETCHED_IN);
 		GridLayout groupLayout = new GridLayout();
 		groupLayout.numColumns = 10;
 		group.setLayout(groupLayout);
-		group.setText(categoryValue + " (" + pictures.size() + " images)");
+		group.setText(categoryLabel);
 		Iterator<Picture> it = pictures.iterator();
 		while(it.hasNext()) {
 			final Picture pic = it.next();

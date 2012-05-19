@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Shell;
 import com.twillekes.portfolio.Metadata;
 import com.twillekes.portfolio.Picture;
 import com.twillekes.portfolio.Portfolio;
+import com.twillekes.portfolio.Repository;
 
 public class PortfolioUserInterface {
 	Portfolio portfolio;
@@ -64,7 +65,11 @@ public class PortfolioUserInterface {
 				}
 			}
 		}
-		setupCategories(categorization, categoryGroup);
+		if (categorization.equals("repository")) {
+			setupRepositoryCategories(categoryGroup);
+		} else {
+			setupCategories(categorization, categoryGroup);
+		}
 		categoryGroup.layout();
 		categoryGroup.pack();
 	}
@@ -91,6 +96,14 @@ public class PortfolioUserInterface {
 				butt.setSelection(true);
 			}
 		}
+		Button repoButt = new Button(group, SWT.TOGGLE);
+		repoButt.setText("repository");
+		repoButt.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				buildCategoryUserInterface(((Button)event.widget).getText());
+			}
+		});
 		final Combo combo = new Combo(group, SWT.DROP_DOWN | SWT.READ_ONLY);
 		List<String> flagCategories = Metadata.getFlagCategories();
 		combo.setItems(flagCategories.toArray(new String[flagCategories.size()]));
@@ -103,6 +116,14 @@ public class PortfolioUserInterface {
 		});
 //		group.layout();
 //		group.pack();
+	}
+	public void setupRepositoryCategories(Composite parent) {
+		List<Repository> repos = Repository.get();
+		Iterator<Repository> it = repos.iterator();
+		while(it.hasNext()) {
+			Repository repo = it.next();
+			new CategoryUserInterface(parent, repo.getPictures(), repo.getRelativeUrl());
+		}
 	}
 	public void setupCategories(String categorization, Composite parent) {
 		List<String> catValues;
@@ -129,7 +150,7 @@ public class PortfolioUserInterface {
 					list.add(pic);
 				}
 			}
-			new CategoryUserInterface(parent, list, subject);
+			new CategoryUserInterface(parent, list, subject + " (" + list.size() + " images)");
 		}
 	}
 	public static Composite create(List<Picture> pictures) {
