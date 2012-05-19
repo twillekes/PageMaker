@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.twillekes.portfolio.Metadata;
 import com.twillekes.portfolio.Picture;
+import com.twillekes.portfolio.Repository;
 
 public class PictureUserInterface {
 	interface TextChangeHandler {
@@ -70,13 +71,19 @@ public class PictureUserInterface {
 		private Label label;
 		private Combo combo;
 		public PictureComboBox(Composite parent, Picture picture, String sLabel, String initialText, String[] items, TextChangeHandler handler) throws Exception {
+			create(parent, picture, sLabel, initialText, items, handler, 0);
+		}
+		public PictureComboBox(Composite parent, Picture picture, String sLabel, String initialText, String[] items, TextChangeHandler handler, int styles) throws Exception {
+			create(parent, picture, sLabel, initialText, items, handler, styles);
+		}
+		public void create(Composite parent, Picture picture, String sLabel, String initialText, String[] items, TextChangeHandler handler, int styles) throws Exception {
 			group = new Group(parent, SWT.SHADOW_NONE);
 			group.setLayout(new RowLayout(SWT.HORIZONTAL));
 			
 			label = new Label(group, SWT.SHADOW_OUT);
 			label.setText(sLabel);
 			
-			combo = new Combo(group, SWT.DROP_DOWN);
+			combo = new Combo(group, SWT.DROP_DOWN | styles);
 			combo.setItems(items);
 			combo.addModifyListener(new TextModifyListener(combo, picture, handler));
 			
@@ -285,6 +292,13 @@ public class PictureUserInterface {
 					picture.getMetadata().setIsDiscarded(value);
 				}
 			});
+			new PictureComboBox(metadataGroup, picture, "Repository:", Repository.getRepositoryNameForPicture(picture),
+					Repository.getRepositoryNames().toArray(new String[Repository.getRepositoryNames().size()]), new TextChangeHandler(){
+				@Override
+				public void textChanged(Picture picture, String value) {
+					Repository.movePictureToRepository(picture, value);
+				}
+			}, SWT.READ_ONLY);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}

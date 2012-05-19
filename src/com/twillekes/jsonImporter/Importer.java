@@ -45,7 +45,7 @@ public class Importer {
 			this.metadataRecords = new ArrayList<MetadataRecord>();
 		}
 		public String getFileName() {
-			return Repository.BASE_PATH + "locations.json";
+			return Repository.getOriginalBasePath() + "locations.json";
 		}
 		public void handleJsonObject(JsonObject obj) throws ParseException {
 			RecordType type = RecordType.LOCAL;
@@ -73,7 +73,7 @@ public class Importer {
 			this.portfolio = new Portfolio();
 		}
 		public String getFileName() {
-			return Repository.FILE_NAME;
+			return Repository.getFileName();
 		}
 		public void handleJsonObject(JsonObject obj) throws ParseException {
 			String account = null;
@@ -123,7 +123,7 @@ public class Importer {
 				final String val = entry.getValue().getAsString();
 				try {
 					if (key.equals("filename")) {
-						words.setFilePath(this.repository.getPath() + val);
+						words.setFilePath(this.repository.getRelativePath() + val);
 					} else if (key.equals("title")) {
 						words.setTitle(val);
 					} else if (key.equals("doNotShow")) {
@@ -158,8 +158,7 @@ public class Importer {
 			Metadata metadata = picture.getMetadata();
 			try {
 				if (key.equals("filename")) { // Original metadata used "filename"
-					picture.setFilePath(this.repository.getBaseUrl() + this.repository.getRelativeUrl() + val);
-					picture.setLocalFilePath(this.repository.getRelativeUrl() + val);
+					picture.setFileName(val);
 				} else if (key.equals("filePath")) {
 					picture.setFilePath(val);
 				} else if (key.equals("localFilePath")) {
@@ -216,7 +215,7 @@ public class Importer {
 			}
 		}
 		public String getFileName() {
-			return this.repository.getPath() + "/metadata.json";
+			return this.repository.getOriginalPath() + "/metadata.json";
 		}
 	}
 	
@@ -250,23 +249,17 @@ public class Importer {
 			}
 			portfolioDeserializer.isWords = false;
 			Repository repository = null;
-			//portfolioDeserializer.path = rec.path;
-			//portfolioDeserializer.url = rec.path;
 			if (rec.path.equals("images")) {
 				repository = new Repository("tjwillekes", "images");
-				//portfolioDeserializer.url = "http://members.shaw.ca/tjwillekes/images";
 			} else if (rec.path.equals("images_2")) {
 				repository = new Repository("tomjwillekes", "images_2");
-				//portfolioDeserializer.url = "http://members.shaw.ca/tomjwillekes/images_2";
 			} else if (rec.path.equals("newImages")) {
 				repository = new Repository("twillekes", "newImages");
 			} else if (rec.path.equals("words")) {
 				continue;
-//				portfolioDeserializer.isWords = true;
 			}
 			portfolioDeserializer.repository = repository;
 			this.importJson(portfolioDeserializer);
-//			System.out.println("After loading " + rec.path + " the portfolio is: " + portfolio.toString());
 		}
 		return portfolio;
 	}

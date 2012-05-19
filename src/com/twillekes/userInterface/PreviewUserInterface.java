@@ -13,7 +13,6 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 
 import com.twillekes.portfolio.Picture;
-import com.twillekes.portfolio.Repository;
 import com.twillekes.userInteraction.Selection;
 
 public class PreviewUserInterface {
@@ -44,7 +43,7 @@ public class PreviewUserInterface {
 	}
 	public PreviewUserInterface(Composite parent, Picture picture, String filePath) {
 		this.picture = picture;
-		previewImage = new Image(Application.getDevice(), Repository.BASE_PATH + filePath);
+		previewImage = new Image(Application.getDevice(), filePath);
 		final Rectangle rect = previewImage.getBounds();
 		int width = WIDTH;
 		if (rect.width > WIDTH) {

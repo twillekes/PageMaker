@@ -31,10 +31,10 @@ public class ImportPicture {
         // Copy the files into the "new" folder
         File pictureFile = new File(filePath);
         String fileName = pictureFile.getName();
-        File destPictureFile = new File(Repository.BASE_PATH + NEW_IMAGES_FOLDER + fileName);
+        File destPictureFile = new File(Repository.getBasePath() + fileName);
         File thumbFile = new File(thumbPath);
         String thumbFileName = thumbFile.getName();
-        File destThumbFile = new File(Repository.BASE_PATH + NEW_IMAGES_FOLDER + thumbFileName);
+        File destThumbFile = new File(Repository.getBasePath() + thumbFileName);
         try {
 			FileUtils.copyFile(pictureFile, destPictureFile);
 			FileUtils.copyFile(thumbFile, destThumbFile);
@@ -56,8 +56,15 @@ public class ImportPicture {
 				return;
 			}
         }
-        pic.setLocalFilePath(NEW_IMAGES_FOLDER + fileName);
-        pic.setFilePath(NEW_IMAGES_FOLDER + fileName); // URL is relative
+        Repository repository;
+		try {
+			repository = Repository.get("newImages");
+	        repository.add(pic);
+			pic.setFileName(fileName);
+		} catch (Exception e2) {
+			e2.printStackTrace();
+			return;
+		}
         pic.getMetadata().setIsNew("1");
         Application.getPortfolio().addPicture(pic);
 		

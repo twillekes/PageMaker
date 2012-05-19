@@ -39,7 +39,7 @@ public class Exporter {
 		Gson gson = new Gson();
 		String json = gson.toJson(Repository.get());
 		try {
-			FileWriter fstream = new FileWriter(Repository.FILE_NAME);
+			FileWriter fstream = new FileWriter(Repository.getFileName());
 			BufferedWriter out = new BufferedWriter(fstream);
 			out.write(json);
 			out.close();
@@ -61,7 +61,7 @@ public class Exporter {
 //		System.out.println(words);
 		
 		try {
-			FileWriter fstream = new FileWriter(Repository.BASE_PATH + "imageList.js");
+			FileWriter fstream = new FileWriter(Repository.getJavascriptPath() + "imageList.js");
 			BufferedWriter out = new BufferedWriter(fstream);
 			out.write(json);
 			out.write(cats);

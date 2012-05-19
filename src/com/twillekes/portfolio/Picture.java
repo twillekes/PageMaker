@@ -11,6 +11,8 @@ import java.util.List;
 
 public class Picture implements Comparable<Picture>, Cloneable {
 	// Fields
+	// WARNING: These must appear as expected by the page's Javascript as they
+	// are serialized directly into JSON from here!
 	private String filePath;
 	private String localFilePath;
 	private Metadata metadata;
@@ -19,6 +21,7 @@ public class Picture implements Comparable<Picture>, Cloneable {
 	// Constructor
 	public Picture() {
 		filePath = "undefined";
+		localFilePath = "undefined";
 		this.metadata = new Metadata();
 	}
 	public Picture clone() throws CloneNotSupportedException {
@@ -31,11 +34,25 @@ public class Picture implements Comparable<Picture>, Cloneable {
 	    }
 	    return clone;
 	}
-	public void setFilePath(String fileName) {
-		this.filePath = fileName;
+	public void setFileName(String fileName) throws Exception {
+		Repository repo = Repository.getRepositoryForPicture(this);
+		if (repo == null) {
+			throw new Exception("Must add picture to repository before setting its name");
+		}
+		this.setFilePath(repo.getUrl() + fileName);
+		this.setLocalFilePath(Repository.getBasePath() + fileName);
+	}
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
 	}
 	public String getFilePath() {
 		return filePath;
+	}
+	public void setLocalFilePath(String localFilePath) {
+		this.localFilePath = localFilePath;
+	}
+	public String getLocalFilePath() {
+		return localFilePath;
 	}
 	public String getThumbFilePath() {
 		return Picture.getThumbName(this.getLocalFilePath());
@@ -52,14 +69,8 @@ public class Picture implements Comparable<Picture>, Cloneable {
 	public void setTags(List<String> tags) {
 		this.tags = tags;
 	}
-	public String getLocalFilePath() {
-		return localFilePath;
-	}
-	public void setLocalFilePath(String filePath) {
-		this.localFilePath = filePath;
-	}
 	public String toString() {
-		return "File name: " + this.filePath + " File Path: " + this.localFilePath + " Metadata: " + this.metadata.toString();
+		return "File path: " + this.filePath + " Metadata: " + this.metadata.toString();
 	}
 	public int compareTo(Picture o) {
 		if (!(o instanceof Picture)) {

@@ -10,6 +10,9 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Metadata implements Cloneable {
+	// Fields
+	// WARNING: These must appear as expected by the page's Javascript as they
+	// are serialized directly into JSON from here!
 	private String title;
 	private String description;
 	private String rating;
