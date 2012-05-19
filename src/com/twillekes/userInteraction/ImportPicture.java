@@ -10,9 +10,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
-import com.twillekes.jsonImporter.Importer;
 import com.twillekes.portfolio.Picture;
 import com.twillekes.portfolio.Repository;
+import com.twillekes.repoExporter.FileSystemExporter;
 import com.twillekes.userInterface.Application;
 import com.twillekes.userInterface.PictureUserInterface;
 
@@ -21,7 +21,7 @@ public class ImportPicture {
 	static private Picture templatePicture = null;
 	public ImportPicture(String filePath){
 		try {
-			Importer.copyFiles(filePath, Repository.getBasePath());
+			FileSystemExporter.copyFiles(filePath, Repository.getBasePath());
 		} catch (IOException e4) {
 			MessageBox mBox = new MessageBox(Application.getShell(), SWT.ICON_ERROR | SWT.OK);
 			mBox.setMessage("Could not copy image files");

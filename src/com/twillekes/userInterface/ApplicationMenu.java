@@ -10,6 +10,7 @@ import com.twillekes.userInteraction.EditProperties;
 import com.twillekes.userInteraction.ExitApplication;
 import com.twillekes.userInteraction.ExportRepository;
 import com.twillekes.userInteraction.ImportFile;
+import com.twillekes.userInteraction.PublishRepository;
 import com.twillekes.userInteraction.SaveRepository;
 
 public class ApplicationMenu {
@@ -32,6 +33,10 @@ public class ApplicationMenu {
 	    MenuItem exportItem = new MenuItem(fileMenu, SWT.NONE);
 	    exportItem.setText("&Export");
 	    exportItem.addSelectionListener(new ExportRepository());
+	    
+	    MenuItem publishItem = new MenuItem(fileMenu, SWT.NONE);
+	    publishItem.setText("&Publish");
+	    publishItem.addSelectionListener(new PublishRepository());
 	    
 	    new MenuItem(fileMenu, SWT.SEPARATOR);
 	    

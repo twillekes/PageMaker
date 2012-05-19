@@ -15,5 +15,6 @@
 			<attribute name="javadoc_location" value="file:/Users/twillekes/Documents/workspace/PageMaker/lib/commons-io-2.3/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/Users/twillekes/Documents/workspace/PageMaker/lib/commons-net-3.1/commons-net-3.1.jar" sourcepath="/Users/twillekes/Documents/workspace/PageMaker/lib/commons-net-3.1/commons-net-3.1-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

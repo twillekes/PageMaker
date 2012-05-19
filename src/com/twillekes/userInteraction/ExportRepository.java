@@ -5,6 +5,7 @@ import org.eclipse.swt.events.SelectionListener;
 
 import com.twillekes.jsonExporter.Exporter;
 import com.twillekes.portfolio.Portfolio;
+import com.twillekes.repoExporter.FileSystemExporter;
 import com.twillekes.userInterface.Application;
 
 public class ExportRepository implements SelectionListener  {
@@ -17,7 +18,7 @@ public class ExportRepository implements SelectionListener  {
 		portfolio.findAllCategories();
 		exporter.exportToJS(portfolio);
 		try {
-			exporter.exportRepositoryToFileSystem("export/");
+			FileSystemExporter.export("export/");
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}

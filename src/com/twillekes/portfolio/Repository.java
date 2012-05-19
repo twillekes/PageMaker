@@ -28,6 +28,9 @@ public class Repository {
 		}
 		repositories.add(this);
 	}
+	public String getAccount() {
+		return this.account;
+	}
 	public static String getFileName() {
 		return FILE_NAME;
 	}
@@ -74,7 +77,7 @@ public class Repository {
 		}
 		throw new Exception("Unable to find repository with path " + path);
 	}
-	private String getPath() {
+	public String getPath() {
 		return this.path;
 	}
 	public static Repository getRepositoryForPicture(Picture picture) {
