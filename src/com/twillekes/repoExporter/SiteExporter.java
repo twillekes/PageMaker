@@ -1,10 +1,8 @@
 package com.twillekes.repoExporter;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.SocketException;
 import java.util.Iterator;
 
 import org.apache.commons.net.ftp.FTPClient;
@@ -50,7 +48,6 @@ public class SiteExporter {
 			}
 		}
 		public void upload(String filePath) throws Exception {
-			// Don't forget thumbnails.
 			String destFilePath = Picture.getFileName(filePath);
 	        String thumbPath = Picture.getThumbName(filePath);
 	        String destThumbFilePath = Picture.getFileName(thumbPath);
