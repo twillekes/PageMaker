@@ -35,4 +35,16 @@ public class FileSystemExporter {
 		FileUtils.copyFile(pictureFile, destPictureFile);
 		FileUtils.copyFile(thumbFile, destThumbFile);
 	}
+	public static long getPercent(Repository repository) {
+		long size = 0;
+		Iterator<Picture> it = repository.getPictures().iterator();
+		while(it.hasNext()) {
+			Picture picture = it.next();
+			File picFile = new File(picture.getRepositoryFilePath());
+			size += FileUtils.sizeOf(picFile);
+			File thumbFile = new File(picture.getRepositoryThumbFilePath());
+			size += FileUtils.sizeOf(thumbFile);
+		}
+		return size * 100 / (20 * 1024 * 1024);
+	}
 }
