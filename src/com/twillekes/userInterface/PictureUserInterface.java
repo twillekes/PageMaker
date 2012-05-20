@@ -6,10 +6,13 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
@@ -105,9 +108,17 @@ public class PictureUserInterface {
 	private Group textGroup;
 	private Group uberGroup;
 	public static PictureUserInterface create(Picture picture) {
-		Shell shell = new Shell(Application.getShell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+		final Shell shell = new Shell(Application.getShell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell.setLayout(new GridLayout());
 		shell.setText("Edit Picture Metadata");
+	    final Button done = new Button(shell, SWT.PUSH);
+	    done.setText("Done");
+	    done.addListener(SWT.Selection, new Listener(){
+	    	public void handleEvent(Event event) {
+	    		shell.close();
+	    	}
+	    });
+	    shell.setDefaultButton(done);
 		PictureUserInterface picUi = new PictureUserInterface(shell, picture);
 		shell.layout();
 		shell.pack();

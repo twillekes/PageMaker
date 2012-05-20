@@ -30,15 +30,16 @@ import com.twillekes.portfolio.Repository;
 import com.twillekes.repoExporter.FileSystemExporter;
 
 public class PortfolioUserInterface {
-	Portfolio portfolio;
-	Group categoryGroup;
+	private Portfolio portfolio;
+	private Group categoryGroup;
+	private ScrolledComposite scroll;
 	public PortfolioUserInterface(Composite parent, Portfolio portfolio) {
 		this.portfolio = portfolio;
 		setupCategoryUserInterface("subject", parent);
 		//setupFullPortfolioUserInterface(parent, portfolio);
 	}
 	public void setupCategoryUserInterface(String categorization, Composite parent) {
-		ScrolledComposite scroll = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+		scroll = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		scroll.setLayout(new FillLayout());
 		categoryGroup = new Group(scroll, SWT.NONE);
 		RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
@@ -156,9 +157,18 @@ public class PortfolioUserInterface {
 	}
 	public static Composite create(List<Picture> pictures) {
 		Rectangle rect = Application.getShell().getBounds();
-		Shell shell = new Shell(Application.getShell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+		final Shell shell = new Shell(Application.getShell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell.setLayout(new GridLayout());
 		shell.setText("Edit Picture Metadata");
+		
+	    final Button done = new Button(shell, SWT.PUSH);
+	    done.setText("Done");
+	    done.addListener(SWT.Selection, new Listener(){
+	    	public void handleEvent(Event event) {
+	    		shell.close();
+	    	}
+	    });
+	    shell.setDefaultButton(done);
 
 		ScrolledComposite portfolioScroll = new ScrolledComposite(shell, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		portfolioScroll.setLayout(new FillLayout());
@@ -196,5 +206,7 @@ public class PortfolioUserInterface {
 		shell.open();
 		return shell;
 	}
-
+	public void dispose() {
+		scroll.dispose();
+	}
 }

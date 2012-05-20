@@ -63,7 +63,7 @@ public class Repository {
 		List<String> names = new ArrayList<String>();
 		while(it.hasNext()) {
 			Repository repo = it.next();
-			names.add(repo.getRelativeUrl());
+			names.add(repo.getPath());
 		}
 		return names;
 	}
@@ -91,7 +91,7 @@ public class Repository {
 		return null;
 	}
 	public static String getRepositoryNameForPicture(Picture picture) {
-		return getRepositoryForPicture(picture).getRelativeUrl();
+		return getRepositoryForPicture(picture).getPath();
 	}
 	public boolean containsPicture(Picture picture) {
 		Iterator<Picture> it = this.pictures.iterator();

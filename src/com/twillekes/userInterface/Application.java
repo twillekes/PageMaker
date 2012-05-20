@@ -20,6 +20,7 @@ public class Application {
 	private static Shell shell;
 	private static Display display;
 	private static Portfolio portfolio;
+	private static PortfolioUserInterface portfolioUi;
 	public Application() {
         Display.setAppName("Page Maker");
         display = new Display();
@@ -37,7 +38,7 @@ public class Application {
 		Importer importer = new Importer();
 		portfolio = importer.createPortfolioFromRepository();
         //portfolio = importer.createPortfolioFromMetadata();
-		new PortfolioUserInterface(shell, portfolio);
+		portfolioUi = new PortfolioUserInterface(shell, portfolio);
 
         shell.setMenuBar(applicationMenu.menuBar);
 		shell.layout();
@@ -111,4 +112,11 @@ public class Application {
     public static void main(String[] args) {
         new Application();
     }
+	public static void setPortfolio(Portfolio port) {
+		portfolioUi.dispose();
+		portfolio = port;
+		portfolioUi = new PortfolioUserInterface(shell, portfolio);
+		shell.layout();
+		shell.pack();
+	}
 }
