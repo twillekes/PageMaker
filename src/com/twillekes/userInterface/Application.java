@@ -23,8 +23,15 @@ public class Application {
 	private static PortfolioUserInterface portfolioUi;
 	public Application() {
         Display.setAppName("Page Maker");
+        Display.setAppVersion("Alpha.0");
         display = new Display();
-
+        
+//        image = new Image(display, BalloonExample.class.getResourceAsStream("tray_icon.gif"));
+//		 Tray tray = display.getSystemTray();
+//		 if(tray != null) {
+//		 	TrayItem trayItem = new TrayItem(tray, SWT.NONE);
+//		 	trayItem.setImage(image);
+//		 }
         shell = new Shell(display, SWT.SHELL_TRIM);
         FillLayout layout = new FillLayout();
         shell.setLayout(layout);
