@@ -3,7 +3,7 @@ package com.twillekes.userInteraction;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 
-import com.twillekes.jsonExporter.Exporter;
+import com.twillekes.json.Exporter;
 
 
 public class SaveRepository implements SelectionListener {

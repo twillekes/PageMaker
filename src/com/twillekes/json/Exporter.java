@@ -1,10 +1,9 @@
-package com.twillekes.jsonExporter;
+package com.twillekes.json;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 
 import com.google.gson.Gson;
-import com.twillekes.jsonImporter.Importer;
 import com.twillekes.portfolio.Portfolio;
 import com.twillekes.portfolio.Repository;
 

@@ -3,7 +3,7 @@ package com.twillekes.userInteraction;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 
-import com.twillekes.jsonImporter.Importer;
+import com.twillekes.json.Importer;
 import com.twillekes.portfolio.Portfolio;
 import com.twillekes.userInterface.Application;
 

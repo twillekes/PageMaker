@@ -1,4 +1,4 @@
-package com.twillekes.jsonImporter;
+package com.twillekes.json;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
