@@ -139,20 +139,7 @@ public class PortfolioUserInterface {
 		while(subjectIt.hasNext()) {
 			List<Picture> list = new ArrayList<Picture>();
 			String subject = subjectIt.next();
-			Iterator<Picture> picsIt = portfolio.getPictures().iterator();
-			while(picsIt.hasNext()) {
-				Picture pic = picsIt.next();
-				String catValue = "";;
-				try {
-					catValue = pic.getMetadata().getCategoryValue(categorization);
-				} catch (Exception e) {
-					System.out.println(e.getMessage());
-				}
-				if (catValue != null && catValue.equals(subject)) {
-					list.add(pic);
-				}
-			}
-			new CategoryUserInterface(parent, list, subject + " (" + list.size() + " images)");
+			new CategoryUserInterface(parent, portfolio.getPictures(categorization, subject), subject + " (" + list.size() + " images)");
 		}
 	}
 	public static Composite create(List<Picture> pictures) {

@@ -109,4 +109,21 @@ public class Portfolio {
 	public void addWords(Words words) {
 		this.words.add(words);
 	}
+	public List<Picture> getPictures(String categorization, String subject) {
+		List<Picture> list = new ArrayList<Picture>();
+		Iterator<Picture> it = pictures.iterator();
+		while(it.hasNext()) {
+			Picture pic = it.next();
+			String catValue = null;
+			try {
+				catValue = pic.getMetadata().getCategoryValue(categorization);
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
+			if (catValue != null && catValue.equals(subject)) {
+				list.add(pic);
+			}
+		}
+		return list;
+	}
 }
