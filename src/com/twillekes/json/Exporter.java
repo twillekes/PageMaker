@@ -60,7 +60,7 @@ public class Exporter {
 //		System.out.println(words);
 		
 		try {
-			FileWriter fstream = new FileWriter(Repository.getBasePath() + "imageList.js");
+			FileWriter fstream = new FileWriter(Repository.getPagePath() + "imageList.js");
 			BufferedWriter out = new BufferedWriter(fstream);
 			out.write(json);
 			out.write(cats);

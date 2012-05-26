@@ -172,8 +172,8 @@ public class SiteExporter {
 		}
 		try {
 			ftpExporter.initiate("twillekes", "");
-			ftpExporter.upload(Repository.getBasePath() + "feed.xml");
-			ftpExporter.upload(Repository.getBasePath() + "imageList.js");
+			ftpExporter.upload(Repository.getPagePath() + "feed.xml");
+			ftpExporter.upload(Repository.getPagePath() + "imageList.js");
 			ftpExporter.terminate();
 		} catch (Exception e) {
 			logger.log("Unable to upload feed and imageList files");

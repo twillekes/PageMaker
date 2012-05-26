@@ -68,7 +68,7 @@ public class Exporter {
 		System.out.println(xmlString);
 		
 		try {
-			BufferedWriter out = new BufferedWriter(new FileWriter(Repository.getBasePath() + "feed.xml"));
+			BufferedWriter out = new BufferedWriter(new FileWriter(Repository.getPagePath() + "feed.xml"));
 			out.write(xmlString);
 			out.close();
 		} catch (IOException e) { 
