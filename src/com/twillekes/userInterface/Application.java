@@ -16,6 +16,18 @@ import com.twillekes.json.Importer;
 import com.twillekes.portfolio.Portfolio;
 import com.twillekes.userInteraction.Selection;
 
+// TODO: Add ability to delete old images
+// TODO: Application icon/tray icon
+// TODO: Package as application
+// TODO: Ability to auto-FTP page template files
+// TODO: Drag and drop images in/out
+// TODO: Drag and drop images between categories
+// TODO: See how windows behaves
+// TODO: Automatic load balancer across web repositories
+// TODO: Edit common properties between selected images
+// TODO: Tags and tag clouds
+// TODO: Undo/redo
+// TODO: Preview page in an embedded browser
 public class Application {
 	private static Shell shell;
 	private static Display display;

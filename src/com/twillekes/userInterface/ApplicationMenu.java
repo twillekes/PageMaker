@@ -13,7 +13,6 @@ import com.twillekes.userInteraction.ImportFile;
 import com.twillekes.userInteraction.ImportMetadata;
 import com.twillekes.userInteraction.ImportRepository;
 import com.twillekes.userInteraction.PublishRepository;
-import com.twillekes.userInteraction.SaveRepository;
 
 public class ApplicationMenu {
 	public Menu menuBar;

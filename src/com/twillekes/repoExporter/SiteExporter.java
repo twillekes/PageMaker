@@ -33,34 +33,33 @@ public class SiteExporter {
 			client = new FTPClient();
 		}
 		public void initiate(String account, String destDir) throws Exception {
-			logger.log("Initiating with account "+account);
+			logger.log("Initiating with account " + account);
 			client.connect(SERVER);
 			int reply = client.getReplyCode();
 			if (!FTPReply.isPositiveCompletion(reply)) {
 				client.disconnect();
-				logger.log("Server refused connection");
+				logger.log("  Server refused connection");
 				throw new Exception("Server refused connection");
 			}
 			if (!client.login(account, password)) {
-				logger.log("Unable to log in");
+				logger.log("  Unable to log in");
 				throw new Exception("Unable to log in");
 			}
 			if (destDir.length() > 0 && !client.changeWorkingDirectory(destDir)) {
 				client.makeDirectory(destDir);
 				if (!client.changeWorkingDirectory(destDir)) {
-					logger.log("Could not create destination directory " + destDir);
+					logger.log("  Could not create destination directory " + destDir);
 					throw new Exception("Could not create destination directory " + destDir);
 				}
 			}
 			files = client.listFiles();
-			logger.log("Remote has " + files.length + " files");
+			logger.log("  Account (" + account + ") has " + files.length + " files");
 		}
 		private boolean shouldUpload(String filePath) {
 			String fileName = Picture.getFileName(filePath);
 			File theFile = new File(filePath);
 			boolean found = false;
 			for (int i = 0; i < this.files.length ; i++) {
-				//System.out.println("Checking remote file name "+this.files[i].getName());
 				if (this.files[i].getName().equals(fileName)) {
 					if (Math.abs(this.files[i].getSize() - FileUtils.sizeOf(theFile)) > FILE_SIZE_TOLERANCE) {
 						return true;
@@ -81,7 +80,7 @@ public class SiteExporter {
 			if (shouldUpload(Picture.getThumbName(filePath))) {
 				return true;
 			}
-			logger.log("File " + Picture.getFileName(filePath) + " does not need upload");
+			logger.log("    File " + Picture.getFileName(filePath) + " does not need upload");
 			return false;
 		}
 		public void terminate() {
@@ -97,41 +96,42 @@ public class SiteExporter {
 	        String thumbPath = Picture.getThumbName(filePath);
 	        String destThumbFilePath = Picture.getFileName(thumbPath);
 
-	        logger.log("Uploading from "+filePath+" to "+destFilePath+" and "+thumbPath+" to "+destThumbFilePath);
+	        logger.log("    Uploading from "+filePath+" to "+destFilePath+" and "+thumbPath+" to "+destThumbFilePath);
 			InputStream local = new FileInputStream(filePath);
 			if (!client.storeFile(destFilePath, local)) {
-				logger.log("Unable to upload "+filePath);
+				logger.log("    Unable to upload "+filePath);
 				throw new Exception("Unable to upload "+filePath);
 			}
 			local = new FileInputStream(thumbPath);
 			if (!client.storeFile(destThumbFilePath, local)) {
-				logger.log("Unable to upload "+thumbPath);
+				logger.log("    Unable to upload "+thumbPath);
 				throw new Exception("Unable to upload "+thumbPath);
 			}
 		}
 		public void upload(String filePath) throws Exception {
-	        logger.log("Uploading "+filePath);
+	        logger.log("    Uploading "+filePath);
 	        String destFilePath = Picture.getFileName(filePath);
 			InputStream local = new FileInputStream(filePath);
 			if (!client.storeFile(destFilePath, local)) {
-				logger.log("Unable to upload "+filePath);
+				logger.log("    Unable to upload "+filePath);
 				throw new Exception("Unable to upload "+filePath);
 			}
 		}
 		public void purge(List<String> filesToKeep) {
+			logger.log("  Starting purge...");
 			for (int i = 0; i < this.files.length ; i++) {
 				String thumbName = Picture.getThumbName(this.files[i].getName());
 				if (filesToKeep.contains(this.files[i].getName())) {
-					logger.log("Keeping file "+this.files[i].getName());
+					logger.log("    Keeping file "+this.files[i].getName());
 					continue;
 				}
-				logger.log("Deleting files "+this.files[i].getName()+" and "+thumbName);
+				logger.log("    Deleting files "+this.files[i].getName()+" and "+thumbName);
 				try {
 					if (!client.deleteFile(this.files[i].getName())) {
-						logger.log("Unable to delete "+this.files[i].getName());
+						logger.log("    Unable to delete "+this.files[i].getName());
 					}
 					if (!client.deleteFile(thumbName)) {
-						logger.log("Unable to delete "+thumbName);
+						logger.log("    Unable to delete "+thumbName);
 					}
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -178,7 +178,9 @@ public class SiteExporter {
 		} catch (Exception e) {
 			logger.log("Unable to upload feed and imageList files");
 			e.printStackTrace();
+			return;
 		}
+		logger.log("The site has been published successfully");
 	}
 	public void test(String pw, Logger logger) {
 		FtpExporter ftpExporter = new FtpExporter(pw, logger);
@@ -194,6 +196,8 @@ public class SiteExporter {
 			ftpExporter.terminate();
 		} catch (Exception e) {
 			e.printStackTrace();
+			return;
 		}
+		logger.log("The test has completed successfully");
 	}
 }

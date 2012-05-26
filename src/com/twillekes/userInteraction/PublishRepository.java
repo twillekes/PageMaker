@@ -4,8 +4,8 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 
 import com.twillekes.repoExporter.SiteExporter;
-import com.twillekes.repoExporter.SiteExporter.Logger;
 import com.twillekes.userInterface.PasswordDialog;
+import com.twillekes.userInterface.PublishDialog;
 
 public class PublishRepository implements SelectionListener {
 	String pass;
@@ -15,13 +15,8 @@ public class PublishRepository implements SelectionListener {
 			@Override
 			public void PasswordReceived(String password) {
 				SiteExporter siteExporter = new SiteExporter();
-//				siteExporter.export("testpw", new SiteExporter.Logger() {});
-				siteExporter.test(password, new Logger() {
-					@Override
-					public void log(String message) {
-						System.out.println(message);
-					}
-				});
+//				siteExporter.export(password, new PublishDialog());
+				siteExporter.test(password, new PublishDialog());
 			}
 			@Override
 			public void DialogCancelled() {
