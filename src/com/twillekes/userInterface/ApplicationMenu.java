@@ -36,9 +36,9 @@ public class ApplicationMenu {
 	    importRepositoryItem.setText("Import from &Repository");
 	    importRepositoryItem.addSelectionListener(new ImportRepository());
 	    
-	    MenuItem saveItem = new MenuItem(fileMenu, SWT.NONE);
-	    saveItem.setText("&Save Repository to Disk");
-	    saveItem.addSelectionListener(new SaveRepository());
+//	    MenuItem saveItem = new MenuItem(fileMenu, SWT.NONE);
+//	    saveItem.setText("&Save Repository to Disk");
+//	    saveItem.addSelectionListener(new SaveRepository());
 	    
 	    MenuItem exportItem = new MenuItem(fileMenu, SWT.NONE);
 	    exportItem.setText("&Export Repository to Disk");

@@ -22,6 +22,9 @@ public class ExportRepository implements SelectionListener  {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
+		
+		com.twillekes.xml.Exporter xmlExporter = new com.twillekes.xml.Exporter();
+		xmlExporter.export(Application.getPortfolio());
 	}
 	@Override
 	public void widgetDefaultSelected(SelectionEvent e) {
