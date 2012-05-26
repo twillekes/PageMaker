@@ -25,6 +25,7 @@ import org.w3c.dom.Node;
 import com.twillekes.json.Importer;
 import com.twillekes.portfolio.Picture;
 import com.twillekes.portfolio.Portfolio;
+import com.twillekes.portfolio.Repository;
 
 public class Exporter {
 	public static void main(String[] args) {
@@ -41,7 +42,7 @@ public class Exporter {
 		} catch (ParserConfigurationException e1) {
 			e1.printStackTrace();
 		}
-		Document doc = docBuilder.newDocument(); // parse("/path/to/file.xml");
+		Document doc = docBuilder.newDocument();
 		
 		buildRSS(portfolio, doc);
 		
@@ -67,7 +68,7 @@ public class Exporter {
 		System.out.println(xmlString);
 		
 		try {
-			BufferedWriter out = new BufferedWriter(new FileWriter("test.txt"));
+			BufferedWriter out = new BufferedWriter(new FileWriter(Repository.getBasePath() + "feed.xml"));
 			out.write(xmlString);
 			out.close();
 		} catch (IOException e) { 

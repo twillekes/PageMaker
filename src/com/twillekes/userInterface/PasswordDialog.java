@@ -36,13 +36,16 @@ public class PasswordDialog {
 	    ok.setText("Ok");
 	    ok.addListener(SWT.Selection, new Listener(){
 	    	public void handleEvent(Event event) {
-	    		observer.PasswordReceived(textPassword.getText());
+	    		String pw = textPassword.getText();
+	    		shell.close();
+	    		observer.PasswordReceived(pw);
 	    	}
 	    });
 	    Button cancel = new Button(butts, SWT.PUSH);
 	    cancel.setText("Cancel");
 	    cancel.addListener(SWT.Selection, new Listener(){
 	    	public void handleEvent(Event event) {
+	    		shell.close();
 	    		observer.DialogCancelled();
 	    	}
 	    });
