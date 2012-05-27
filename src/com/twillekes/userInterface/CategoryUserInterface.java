@@ -1,5 +1,6 @@
 package com.twillekes.userInterface;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -14,12 +15,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 
 import com.twillekes.portfolio.Picture;
+import com.twillekes.userInteraction.Selection;
 
 public class CategoryUserInterface {
 	private List<Picture> pictures;
 	private boolean shown;
 	private Group group;
 	private Group previewGroup = null;
+	private List<PreviewUserInterface> previewUserInterfaces;
 	public CategoryUserInterface(final Composite parent, List<Picture> pictures, String categoryLabel) {
 		this.pictures = pictures;
 		this.shown = false;
@@ -34,6 +37,7 @@ public class CategoryUserInterface {
 			public void widgetSelected(SelectionEvent e) {
 				if (shown) {
 					previewGroup.dispose();
+					Selection.instance().remove(previewUserInterfaces);
 				} else {
 					populatePreviews();
 				}
@@ -56,9 +60,11 @@ public class CategoryUserInterface {
 		previewGroup.setLayout(groupLayout);
 		//previewGroup.setText(categoryLabel);
 		Iterator<Picture> it = pictures.iterator();
+		previewUserInterfaces = new ArrayList<PreviewUserInterface>();
 		while(it.hasNext()) {
 			final Picture pic = it.next();
 			final PreviewUserInterface prevUi = new PreviewUserInterface(previewGroup, pic, pic.getRepositoryThumbFilePath());
+			previewUserInterfaces.add(prevUi);
 			prevUi.setClickObserver(new PreviewUserInterface.ClickObserver() {
 				@Override
 				public void click(MouseEvent mouseEvent) {

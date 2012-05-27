@@ -29,6 +29,7 @@ import com.twillekes.portfolio.Picture;
 import com.twillekes.portfolio.Portfolio;
 import com.twillekes.portfolio.Repository;
 import com.twillekes.repoExporter.FileSystemExporter;
+import com.twillekes.userInteraction.Selection;
 import com.twillekes.userInteraction.Trash;
 
 public class PortfolioUserInterface implements Observer {
@@ -56,6 +57,7 @@ public class PortfolioUserInterface implements Observer {
 		scroll.pack();
 	}
 	public void buildCategoryUserInterface(String categorization) {
+		Selection.instance().removeAll();
 		this.currentCategorization = categorization;
 		Control [] children = categoryGroup.getChildren ();
 		for (int i=1; i<children.length; i++) {

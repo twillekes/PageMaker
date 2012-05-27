@@ -12,7 +12,6 @@ public class Selection extends Observable {
 	private static Selection theInstance = null;
 	List<PreviewUserInterface> selected;
 	public Selection() {
-		theInstance = this;
 		selected = new ArrayList<PreviewUserInterface>();
 	}
 	public static Selection instance() {
@@ -26,15 +25,21 @@ public class Selection extends Observable {
 		this.setChanged();
 		this.notifyObservers(selected.size());
 	}
+	public void remove(List<PreviewUserInterface> previewUserInterfaces) {
+		Iterator<PreviewUserInterface> it = previewUserInterfaces.iterator();
+		while(it.hasNext()) {
+			remove(it.next());
+		}
+	}
 	public void remove(PreviewUserInterface previewUserInterface) {
 		selected.remove(previewUserInterface);
 		this.setChanged();
 		this.notifyObservers(selected.size());
 	}
 	public void removeAll() {
-		selected.removeAll(null);
+		selected.clear();
 		this.setChanged();
-		this.notifyObservers(selected.size());
+		this.notifyObservers(0);
 	}
 	public List<PreviewUserInterface> get() {
 		return selected;

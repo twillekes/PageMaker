@@ -1,8 +1,6 @@
 package com.twillekes.userInterface;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.PaintEvent;
@@ -85,12 +83,6 @@ public class PreviewUserInterface {
 				}
 			}
 		});
-//		canvas.addDisposeListener(new DisposeListener(){
-//			@Override
-//			public void widgetDisposed(DisposeEvent e) {
-//				Selection.instance().remove(this);
-//			}
-//		});
 		//canvas.layout();
 	}
 	public void setClickObserver(ClickObserver clickObserver) {
