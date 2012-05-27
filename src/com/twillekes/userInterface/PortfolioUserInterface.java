@@ -73,6 +73,8 @@ public class PortfolioUserInterface {
 		}
 		categoryGroup.layout();
 		categoryGroup.pack();
+		Application.getShell().layout();
+		Application.getShell().pack();
 	}
 	public void setupCategoryButtons(String categorization, Composite parent) {
 		final Group group = new Group(parent, SWT.NONE);
