@@ -205,6 +205,8 @@ public class Importer {
 					metadata.setIsDiscarded(val);
 				} else if (key.equals("isNew")) {
 					metadata.setIsNew(val);
+				} else if (key.equals("isInFeed")) {
+					metadata.setIsInFeed(val);
 				} else if (key.equals("isFavorite")) {
 					metadata.setIsFavorite(val);
 				} else {

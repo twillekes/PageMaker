@@ -1,6 +1,5 @@
 package com.twillekes.userInterface;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -137,9 +136,9 @@ public class PortfolioUserInterface {
 		}
 		Iterator<String> subjectIt = catValues.iterator();
 		while(subjectIt.hasNext()) {
-			List<Picture> list = new ArrayList<Picture>();
 			String subject = subjectIt.next();
-			new CategoryUserInterface(parent, portfolio.getPictures(categorization, subject), subject + " (" + list.size() + " images)");
+			List<Picture> list = portfolio.getPictures(categorization, subject);
+			new CategoryUserInterface(parent, list, subject + " (" + list.size() + " images)");
 		}
 	}
 	public static Composite create(List<Picture> pictures) {

@@ -16,6 +16,9 @@ import com.twillekes.json.Importer;
 import com.twillekes.portfolio.Portfolio;
 import com.twillekes.userInteraction.Selection;
 
+// Need to run JAR as:
+// java -XstartOnFirstThread -jar PageMaker.jar
+
 // TODO: Add ability to delete old images
 // TODO: Application icon/tray icon
 // TODO: Package as application

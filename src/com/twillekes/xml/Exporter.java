@@ -28,12 +28,12 @@ import com.twillekes.portfolio.Portfolio;
 import com.twillekes.portfolio.Repository;
 
 public class Exporter {
-	public static void main(String[] args) {
-		Importer imp = new Importer();
-		Portfolio portfolio = imp.createPortfolioFromRepository();
-		Exporter exp = new Exporter();
-		exp.export(portfolio);
-	}
+//	public static void main(String[] args) {
+//		Importer imp = new Importer();
+//		Portfolio portfolio = imp.createPortfolioFromRepository();
+//		Exporter exp = new Exporter();
+//		exp.export(portfolio);
+//	}
 	public void export(Portfolio portfolio) {
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = null;
@@ -97,7 +97,7 @@ public class Exporter {
 		link.setTextContent("http://members.shaw.ca/twillekes/");
 		channel.appendChild(link);
 
-		Iterator<Picture> it = portfolio.getPictures("isNew", "1").iterator();
+		Iterator<Picture> it = portfolio.getPictures("isInFeed", "1").iterator();
 		while(it.hasNext()) {
 			Picture pic = it.next();
 			Node item = doc.createElement("item");

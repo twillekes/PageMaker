@@ -303,6 +303,13 @@ public class PictureUserInterface {
 					picture.getMetadata().setIsDiscarded(value);
 				}
 			});
+			new PictureComboBox(metadataGroup, picture, "Is in Feed:", picture.getMetadata().getIsInFeed(),
+					Metadata.schema.isInFeeds.toArray(new String[Metadata.schema.isInFeeds.size()]), new TextChangeHandler(){
+				@Override
+				public void textChanged(Picture picture, String value) {
+					picture.getMetadata().setIsInFeed(value);
+				}
+			});
 			new PictureComboBox(metadataGroup, picture, "Repository:", Repository.getRepositoryNameForPicture(picture),
 					Repository.getRepositoryNames().toArray(new String[Repository.getRepositoryNames().size()]), new TextChangeHandler(){
 				@Override

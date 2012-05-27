@@ -34,6 +34,7 @@ public class Metadata implements Cloneable {
 	private String isNew;
 	private String isDiscarded;
 	private String isFavorite;
+	private String isInFeed;
 	public static MetadataSchema schema = null;
 	
 	public Metadata() {
@@ -52,7 +53,7 @@ public class Metadata implements Cloneable {
 	public class MetadataSchema {
 		public List<String> orientations, subjects, seasons, cameras, lenses, films,
 			chromes, formats, directions, filterss, doNotShows, isNews, isDiscardeds,
-			isFavorites, ratings, years, months;
+			isFavorites, ratings, years, months, isInFeeds;
 		public MetadataSchema() {
 			orientations = new ArrayList<String>();
 			subjects = new ArrayList<String>();
@@ -71,6 +72,7 @@ public class Metadata implements Cloneable {
 			ratings = new ArrayList<String>();
 			years = new ArrayList<String>();
 			months = new ArrayList<String>();
+			isInFeeds = new ArrayList<String>();
 		}
 		public void update(String newEntry, List<String> arr) {
 			Iterator<String> it = arr.iterator();
@@ -117,6 +119,8 @@ public class Metadata implements Cloneable {
 				return this.isDiscardeds;
 			} else if (categoryName.equals("isFavorite")) {
 				return this.isFavorites;
+			} else if (categoryName.equals("isInFeed")) {
+				return this.isInFeeds;
 			} else {
 				throw new Exception("Unrecognized category name: " + categoryName);
 			}
@@ -130,7 +134,7 @@ public class Metadata implements Cloneable {
 	}
 	
 	public static List<String> getFlagCategories() {
-		List<String> categories = Arrays.asList("doNotShow", "isNew", "isDiscarded", "isFavorite");
+		List<String> categories = Arrays.asList("doNotShow", "isNew", "isDiscarded", "isFavorite", "isInFeed");
 		List<String> populated = new ArrayList<String>();
 		Iterator<String> it = categories.iterator();
 		while(it.hasNext()) {
@@ -185,6 +189,8 @@ public class Metadata implements Cloneable {
 			return this.isDiscarded;
 		} else if (categoryName.equals("isFavorite")) {
 			return this.isFavorite;
+		} else if (categoryName.equals("isInFeed")) {
+			return this.isInFeed;
 		} else {
 			throw new Exception("Unrecognized category name: " + categoryName);
 		}
@@ -352,31 +358,47 @@ public class Metadata implements Cloneable {
 		return doNotShow;
 	}
 	public void setDoNotShow(String doNotShow) {
-		this.doNotShow = doNotShow;
-		schema.update(doNotShow, schema.doNotShows);
+		if (doNotShow.equals("")) {
+			this.doNotShow = null;
+		} else {
+			this.doNotShow = doNotShow;
+			schema.update(doNotShow, schema.doNotShows);
+		}
 	}
 
 	public String getIsNew() {
 		return isNew;
 	}
 	public void setIsNew(String isNew) {
-		this.isNew = isNew;
-		schema.update(isNew, schema.isNews);
+		if (isNew.equals("")) {
+			isNew = null;
+		} else {
+			this.isNew = isNew;
+			schema.update(isNew, schema.isNews);
+		}
 	}
 
 	public String getIsDiscarded() {
 		return isDiscarded;
 	}
 	public void setIsDiscarded(String isDiscarded) {
-		this.isDiscarded = isDiscarded;
-		schema.update(isDiscarded, schema.isDiscardeds);
+		if (isDiscarded.equals("")) {
+			this.isDiscarded = null;
+		} else {
+			this.isDiscarded = isDiscarded;
+			schema.update(isDiscarded, schema.isDiscardeds);
+		}
 	}
 	public String getIsFavorite() {
 		return isFavorite;
 	}
 	public void setIsFavorite(String isFavorite) {
-		this.isFavorite = isFavorite;
-		schema.update(isFavorite, schema.isFavorites);
+		if (isFavorite.equals("")) {
+			this.isFavorite = null;
+		} else {
+			this.isFavorite = isFavorite;
+			schema.update(isFavorite, schema.isFavorites);
+		}
 	}
 	
 	public String toString() {
@@ -392,5 +414,16 @@ public class Metadata implements Cloneable {
 			   " Subject: " + this.subject +
 			   " Rating: " + this.rating +
 			   " isNew: " + this.isNew;
+	}
+	public String getIsInFeed() {
+		return isInFeed;
+	}
+	public void setIsInFeed(String isInFeed) {
+		if (isInFeed.equals("")) {
+			this.isInFeed = null;
+		} else {
+			this.isInFeed = isInFeed;
+			schema.update(isInFeed, schema.isInFeeds);
+		}
 	}
 }
