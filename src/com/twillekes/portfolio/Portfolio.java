@@ -5,10 +5,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-public class Portfolio {
+public class Portfolio extends Observable {
 	public class CategoryRecord {
 		public String categoryValue;
 		public List<Integer> imageIndexes;
@@ -126,8 +127,22 @@ public class Portfolio {
 		}
 		return list;
 	}
-	public void remove(Picture picture) {
-		this.pictures.remove(picture);
-		// TODO: Signal observer
+	public void remove(Picture picture) throws Exception {
+		// Cannot use pictures.remove() because the comparitor is overridden for pictures
+		Iterator<Picture> it = this.pictures.iterator();
+		boolean found = false;
+		while(it.hasNext()) {
+			Picture pic = it.next();
+			if (pic == picture) {
+				it.remove();
+				found = true;
+				break;
+			}
+		}
+		if (!found) {
+			throw new Exception("Unable to remove picture " + picture.getRepositoryFilePath());
+		}
+		this.setChanged();
+		this.notifyObservers();
 	}
 }

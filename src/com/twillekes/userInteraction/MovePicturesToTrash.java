@@ -9,9 +9,8 @@ import org.eclipse.swt.widgets.MessageBox;
 
 import com.twillekes.portfolio.Picture;
 import com.twillekes.userInterface.Application;
-import com.twillekes.userInterface.PortfolioUserInterface;
 
-public class EditProperties implements SelectionListener {
+public class MovePicturesToTrash implements SelectionListener {
 	@Override
 	public void widgetSelected(SelectionEvent e) {
 		List<Picture> pics = Selection.instance().getPictures();
@@ -19,9 +18,18 @@ public class EditProperties implements SelectionListener {
 			MessageBox mBox = new MessageBox(Application.getShell(), SWT.ICON_ERROR | SWT.OK);
 			mBox.setMessage("You need to select some images first");
 			mBox.open();
-			return;
+		} else {
+			MessageBox mBox = new MessageBox(Application.getShell(), SWT.ICON_QUESTION | SWT.OK | SWT.CANCEL);
+			mBox.setMessage("Are you sure you want to move the selected images to the trash bin?");
+			int value = mBox.open();
+			if (value == SWT.OK) {
+				try {
+					Trash.instance().moveToTrash(pics);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
 		}
-		PortfolioUserInterface.create(pics);
 	}
 	@Override
 	public void widgetDefaultSelected(SelectionEvent e) {

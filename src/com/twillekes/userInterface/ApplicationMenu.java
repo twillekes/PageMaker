@@ -1,12 +1,16 @@
 package com.twillekes.userInterface;
 
 
+import java.util.Observable;
+import java.util.Observer;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
-import com.twillekes.userInteraction.DeletePictures;
+import com.twillekes.userInteraction.EmptyTrash;
+import com.twillekes.userInteraction.MovePicturesToTrash;
 import com.twillekes.userInteraction.EditProperties;
 import com.twillekes.userInteraction.ExitApplication;
 import com.twillekes.userInteraction.ExportRepository;
@@ -14,9 +18,14 @@ import com.twillekes.userInteraction.ImportFile;
 import com.twillekes.userInteraction.ImportMetadata;
 import com.twillekes.userInteraction.ImportRepository;
 import com.twillekes.userInteraction.PublishRepository;
+import com.twillekes.userInteraction.Selection;
+import com.twillekes.userInteraction.Trash;
 
-public class ApplicationMenu {
+public class ApplicationMenu implements Observer {
 	public Menu menuBar;
+	private MenuItem editPropertiesItem;
+	private MenuItem deletePictureItem;
+	private MenuItem emptyTrashItem;
 	public ApplicationMenu() {
 		final Shell shell = Application.getShell();
 	    menuBar = new Menu(shell, SWT.BAR);
@@ -36,6 +45,8 @@ public class ApplicationMenu {
 	    importRepositoryItem.setText("Import from &Repository");
 	    importRepositoryItem.addSelectionListener(new ImportRepository());
 	    
+	    new MenuItem(fileMenu, SWT.SEPARATOR);
+	    
 //	    MenuItem saveItem = new MenuItem(fileMenu, SWT.NONE);
 //	    saveItem.setText("&Save Repository to Disk");
 //	    saveItem.addSelectionListener(new SaveRepository());
@@ -47,6 +58,13 @@ public class ApplicationMenu {
 	    MenuItem publishItem = new MenuItem(fileMenu, SWT.NONE);
 	    publishItem.setText("&Publish to Web");
 	    publishItem.addSelectionListener(new PublishRepository());
+	    
+	    new MenuItem(fileMenu, SWT.SEPARATOR);
+	    
+	    emptyTrashItem = new MenuItem(fileMenu, SWT.NONE);
+	    emptyTrashItem.setText("&Empty the Trash");
+	    emptyTrashItem.addSelectionListener(new EmptyTrash());
+	    emptyTrashItem.setEnabled(Trash.instance().collect().size() > 0);
 	    
 	    new MenuItem(fileMenu, SWT.SEPARATOR);
 	    
@@ -65,12 +83,32 @@ public class ApplicationMenu {
 	    fileImportItem.setText("&Import an Image");
 	    fileImportItem.addSelectionListener(new ImportFile());
 	    
-	    MenuItem editPropertiesItem = new MenuItem(editMenu, SWT.NONE);
+	    new MenuItem(editMenu, SWT.SEPARATOR);
+	    
+	    editPropertiesItem = new MenuItem(editMenu, SWT.NONE);
 	    editPropertiesItem.setText("Edit &Properties");
 	    editPropertiesItem.addSelectionListener(new EditProperties());
+	    editPropertiesItem.setEnabled(false);
 	    
-	    MenuItem deletePictureItem = new MenuItem(editMenu, SWT.NONE);
-	    deletePictureItem.setText("&Delete Picture");
-	    deletePictureItem.addSelectionListener(new DeletePictures());
+	    deletePictureItem = new MenuItem(editMenu, SWT.NONE);
+	    deletePictureItem.setText("&Move Pictures to Trash");
+	    deletePictureItem.addSelectionListener(new MovePicturesToTrash());
+	    deletePictureItem.setEnabled(false);
+	    
+	    Selection.instance().addObserver(this);
+	    Trash.instance().addObserver(this);
+	}
+	@Override
+	public void update(Observable source, Object value) {
+		boolean enabled = false;
+		if ((Integer)value > 0) {
+			enabled = true;
+		}
+		if (source == Selection.instance()) {
+			editPropertiesItem.setEnabled(enabled);
+			deletePictureItem.setEnabled(enabled);
+		} else if (source == Trash.instance()) {
+			emptyTrashItem.setEnabled(enabled);
+		}
 	}
 }

@@ -18,7 +18,6 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.twillekes.json.Importer;
 import com.twillekes.portfolio.Portfolio;
-import com.twillekes.userInteraction.Selection;
 
 // Need to run JAR as:
 // java -XstartOnFirstThread -jar PageMaker.jar
@@ -56,15 +55,14 @@ public class Application {
         shell.setLayout(layout);
         shell.setText("Page Maker");
         
-        ApplicationMenu applicationMenu = new ApplicationMenu();
-        new Selection();
-
         //center(shell);
 
 		Importer importer = new Importer();
 		portfolio = importer.createPortfolioFromRepository();
         //portfolio = importer.createPortfolioFromMetadata();
 		portfolioUi = new PortfolioUserInterface(shell, portfolio);
+
+        ApplicationMenu applicationMenu = new ApplicationMenu();
 
         shell.setMenuBar(applicationMenu.menuBar);
 		shell.layout();

@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.twillekes.userInterface.Application;
-
 // Change to "baseUrl", which is SITE_URL + account name and
 // "relativeUrl", which is the path (e.g. "newImages/")
 // Then for the local case, just set baseUrl to ""
@@ -57,8 +55,10 @@ public class Repository {
 	public void add(Picture picture) {
 		this.pictures.add(picture);
 	}
-	public void remove(Picture picture) {
-		this.pictures.remove(picture);
+	public void remove(Picture picture) throws Exception {
+		if (!this.pictures.remove(picture)) {
+			throw new Exception("Could not remove picture " + picture.getRepositoryFilePath() + " from repository " + this.getPath());
+		}
 	}
 	public List<Picture> getPictures() {
 		return this.pictures;
@@ -88,7 +88,7 @@ public class Repository {
 	public String getPath() {
 		return this.path;
 	}
-	public static Repository getRepositoryForPicture(Picture picture) {
+	public static Repository getRepositoryForPicture(Picture picture) throws Exception {
 		Iterator<Repository> it = repositories.iterator();
 		while(it.hasNext()) {
 			Repository repo = it.next();
@@ -96,9 +96,9 @@ public class Repository {
 				return repo;
 			}
 		}
-		return null;
+		throw new Exception("Could not find repository for picture " + picture.getRepositoryFilePath());
 	}
-	public static String getRepositoryNameForPicture(Picture picture) {
+	public static String getRepositoryNameForPicture(Picture picture) throws Exception {
 		return getRepositoryForPicture(picture).getPath();
 	}
 	public boolean containsPicture(Picture picture) {
@@ -113,12 +113,6 @@ public class Repository {
 	}
 	public static void movePictureToRepository(Picture picture, String repoName) {
 		// TODO
-	}
-	public static String removePictureFromRepository(Picture picture) {
-		String repoName = getRepositoryNameForPicture(picture);
-		Repository repo = getRepositoryForPicture(picture);
-		repo.remove(picture);
-		return repoName;
 	}
 	public static String getOriginalBasePath() {
 		return ORIG_PATH;
@@ -135,17 +129,14 @@ public class Repository {
 	public static String getPagePath() {
 		return PAGE_PATH;
 	}
-	public void moveToTrash(Picture picture) {
-		pictures.remove(picture);
+	public void moveToTrash(Picture picture) throws Exception {
+		if (!pictures.remove(picture)) {
+			throw new Exception("Could not find picture " + picture.getRepositoryFilePath() + " in repository " + this.getPath());
+		}
 		trash.add(picture);
 	}
-	public static void moveToTrash(List<Picture> pictures) {
-		Iterator<Picture> it = pictures.iterator();
-		while(it.hasNext()) {
-			Picture picture = it.next();
-			Repository.getRepositoryForPicture(picture).moveToTrash(picture);
-			Application.getPortfolio().remove(picture);
-		}
+	public List<Picture> getTrash() {
+		return trash;
 	}
 	public void addToTrash(Picture picture) {
 		trash.add(picture);

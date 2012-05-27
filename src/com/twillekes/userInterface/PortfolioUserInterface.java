@@ -2,6 +2,8 @@ package com.twillekes.userInterface;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -27,13 +29,17 @@ import com.twillekes.portfolio.Picture;
 import com.twillekes.portfolio.Portfolio;
 import com.twillekes.portfolio.Repository;
 import com.twillekes.repoExporter.FileSystemExporter;
+import com.twillekes.userInteraction.Trash;
 
-public class PortfolioUserInterface {
+public class PortfolioUserInterface implements Observer {
 	private Portfolio portfolio;
 	private Group categoryGroup;
 	private ScrolledComposite scroll;
+	private String currentCategorization = null;
 	public PortfolioUserInterface(Composite parent, Portfolio portfolio) {
 		this.portfolio = portfolio;
+		this.portfolio.addObserver(this);
+		Trash.instance().addObserver(this);
 		setupCategoryUserInterface("subject", parent);
 		//setupFullPortfolioUserInterface(parent, portfolio);
 	}
@@ -50,6 +56,7 @@ public class PortfolioUserInterface {
 		scroll.pack();
 	}
 	public void buildCategoryUserInterface(String categorization) {
+		this.currentCategorization = categorization;
 		Control [] children = categoryGroup.getChildren ();
 		for (int i=1; i<children.length; i++) {
 			Control child = children [i];
@@ -127,6 +134,10 @@ public class PortfolioUserInterface {
 			Repository repo = it.next();
 			new CategoryUserInterface(parent, repo.getPictures(), repo.getPath() + " (" + FileSystemExporter.getPercent(repo) + "% of 20Meg)");
 		}
+		List<Picture> trash = Trash.instance().collect();
+		if (trash.size() > 0) {
+			new CategoryUserInterface(parent, trash, "Trash (" + trash.size() + " images)");
+		}
 	}
 	public void setupCategories(String categorization, Composite parent) {
 		List<String> catValues;
@@ -196,5 +207,9 @@ public class PortfolioUserInterface {
 	}
 	public void dispose() {
 		scroll.dispose();
+	}
+	@Override
+	public void update(Observable o, Object arg) {
+		buildCategoryUserInterface(currentCategorization);
 	}
 }
