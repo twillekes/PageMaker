@@ -13,11 +13,12 @@ import com.twillekes.userInteraction.EmptyTrash;
 import com.twillekes.userInteraction.MovePicturesToTrash;
 import com.twillekes.userInteraction.EditProperties;
 import com.twillekes.userInteraction.ExitApplication;
-import com.twillekes.userInteraction.ExportRepository;
+import com.twillekes.userInteraction.GeneratePage;
 import com.twillekes.userInteraction.ImportFile;
 import com.twillekes.userInteraction.ImportMetadata;
 import com.twillekes.userInteraction.ImportRepository;
 import com.twillekes.userInteraction.PublishRepository;
+import com.twillekes.userInteraction.SaveRepository;
 import com.twillekes.userInteraction.Selection;
 import com.twillekes.userInteraction.Trash;
 
@@ -47,13 +48,13 @@ public class ApplicationMenu implements Observer {
 	    
 	    new MenuItem(fileMenu, SWT.SEPARATOR);
 	    
-//	    MenuItem saveItem = new MenuItem(fileMenu, SWT.NONE);
-//	    saveItem.setText("&Save Repository to Disk");
-//	    saveItem.addSelectionListener(new SaveRepository());
+	    MenuItem saveItem = new MenuItem(fileMenu, SWT.NONE);
+	    saveItem.setText("&Save Repository");
+	    saveItem.addSelectionListener(new SaveRepository());
 	    
 	    MenuItem exportItem = new MenuItem(fileMenu, SWT.NONE);
-	    exportItem.setText("&Export Repository to Disk");
-	    exportItem.addSelectionListener(new ExportRepository());
+	    exportItem.setText("&Generate Page");
+	    exportItem.addSelectionListener(new GeneratePage());
 	    
 	    MenuItem publishItem = new MenuItem(fileMenu, SWT.NONE);
 	    publishItem.setText("&Publish to Web");

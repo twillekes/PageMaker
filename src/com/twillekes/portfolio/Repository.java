@@ -10,8 +10,8 @@ import java.util.List;
 
 public class Repository {
 	private static final String ORIG_PATH = "../Page/My-personal-web-page/page/";
-	private static final String FROM_ORIG_PATH = "../testRepository/";
-	private static final String BASE_PATH = "testRepository/";
+	private static final String FROM_ORIG_PATH = "../repository/";
+	private static final String BASE_PATH = "repository/";
 	private static final String PAGE_PATH = "page/";
 	private static final String FILE_NAME = BASE_PATH + "repository.json";
 	private static final String SITE_URL = "http://members.shaw.ca/";

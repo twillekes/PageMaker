@@ -65,7 +65,7 @@ public class Exporter {
 		}
 
 		String xmlString = escape(result.getWriter().toString());
-		System.out.println(xmlString);
+//		System.out.println(xmlString);
 		
 		try {
 			BufferedWriter out = new BufferedWriter(new FileWriter(Repository.getPagePath() + "feed.xml"));

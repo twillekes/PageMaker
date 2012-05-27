@@ -22,7 +22,7 @@ import com.twillekes.portfolio.Portfolio;
 // Need to run JAR as:
 // java -XstartOnFirstThread -jar PageMaker.jar
 
-// TODO: Add ability to delete old images
+// TODO: Track dirtiness state
 // TODO: Application icon/tray icon
 // TODO: Package as application
 // TODO: Ability to auto-FTP page template files
