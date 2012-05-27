@@ -15,8 +15,8 @@ public class PublishRepository implements SelectionListener {
 			@Override
 			public void PasswordReceived(String password) {
 				SiteExporter siteExporter = new SiteExporter();
-//				siteExporter.export(password, new PublishDialog());
-				siteExporter.test(password, new PublishDialog());
+				siteExporter.export(password, new PublishDialog());
+//				siteExporter.test(password, new PublishDialog());
 			}
 			@Override
 			public void DialogCancelled() {

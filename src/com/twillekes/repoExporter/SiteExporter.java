@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -15,18 +16,35 @@ import org.apache.commons.net.ftp.FTPReply;
 
 import com.twillekes.portfolio.Picture;
 import com.twillekes.portfolio.Repository;
+import com.twillekes.userInterface.Application;
 
 public class SiteExporter {
 	private static final String SERVER = "ftp.shaw.ca";
+	public static boolean forReal = false;
 	public interface Logger {
 		public void log(String message);
+	}
+	private class LoggerProxy implements Logger {
+		Logger logger;
+		public LoggerProxy(Logger logger) {
+			this.logger = logger;
+		}
+		@Override
+		public void log(final String message) {
+			Application.getDisplay().asyncExec(new Runnable(){
+				@Override
+				public void run() {
+					logger.log(message);
+				}
+			});
+		}
 	}
 	private class FtpExporter {
 		private String password;
 		private Logger logger;
 		private FTPClient client;
 		private FTPFile[] files;
-		private static final long FILE_SIZE_TOLERANCE = 1;
+		private static final long FILE_SIZE_TOLERANCE = 0;
 		public FtpExporter(String password, Logger logger) {
 			this.password = password;
 			this.logger = logger;
@@ -61,9 +79,12 @@ public class SiteExporter {
 			boolean found = false;
 			for (int i = 0; i < this.files.length ; i++) {
 				if (this.files[i].getName().equals(fileName)) {
+//					System.out.println("Remote file size is "+this.files[i].getSize()+" local size is "+FileUtils.sizeOf(theFile));
 					if (Math.abs(this.files[i].getSize() - FileUtils.sizeOf(theFile)) > FILE_SIZE_TOLERANCE) {
 						return true;
 					}
+//					Date date = new Date(theFile.lastModified());
+//					System.out.println("Remote file time stamp is "+this.files[i].getTimestamp().getTime()+" Local date is "+date);
 					if (FileUtils.isFileNewer(theFile, this.files[i].getTimestamp().getTime())) {
 						return true;
 					}
@@ -98,12 +119,12 @@ public class SiteExporter {
 
 	        logger.log("    Uploading from "+filePath+" to "+destFilePath+" and "+thumbPath+" to "+destThumbFilePath);
 			InputStream local = new FileInputStream(filePath);
-			if (!client.storeFile(destFilePath, local)) {
+			if (forReal && !client.storeFile(destFilePath, local)) {
 				logger.log("    Unable to upload "+filePath);
 				throw new Exception("Unable to upload "+filePath);
 			}
 			local = new FileInputStream(thumbPath);
-			if (!client.storeFile(destThumbFilePath, local)) {
+			if (forReal && !client.storeFile(destThumbFilePath, local)) {
 				logger.log("    Unable to upload "+thumbPath);
 				throw new Exception("Unable to upload "+thumbPath);
 			}
@@ -112,7 +133,7 @@ public class SiteExporter {
 	        logger.log("    Uploading "+filePath);
 	        String destFilePath = Picture.getFileName(filePath);
 			InputStream local = new FileInputStream(filePath);
-			if (!client.storeFile(destFilePath, local)) {
+			if (forReal && !client.storeFile(destFilePath, local)) {
 				logger.log("    Unable to upload "+filePath);
 				throw new Exception("Unable to upload "+filePath);
 			}
@@ -127,10 +148,10 @@ public class SiteExporter {
 				}
 				logger.log("    Deleting files "+this.files[i].getName()+" and "+thumbName);
 				try {
-					if (!client.deleteFile(this.files[i].getName())) {
+					if (forReal && !client.deleteFile(this.files[i].getName())) {
 						logger.log("    Unable to delete "+this.files[i].getName());
 					}
-					if (!client.deleteFile(thumbName)) {
+					if (forReal && !client.deleteFile(thumbName)) {
 						logger.log("    Unable to delete "+thumbName);
 					}
 				} catch (IOException e) {
@@ -139,7 +160,15 @@ public class SiteExporter {
 			}
 		}
 	}
-	public void export(String password, Logger logger) {
+	public void export(final String password, final Logger logger) {
+		final LoggerProxy loggerProxy = new LoggerProxy(logger);
+		new Thread() {
+			public void run() {
+				performExport(password, loggerProxy);
+			}
+		}.start();
+	}
+	private void performExport(String password, Logger logger) {
 		FtpExporter ftpExporter = new FtpExporter(password, logger);
 		Iterator<Repository> it = Repository.get().iterator();
 		while(it.hasNext()) {

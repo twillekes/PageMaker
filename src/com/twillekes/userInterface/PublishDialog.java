@@ -29,7 +29,7 @@ public class PublishDialog implements Logger {
 		text = new Text(group, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.READ_ONLY);
 		RowData layoutData = new RowData();
 		layoutData.height = 260;
-		layoutData.width = 260;
+		layoutData.width = 600;
 		text.setLayoutData(layoutData);
 		
 	    final Button done = new Button(group, SWT.PUSH);
@@ -40,7 +40,7 @@ public class PublishDialog implements Logger {
 	    	}
 	    });
 	    shell.setDefaultButton(done);
-	    shell.setSize(300,360);
+	    shell.setSize(300,700);
 		shell.layout();
 		shell.pack();
 		shell.open();
