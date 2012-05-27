@@ -126,4 +126,8 @@ public class Portfolio {
 		}
 		return list;
 	}
+	public void remove(Picture picture) {
+		this.pictures.remove(picture);
+		// TODO: Signal observer
+	}
 }

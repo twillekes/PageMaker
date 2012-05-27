@@ -24,7 +24,18 @@ public class DeletePictures implements SelectionListener {
 			mBox.setMessage("Are you sure you want to permanently delete the selected images?");
 			int value = mBox.open();
 			if (value == SWT.OK) {
-				Repository.deletePictures(pics);
+				// TODO
+				// Move pictures into their trashedPictures holder
+				// Invoke moveToTrash on them, which
+				//   Marks the picture as changed
+				//   Notifies observers of the change (which the UI listens to)
+				//   Removes the picture from the Porfolio
+				// Note: Will want a "Empty trash" option
+				// Note: Will need to serialize/deserialize the trash bin
+				// Note: May want to have the ability to view the trash bin
+				//       (Model it as a separate special repository? How to save it's origin repo? Via "account"?
+				//        Need a special repo that has a new record type in its list.)
+				Repository.moveToTrash(pics);
 			}
 		}
 	}

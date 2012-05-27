@@ -4,25 +4,29 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.twillekes.userInterface.Application;
+
 // Change to "baseUrl", which is SITE_URL + account name and
 // "relativeUrl", which is the path (e.g. "newImages/")
 // Then for the local case, just set baseUrl to ""
 
 public class Repository {
 	private static final String ORIG_PATH = "../Page/My-personal-web-page/page/";
-	private static final String FROM_ORIG_PATH = "../repository/";
-	private static final String BASE_PATH = "repository/";
+	private static final String FROM_ORIG_PATH = "../testRepository/";
+	private static final String BASE_PATH = "testRepository/";
 	private static final String PAGE_PATH = "page/";
 	private static final String FILE_NAME = BASE_PATH + "repository.json";
 	private static final String SITE_URL = "http://members.shaw.ca/";
 	private String account;
 	private String path;
 	private List<Picture> pictures;
+	private List<Picture> trash;
 	private static List<Repository> repositories = null;
 	public Repository(String account, String path) {
 		this.account = account;
 		this.path = path;
 		this.pictures = new ArrayList<Picture>();
+		this.trash = new ArrayList<Picture>();
 		
 		if (repositories == null) {
 			repositories = new ArrayList<Repository>();
@@ -52,6 +56,9 @@ public class Repository {
 	}
 	public void add(Picture picture) {
 		this.pictures.add(picture);
+	}
+	public void remove(Picture picture) {
+		this.pictures.remove(picture);
 	}
 	public List<Picture> getPictures() {
 		return this.pictures;
@@ -107,8 +114,11 @@ public class Repository {
 	public static void movePictureToRepository(Picture picture, String repoName) {
 		// TODO
 	}
-	public static void deletePictures(List<Picture> pictures) {
-		
+	public static String removePictureFromRepository(Picture picture) {
+		String repoName = getRepositoryNameForPicture(picture);
+		Repository repo = getRepositoryForPicture(picture);
+		repo.remove(picture);
+		return repoName;
 	}
 	public static String getOriginalBasePath() {
 		return ORIG_PATH;
@@ -124,5 +134,20 @@ public class Repository {
 	}
 	public static String getPagePath() {
 		return PAGE_PATH;
+	}
+	public void moveToTrash(Picture picture) {
+		pictures.remove(picture);
+		trash.add(picture);
+	}
+	public static void moveToTrash(List<Picture> pictures) {
+		Iterator<Picture> it = pictures.iterator();
+		while(it.hasNext()) {
+			Picture picture = it.next();
+			Repository.getRepositoryForPicture(picture).moveToTrash(picture);
+			Application.getPortfolio().remove(picture);
+		}
+	}
+	public void addToTrash(Picture picture) {
+		trash.add(picture);
 	}
 }
