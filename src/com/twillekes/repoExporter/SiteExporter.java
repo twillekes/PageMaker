@@ -5,7 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;
+//import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -23,6 +23,9 @@ public class SiteExporter {
 	public static boolean forReal = false;
 	public interface Logger {
 		public void log(String message);
+	}
+	public interface CompletionObserver {
+		public void complete();
 	}
 	private class LoggerProxy implements Logger {
 		Logger logger;
@@ -101,7 +104,7 @@ public class SiteExporter {
 			if (shouldUpload(Picture.getThumbName(filePath))) {
 				return true;
 			}
-			logger.log("    File " + Picture.getFileName(filePath) + " does not need upload");
+			//logger.log("    File " + Picture.getFileName(filePath) + " does not need upload");
 			return false;
 		}
 		public void terminate() {
@@ -143,7 +146,7 @@ public class SiteExporter {
 			for (int i = 0; i < this.files.length ; i++) {
 				String thumbName = Picture.getThumbName(this.files[i].getName());
 				if (filesToKeep.contains(this.files[i].getName())) {
-					logger.log("    Keeping file "+this.files[i].getName());
+					//logger.log("    Keeping file "+this.files[i].getName());
 					continue;
 				}
 				logger.log("    Deleting files "+this.files[i].getName()+" and "+thumbName);
@@ -160,11 +163,17 @@ public class SiteExporter {
 			}
 		}
 	}
-	public void export(final String password, final Logger logger) {
+	public void export(final String password, final Logger logger, final CompletionObserver completionObserver) {
 		final LoggerProxy loggerProxy = new LoggerProxy(logger);
 		new Thread() {
 			public void run() {
 				performExport(password, loggerProxy);
+				Application.getDisplay().asyncExec(new Runnable(){
+					@Override
+					public void run() {
+						completionObserver.complete();
+					}
+				});
 			}
 		}.start();
 	}

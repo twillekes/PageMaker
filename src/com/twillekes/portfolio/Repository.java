@@ -107,6 +107,9 @@ public class Repository {
 	public static void movePictureToRepository(Picture picture, String repoName) {
 		// TODO
 	}
+	public static void deletePictures(List<Picture> pictures) {
+		
+	}
 	public static String getOriginalBasePath() {
 		return ORIG_PATH;
 	}

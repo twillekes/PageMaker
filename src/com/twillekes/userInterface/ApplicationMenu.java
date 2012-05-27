@@ -6,6 +6,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
+import com.twillekes.userInteraction.DeletePictures;
 import com.twillekes.userInteraction.EditProperties;
 import com.twillekes.userInteraction.ExitApplication;
 import com.twillekes.userInteraction.ExportRepository;
@@ -67,5 +68,9 @@ public class ApplicationMenu {
 	    MenuItem editPropertiesItem = new MenuItem(editMenu, SWT.NONE);
 	    editPropertiesItem.setText("Edit &Properties");
 	    editPropertiesItem.addSelectionListener(new EditProperties());
+	    
+	    MenuItem deletePictureItem = new MenuItem(editMenu, SWT.NONE);
+	    deletePictureItem.setText("&Delete Picture");
+	    deletePictureItem.addSelectionListener(new DeletePictures());
 	}
 }

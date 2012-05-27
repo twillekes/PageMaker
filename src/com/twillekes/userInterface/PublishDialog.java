@@ -15,23 +15,36 @@ import com.twillekes.repoExporter.SiteExporter.Logger;
 
 public class PublishDialog implements Logger {
 	private Text text;
+	private Group group;
+	private Shell shell;
 	@Override
 	public void log(String message) {
+		if (text.isDisposed()) {
+			return;
+		}
 		text.append(message + "\n");
 	}
 	public PublishDialog() {
-		final Shell shell = new Shell(Application.getShell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+		shell = new Shell(Application.getShell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell.setLayout(new FillLayout());
 		
-		Group group = new Group(shell, SWT.NONE);
+		group = new Group(shell, SWT.NONE);
 		group.setLayout(new RowLayout(SWT.VERTICAL));
 		
 		text = new Text(group, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.READ_ONLY);
 		RowData layoutData = new RowData();
 		layoutData.height = 260;
-		layoutData.width = 600;
+		layoutData.width = 800;
 		text.setLayoutData(layoutData);
-		
+
+		shell.layout();
+		shell.pack();
+		shell.open();
+	}
+	public void CanBeDisposed() {
+		if (shell.isDisposed()) {
+			return;
+		}
 	    final Button done = new Button(group, SWT.PUSH);
 	    done.setText("Done");
 	    done.addListener(SWT.Selection, new Listener(){
@@ -39,10 +52,8 @@ public class PublishDialog implements Logger {
 	    		shell.close();
 	    	}
 	    });
-	    shell.setDefaultButton(done);
-	    shell.setSize(300,700);
 		shell.layout();
 		shell.pack();
-		shell.open();
+	    shell.setDefaultButton(done);
 	}
 }
