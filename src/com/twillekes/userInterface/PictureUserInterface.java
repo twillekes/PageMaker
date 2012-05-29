@@ -1,6 +1,8 @@
 package com.twillekes.userInterface;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseEvent;
@@ -18,7 +20,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.twillekes.portfolio.Metadata;
 import com.twillekes.portfolio.Picture;
-import com.twillekes.portfolio.Folder;
+import com.twillekes.portfolio.Repository;
 
 public class PictureUserInterface {
 	interface TextChangeHandler {
@@ -65,6 +67,15 @@ public class PictureUserInterface {
 			}
 			text.setText(initialText);
 			text.addModifyListener(new TextModifyListener(text, picture, handler));
+//			text.addFocusListener(new FocusListener(){
+//				public void focusGained(FocusEvent e) {
+//					System.out.println("FOCUSED");
+//				}
+//				@Override
+//				public void focusLost(FocusEvent e) {
+//					System.out.println("FOCUS LOSTED");
+//				}
+//			});
 			
 			group.layout();
 		}
@@ -310,11 +321,11 @@ public class PictureUserInterface {
 					picture.getMetadata().setIsInFeed(value);
 				}
 			});
-			new PictureComboBox(metadataGroup, picture, "Repository:", Folder.getRepositoryNameForPicture(picture),
-					Folder.getRepositoryNames().toArray(new String[Folder.getRepositoryNames().size()]), new TextChangeHandler(){
+			new PictureComboBox(metadataGroup, picture, "Repository:", Repository.instance().getFolderNameForPicture(picture),
+					Repository.instance().getFolderNames().toArray(new String[Repository.instance().getFolderNames().size()]), new TextChangeHandler(){
 				@Override
 				public void textChanged(Picture picture, String value) {
-					Folder.movePictureToRepository(picture, value);
+					Repository.instance().movePictureToRepository(picture, value);
 				}
 			}, SWT.READ_ONLY);
 		} catch (Exception e) {

@@ -3,6 +3,7 @@ package com.twillekes.portfolio;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
+import java.util.Observer;
 
 // Portfolio has albums (defined by tags?)
 // Albums have pictures
@@ -10,7 +11,7 @@ import java.util.Observable;
 // Metadata is fixed information that won't change (e.g. focal length)
 // Tags are information added later
 
-public class Picture extends Observable implements Comparable<Picture>, Cloneable {
+public class Picture extends Observable implements Comparable<Picture>, Cloneable, Observer {
 	// Fields
 	// WARNING: These must appear as expected by the page's Javascript as they
 	// are serialized directly into JSON from here!
@@ -24,6 +25,7 @@ public class Picture extends Observable implements Comparable<Picture>, Cloneabl
 		filePath = "undefined";
 		localFilePath = "undefined";
 		this.metadata = new Metadata();
+		this.metadata.addObserver(this);
 	}
 	public Picture clone() throws CloneNotSupportedException {
 	    Picture clone = (Picture)super.clone();
@@ -36,12 +38,12 @@ public class Picture extends Observable implements Comparable<Picture>, Cloneabl
 	    return clone;
 	}
 	public void setFileName(String fileName) throws Exception {
-		Folder repo = Folder.getRepositoryForPicture(this);
+		Folder repo = Repository.instance().getFolderForPicture(this);
 		if (repo == null) {
 			throw new Exception("Must add picture to repository before setting its name");
 		}
 		this.setFilePath(repo.getUrl() + fileName);
-		this.setLocalFilePath(Folder.getPathFromJavascript() + fileName);
+		this.setLocalFilePath(Repository.instance().getPathFromJavascript() + fileName);
 		this.setChanged();
 		this.notifyObservers();
 	}
@@ -65,7 +67,7 @@ public class Picture extends Observable implements Comparable<Picture>, Cloneabl
 	}
 	// "Repository file path" is used when reading files from within this PageMaker application
 	public String getRepositoryFilePath() {
-		return Folder.getBasePath() + getFileName(this.getLocalFilePath());
+		return Repository.instance().getBasePath() + getFileName(this.getLocalFilePath());
 	}
 	public String getRepositoryThumbFilePath() {
 		return Picture.getThumbName(this.getRepositoryFilePath());
@@ -111,5 +113,10 @@ public class Picture extends Observable implements Comparable<Picture>, Cloneabl
 		int dotPos = filePath.lastIndexOf("/");
 		dotPos += 1;
 		return filePath.substring(dotPos);
+	}
+	@Override
+	public void update(Observable o, Object arg) {
+		this.setChanged();
+		this.notifyObservers();
 	}
 }

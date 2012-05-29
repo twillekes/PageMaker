@@ -9,6 +9,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
+import com.twillekes.portfolio.Repository;
 import com.twillekes.userInteraction.EmptyTrash;
 import com.twillekes.userInteraction.MovePicturesToTrash;
 import com.twillekes.userInteraction.EditProperties;
@@ -27,6 +28,7 @@ public class ApplicationMenu implements Observer {
 	private MenuItem editPropertiesItem;
 	private MenuItem deletePictureItem;
 	private MenuItem emptyTrashItem;
+	private MenuItem saveItem;
 	public ApplicationMenu() {
 		final Shell shell = Application.getShell();
 	    menuBar = new Menu(shell, SWT.BAR);
@@ -48,9 +50,10 @@ public class ApplicationMenu implements Observer {
 	    
 	    new MenuItem(fileMenu, SWT.SEPARATOR);
 	    
-	    MenuItem saveItem = new MenuItem(fileMenu, SWT.NONE);
+	    saveItem = new MenuItem(fileMenu, SWT.NONE);
 	    saveItem.setText("&Save Repository");
 	    saveItem.addSelectionListener(new SaveRepository());
+	    saveItem.setEnabled(false);
 	    
 	    MenuItem exportItem = new MenuItem(fileMenu, SWT.NONE);
 	    exportItem.setText("&Generate Page");
@@ -98,18 +101,17 @@ public class ApplicationMenu implements Observer {
 	    
 	    Selection.instance().addObserver(this);
 	    Trash.instance().addObserver(this);
+	    Repository.instance().addObserver(this);
 	}
 	@Override
 	public void update(Observable source, Object value) {
-		boolean enabled = false;
-		if ((Integer)value > 0) {
-			enabled = true;
-		}
 		if (source == Selection.instance()) {
-			editPropertiesItem.setEnabled(enabled);
-			deletePictureItem.setEnabled(enabled);
+			editPropertiesItem.setEnabled((Integer)value > 0);
+			deletePictureItem.setEnabled((Integer)value > 0);
 		} else if (source == Trash.instance()) {
-			emptyTrashItem.setEnabled(enabled);
+			emptyTrashItem.setEnabled((Integer)value > 0);
+		} else if (source == Repository.instance()) {
+			saveItem.setEnabled((Boolean)value);
 		}
 	}
 }

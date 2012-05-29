@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.twillekes.portfolio.Picture;
 import com.twillekes.portfolio.Folder;
+import com.twillekes.portfolio.Repository;
 import com.twillekes.repoExporter.FileSystemExporter;
 import com.twillekes.userInterface.Application;
 import com.twillekes.userInterface.PictureUserInterface;
@@ -21,7 +22,7 @@ public class ImportPicture {
 	static private Picture templatePicture = null;
 	public ImportPicture(String filePath){
 		try {
-			FileSystemExporter.copyFiles(filePath, Folder.getBasePath());
+			FileSystemExporter.copyFiles(filePath, Repository.instance().getBasePath());
 		} catch (IOException e4) {
 			MessageBox mBox = new MessageBox(Application.getShell(), SWT.ICON_ERROR | SWT.OK);
 			mBox.setMessage("Could not copy image files");
@@ -47,10 +48,10 @@ public class ImportPicture {
 				return;
 			}
         }
-        Folder repository;
+        Folder folder;
 		try {
-			repository = Folder.get("newImages");
-	        repository.add(pic);
+			folder = Repository.instance().getFolder("newImages");
+	        folder.add(pic);
 			pic.setFileName(fileName);
 		} catch (Exception e2) {
 			e2.printStackTrace();

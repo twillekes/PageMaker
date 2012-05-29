@@ -7,10 +7,11 @@ import org.apache.commons.io.FileUtils;
 
 import com.twillekes.portfolio.Picture;
 import com.twillekes.portfolio.Folder;
+import com.twillekes.portfolio.Repository;
 
 public class FileSystemExporter {
 	public static void export(String toPath) throws Exception {
-		Iterator<Folder> it = Folder.get().iterator();
+		Iterator<Folder> it = Repository.instance().getFolders().iterator();
 		while(it.hasNext()) {
 			Folder repo = it.next();
 			String repoPath = repo.getRelativeUrl();

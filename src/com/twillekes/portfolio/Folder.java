@@ -4,42 +4,28 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
+import java.util.Observer;
 
 // Change to "baseUrl", which is SITE_URL + account name and
 // "relativeUrl", which is the path (e.g. "newImages/")
 // Then for the local case, just set baseUrl to ""
 
-public class Folder extends Observable {
-	private static final String ORIG_PATH = "../Page/My-personal-web-page/page/";
-	private static final String FROM_ORIG_PATH = "../repository/";
-	private static final String BASE_PATH = "repository/";
-	private static final String PAGE_PATH = "page/";
-	private static final String FILE_NAME = BASE_PATH + "repository.json";
-	private static final String SITE_URL = "http://members.shaw.ca/";
+public class Folder extends Observable implements Observer {
 	private String account;
 	private String path;
 	private List<Picture> pictures;
 	private List<Picture> trash;
-	private static List<Folder> repositories = null;
 	public Folder(String account, String path) {
 		this.account = account;
 		this.path = path;
 		this.pictures = new ArrayList<Picture>();
 		this.trash = new ArrayList<Picture>();
-		
-		if (repositories == null) {
-			repositories = new ArrayList<Folder>();
-		}
-		repositories.add(this);
 	}
 	public String getAccount() {
 		return this.account;
 	}
-	public static String getFileName() {
-		return FILE_NAME;
-	}
 	public String getBaseUrl() {
-		return SITE_URL + this.account + "/";
+		return Repository.instance().getSiteUrl() + this.account + "/";
 	}
 	public String getRelativeUrl() {
 		return this.path + "/";
@@ -48,13 +34,14 @@ public class Folder extends Observable {
 		return getBaseUrl() + getRelativeUrl();
 	}
 	public String getRelativePath() {
-		return BASE_PATH + this.getRelativeUrl();
+		return Repository.instance().getBasePath() + this.getRelativeUrl();
 	}
 	public String getOriginalPath() {
-		return ORIG_PATH + this.getRelativeUrl();
+		return Repository.instance().getOriginalBasePath() + this.getRelativeUrl();
 	}
 	public void add(Picture picture) {
 		this.pictures.add(picture);
+		picture.addObserver(this);
 		this.setChanged();
 		this.notifyObservers();
 	}
@@ -68,43 +55,8 @@ public class Folder extends Observable {
 	public List<Picture> getPictures() {
 		return this.pictures;
 	}
-	public static List<Folder> get() {
-		return repositories;
-	}
-	public static List<String> getRepositoryNames() {
-		Iterator<Folder> it = repositories.iterator();
-		List<String> names = new ArrayList<String>();
-		while(it.hasNext()) {
-			Folder repo = it.next();
-			names.add(repo.getPath());
-		}
-		return names;
-	}
-	public static Folder get(String path) throws Exception {
-		Iterator<Folder> it = repositories.iterator();
-		while(it.hasNext()) {
-			Folder rep = it.next();
-			if (rep.getPath().equals(path)) {
-				return rep;
-			}
-		}
-		throw new Exception("Unable to find repository with path " + path);
-	}
 	public String getPath() {
 		return this.path;
-	}
-	public static Folder getRepositoryForPicture(Picture picture) throws Exception {
-		Iterator<Folder> it = repositories.iterator();
-		while(it.hasNext()) {
-			Folder repo = it.next();
-			if (repo.containsPicture(picture)) {
-				return repo;
-			}
-		}
-		throw new Exception("Could not find repository for picture " + picture.getRepositoryFilePath());
-	}
-	public static String getRepositoryNameForPicture(Picture picture) throws Exception {
-		return getRepositoryForPicture(picture).getPath();
 	}
 	public boolean containsPicture(Picture picture) {
 		Iterator<Picture> it = this.pictures.iterator();
@@ -115,24 +67,6 @@ public class Folder extends Observable {
 			}
 		}
 		return false;
-	}
-	public static void movePictureToRepository(Picture picture, String repoName) {
-		// TODO
-	}
-	public static String getOriginalBasePath() {
-		return ORIG_PATH;
-	}
-	public static String getBasePath() {
-		return BASE_PATH;
-	}
-	public static String getJavascriptPath() {
-		return getOriginalBasePath();
-	}
-	public static String getPathFromJavascript() {
-		return FROM_ORIG_PATH;
-	}
-	public static String getPagePath() {
-		return PAGE_PATH;
 	}
 	public void moveToTrash(Picture picture) throws Exception {
 		if (!pictures.remove(picture)) {
@@ -147,6 +81,11 @@ public class Folder extends Observable {
 	}
 	public void addToTrash(Picture picture) {
 		trash.add(picture);
+		this.setChanged();
+		this.notifyObservers();
+	}
+	@Override
+	public void update(Observable o, Object arg) {
 		this.setChanged();
 		this.notifyObservers();
 	}

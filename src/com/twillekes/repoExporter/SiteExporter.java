@@ -16,6 +16,7 @@ import org.apache.commons.net.ftp.FTPReply;
 
 import com.twillekes.portfolio.Picture;
 import com.twillekes.portfolio.Folder;
+import com.twillekes.portfolio.Repository;
 import com.twillekes.userInterface.Application;
 
 public class SiteExporter {
@@ -179,7 +180,7 @@ public class SiteExporter {
 	}
 	private void performExport(String password, Logger logger) {
 		FtpExporter ftpExporter = new FtpExporter(password, logger);
-		Iterator<Folder> it = Folder.get().iterator();
+		Iterator<Folder> it = Repository.instance().getFolders().iterator();
 		while(it.hasNext()) {
 			Folder repo = it.next();
 			String repoDir = repo.getPath();
@@ -210,8 +211,8 @@ public class SiteExporter {
 		}
 		try {
 			ftpExporter.initiate("twillekes", "");
-			ftpExporter.upload(Folder.getPagePath() + "feed.xml");
-			ftpExporter.upload(Folder.getPagePath() + "imageList.js");
+			ftpExporter.upload(Repository.instance().getPagePath() + "feed.xml");
+			ftpExporter.upload(Repository.instance().getPagePath() + "imageList.js");
 			ftpExporter.terminate();
 		} catch (Exception e) {
 			logger.log("Unable to upload feed and imageList files");
