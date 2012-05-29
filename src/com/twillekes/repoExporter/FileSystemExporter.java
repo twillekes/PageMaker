@@ -6,13 +6,13 @@ import java.util.Iterator;
 import org.apache.commons.io.FileUtils;
 
 import com.twillekes.portfolio.Picture;
-import com.twillekes.portfolio.Repository;
+import com.twillekes.portfolio.Folder;
 
 public class FileSystemExporter {
 	public static void export(String toPath) throws Exception {
-		Iterator<Repository> it = Repository.get().iterator();
+		Iterator<Folder> it = Folder.get().iterator();
 		while(it.hasNext()) {
-			Repository repo = it.next();
+			Folder repo = it.next();
 			String repoPath = repo.getRelativeUrl();
 			Iterator<Picture> picIt = repo.getPictures().iterator();
 			while(picIt.hasNext()) {
@@ -35,7 +35,7 @@ public class FileSystemExporter {
 		FileUtils.copyFile(pictureFile, destPictureFile);
 		FileUtils.copyFile(thumbFile, destThumbFile);
 	}
-	public static long getPercent(Repository repository) {
+	public static long getPercent(Folder repository) {
 		long size = 0;
 		Iterator<Picture> it = repository.getPictures().iterator();
 		while(it.hasNext()) {

@@ -3,12 +3,13 @@ package com.twillekes.portfolio;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Observable;
 
 // Change to "baseUrl", which is SITE_URL + account name and
 // "relativeUrl", which is the path (e.g. "newImages/")
 // Then for the local case, just set baseUrl to ""
 
-public class Repository {
+public class Folder extends Observable {
 	private static final String ORIG_PATH = "../Page/My-personal-web-page/page/";
 	private static final String FROM_ORIG_PATH = "../repository/";
 	private static final String BASE_PATH = "repository/";
@@ -19,15 +20,15 @@ public class Repository {
 	private String path;
 	private List<Picture> pictures;
 	private List<Picture> trash;
-	private static List<Repository> repositories = null;
-	public Repository(String account, String path) {
+	private static List<Folder> repositories = null;
+	public Folder(String account, String path) {
 		this.account = account;
 		this.path = path;
 		this.pictures = new ArrayList<Picture>();
 		this.trash = new ArrayList<Picture>();
 		
 		if (repositories == null) {
-			repositories = new ArrayList<Repository>();
+			repositories = new ArrayList<Folder>();
 		}
 		repositories.add(this);
 	}
@@ -54,31 +55,35 @@ public class Repository {
 	}
 	public void add(Picture picture) {
 		this.pictures.add(picture);
+		this.setChanged();
+		this.notifyObservers();
 	}
 	public void remove(Picture picture) throws Exception {
 		if (!this.pictures.remove(picture)) {
 			throw new Exception("Could not remove picture " + picture.getRepositoryFilePath() + " from repository " + this.getPath());
 		}
+		this.setChanged();
+		this.notifyObservers();
 	}
 	public List<Picture> getPictures() {
 		return this.pictures;
 	}
-	public static List<Repository> get() {
+	public static List<Folder> get() {
 		return repositories;
 	}
 	public static List<String> getRepositoryNames() {
-		Iterator<Repository> it = repositories.iterator();
+		Iterator<Folder> it = repositories.iterator();
 		List<String> names = new ArrayList<String>();
 		while(it.hasNext()) {
-			Repository repo = it.next();
+			Folder repo = it.next();
 			names.add(repo.getPath());
 		}
 		return names;
 	}
-	public static Repository get(String path) throws Exception {
-		Iterator<Repository> it = repositories.iterator();
+	public static Folder get(String path) throws Exception {
+		Iterator<Folder> it = repositories.iterator();
 		while(it.hasNext()) {
-			Repository rep = it.next();
+			Folder rep = it.next();
 			if (rep.getPath().equals(path)) {
 				return rep;
 			}
@@ -88,10 +93,10 @@ public class Repository {
 	public String getPath() {
 		return this.path;
 	}
-	public static Repository getRepositoryForPicture(Picture picture) throws Exception {
-		Iterator<Repository> it = repositories.iterator();
+	public static Folder getRepositoryForPicture(Picture picture) throws Exception {
+		Iterator<Folder> it = repositories.iterator();
 		while(it.hasNext()) {
-			Repository repo = it.next();
+			Folder repo = it.next();
 			if (repo.containsPicture(picture)) {
 				return repo;
 			}
@@ -134,11 +139,15 @@ public class Repository {
 			throw new Exception("Could not find picture " + picture.getRepositoryFilePath() + " in repository " + this.getPath());
 		}
 		trash.add(picture);
+		this.setChanged();
+		this.notifyObservers();
 	}
 	public List<Picture> getTrash() {
 		return trash;
 	}
 	public void addToTrash(Picture picture) {
 		trash.add(picture);
+		this.setChanged();
+		this.notifyObservers();
 	}
 }

@@ -8,8 +8,10 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
-public class Metadata implements Cloneable {
+public class Metadata extends Observable implements Cloneable, Observer {
 	// Fields
 	// WARNING: These must appear as expected by the page's Javascript as they
 	// are serialized directly into JSON from here!
@@ -40,6 +42,7 @@ public class Metadata implements Cloneable {
 	public Metadata() {
 		if (schema == null) {
 			schema = new MetadataSchema();
+			schema.addObserver(this);
 		}
 	}
 	public Metadata clone() throws CloneNotSupportedException {
@@ -50,7 +53,7 @@ public class Metadata implements Cloneable {
 	    return clone;
 	}
 	
-	public class MetadataSchema {
+	public class MetadataSchema extends Observable {
 		public List<String> orientations, subjects, seasons, cameras, lenses, films,
 			chromes, formats, directions, filterss, doNotShows, isNews, isDiscardeds,
 			isFavorites, ratings, years, months, isInFeeds;
@@ -75,14 +78,20 @@ public class Metadata implements Cloneable {
 			isInFeeds = new ArrayList<String>();
 		}
 		public void update(String newEntry, List<String> arr) {
+			boolean addIt = true;
 			Iterator<String> it = arr.iterator();
 			while(it.hasNext()) {
 				String item = it.next();
 				if (item.equals(newEntry)) {
-					return;
+					addIt = false;
+					break;
 				}
 			}
-			arr.add(newEntry);
+			if (addIt) {
+				arr.add(newEntry);
+			}
+			this.setChanged();
+			this.notifyObservers();
 		}
 		public List<String> getCategoryValues(String categoryName) throws Exception {
 			if (categoryName.equals("subject")) {
@@ -201,6 +210,8 @@ public class Metadata implements Cloneable {
 	}
 	public void setTitle(String title) {
 		this.title = title;
+		this.setChanged();
+		this.notifyObservers();
 	}
 	
 	public String getDescription() {
@@ -208,6 +219,8 @@ public class Metadata implements Cloneable {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+		this.setChanged();
+		this.notifyObservers();
 	}
 	
 	public String getRating() {
@@ -293,6 +306,8 @@ public class Metadata implements Cloneable {
 		} catch (Exception e) {
 			this.realDate = null;
 		}
+		this.setChanged();
+		this.notifyObservers();
 	}
 	public Date validateDate(String date) throws Exception {
 		Date dat = null;
@@ -425,5 +440,10 @@ public class Metadata implements Cloneable {
 			this.isInFeed = isInFeed;
 			schema.update(isInFeed, schema.isInFeeds);
 		}
+	}
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		this.setChanged();
+		this.notifyObservers();
 	}
 }

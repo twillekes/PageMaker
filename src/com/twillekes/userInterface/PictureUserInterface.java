@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.twillekes.portfolio.Metadata;
 import com.twillekes.portfolio.Picture;
-import com.twillekes.portfolio.Repository;
+import com.twillekes.portfolio.Folder;
 
 public class PictureUserInterface {
 	interface TextChangeHandler {
@@ -310,11 +310,11 @@ public class PictureUserInterface {
 					picture.getMetadata().setIsInFeed(value);
 				}
 			});
-			new PictureComboBox(metadataGroup, picture, "Repository:", Repository.getRepositoryNameForPicture(picture),
-					Repository.getRepositoryNames().toArray(new String[Repository.getRepositoryNames().size()]), new TextChangeHandler(){
+			new PictureComboBox(metadataGroup, picture, "Repository:", Folder.getRepositoryNameForPicture(picture),
+					Folder.getRepositoryNames().toArray(new String[Folder.getRepositoryNames().size()]), new TextChangeHandler(){
 				@Override
 				public void textChanged(Picture picture, String value) {
-					Repository.movePictureToRepository(picture, value);
+					Folder.movePictureToRepository(picture, value);
 				}
 			}, SWT.READ_ONLY);
 		} catch (Exception e) {

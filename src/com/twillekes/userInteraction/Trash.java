@@ -9,7 +9,7 @@ import java.util.Observable;
 import org.apache.commons.io.FileUtils;
 
 import com.twillekes.portfolio.Picture;
-import com.twillekes.portfolio.Repository;
+import com.twillekes.portfolio.Folder;
 import com.twillekes.userInterface.Application;
 
 public class Trash extends Observable {
@@ -24,7 +24,7 @@ public class Trash extends Observable {
 		Iterator<Picture> it = pictures.iterator();
 		while(it.hasNext()) {
 			Picture picture = it.next();
-			Repository.getRepositoryForPicture(picture).moveToTrash(picture);
+			Folder.getRepositoryForPicture(picture).moveToTrash(picture);
 			Application.getPortfolio().remove(picture);
 		}
 		instance().setChanged();
@@ -32,17 +32,17 @@ public class Trash extends Observable {
 	}
 	public List<Picture> collect() {
 		List<Picture> trash = new ArrayList<Picture>();
-		Iterator<Repository> it = Repository.get().iterator();
+		Iterator<Folder> it = Folder.get().iterator();
 		while(it.hasNext()) {
-			Repository repo = it.next();
+			Folder repo = it.next();
 			trash.addAll(repo.getTrash());
 		}
 		return trash;
 	}
 	public void empty() {
-		Iterator<Repository> it = Repository.get().iterator();
+		Iterator<Folder> it = Folder.get().iterator();
 		while(it.hasNext()) {
-			Repository repo = it.next();
+			Folder repo = it.next();
 			List<Picture> trash = repo.getTrash();
 			Iterator<Picture> trashIt = trash.iterator();
 			while(trashIt.hasNext()) {

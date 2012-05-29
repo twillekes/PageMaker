@@ -5,7 +5,7 @@ import java.io.FileWriter;
 
 import com.google.gson.Gson;
 import com.twillekes.portfolio.Portfolio;
-import com.twillekes.portfolio.Repository;
+import com.twillekes.portfolio.Folder;
 
 public class Exporter {
 	public static void main(String[] args) {
@@ -36,9 +36,9 @@ public class Exporter {
 	}
 	public void export() {
 		Gson gson = new Gson();
-		String json = gson.toJson(Repository.get());
+		String json = gson.toJson(Folder.get());
 		try {
-			FileWriter fstream = new FileWriter(Repository.getFileName());
+			FileWriter fstream = new FileWriter(Folder.getFileName());
 			BufferedWriter out = new BufferedWriter(fstream);
 			out.write(json);
 			out.close();
@@ -60,7 +60,7 @@ public class Exporter {
 //		System.out.println(words);
 		
 		try {
-			FileWriter fstream = new FileWriter(Repository.getPagePath() + "imageList.js");
+			FileWriter fstream = new FileWriter(Folder.getPagePath() + "imageList.js");
 			BufferedWriter out = new BufferedWriter(fstream);
 			out.write(json);
 			out.write(cats);

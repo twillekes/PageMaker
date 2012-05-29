@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 import com.twillekes.portfolio.Picture;
-import com.twillekes.portfolio.Repository;
+import com.twillekes.portfolio.Folder;
 import com.twillekes.repoExporter.FileSystemExporter;
 import com.twillekes.userInterface.Application;
 import com.twillekes.userInterface.PictureUserInterface;
@@ -21,7 +21,7 @@ public class ImportPicture {
 	static private Picture templatePicture = null;
 	public ImportPicture(String filePath){
 		try {
-			FileSystemExporter.copyFiles(filePath, Repository.getBasePath());
+			FileSystemExporter.copyFiles(filePath, Folder.getBasePath());
 		} catch (IOException e4) {
 			MessageBox mBox = new MessageBox(Application.getShell(), SWT.ICON_ERROR | SWT.OK);
 			mBox.setMessage("Could not copy image files");
@@ -47,9 +47,9 @@ public class ImportPicture {
 				return;
 			}
         }
-        Repository repository;
+        Folder repository;
 		try {
-			repository = Repository.get("newImages");
+			repository = Folder.get("newImages");
 	        repository.add(pic);
 			pic.setFileName(fileName);
 		} catch (Exception e2) {

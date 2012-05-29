@@ -2,6 +2,7 @@ package com.twillekes.portfolio;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 // Portfolio has albums (defined by tags?)
 // Albums have pictures
@@ -9,7 +10,7 @@ import java.util.List;
 // Metadata is fixed information that won't change (e.g. focal length)
 // Tags are information added later
 
-public class Picture implements Comparable<Picture>, Cloneable {
+public class Picture extends Observable implements Comparable<Picture>, Cloneable {
 	// Fields
 	// WARNING: These must appear as expected by the page's Javascript as they
 	// are serialized directly into JSON from here!
@@ -35,16 +36,20 @@ public class Picture implements Comparable<Picture>, Cloneable {
 	    return clone;
 	}
 	public void setFileName(String fileName) throws Exception {
-		Repository repo = Repository.getRepositoryForPicture(this);
+		Folder repo = Folder.getRepositoryForPicture(this);
 		if (repo == null) {
 			throw new Exception("Must add picture to repository before setting its name");
 		}
 		this.setFilePath(repo.getUrl() + fileName);
-		this.setLocalFilePath(Repository.getPathFromJavascript() + fileName);
+		this.setLocalFilePath(Folder.getPathFromJavascript() + fileName);
+		this.setChanged();
+		this.notifyObservers();
 	}
 	// "File path" is the one used when the page is served from the web
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
+		this.setChanged();
+		this.notifyObservers();
 	}
 	public String getFilePath() {
 		return filePath;
@@ -52,13 +57,15 @@ public class Picture implements Comparable<Picture>, Cloneable {
 	// "Local file path" is the one used when the page is served from the local file system
 	public void setLocalFilePath(String localFilePath) {
 		this.localFilePath = localFilePath;
+		this.setChanged();
+		this.notifyObservers();
 	}
 	public String getLocalFilePath() {
 		return localFilePath;
 	}
 	// "Repository file path" is used when reading files from within this PageMaker application
 	public String getRepositoryFilePath() {
-		return Repository.getBasePath() + getFileName(this.getLocalFilePath());
+		return Folder.getBasePath() + getFileName(this.getLocalFilePath());
 	}
 	public String getRepositoryThumbFilePath() {
 		return Picture.getThumbName(this.getRepositoryFilePath());
@@ -68,12 +75,16 @@ public class Picture implements Comparable<Picture>, Cloneable {
 	}
 	public void setMetadata(Metadata metadata) {
 		this.metadata = metadata;
+		this.setChanged();
+		this.notifyObservers();
 	}
 	public List<String> getTags() {
 		return tags;
 	}
 	public void setTags(List<String> tags) {
 		this.tags = tags;
+		this.setChanged();
+		this.notifyObservers();
 	}
 	public String toString() {
 		return "File path: " + this.filePath + " Metadata: " + this.metadata.toString();

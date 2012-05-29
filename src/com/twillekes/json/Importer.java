@@ -16,7 +16,7 @@ import com.google.gson.JsonParser;
 import com.twillekes.portfolio.Metadata;
 import com.twillekes.portfolio.Picture;
 import com.twillekes.portfolio.Portfolio;
-import com.twillekes.portfolio.Repository;
+import com.twillekes.portfolio.Folder;
 import com.twillekes.portfolio.Words;
 
 public class Importer {
@@ -45,7 +45,7 @@ public class Importer {
 			this.metadataRecords = new ArrayList<MetadataRecord>();
 		}
 		public String getFileName() {
-			return Repository.getOriginalBasePath() + "locations.json";
+			return Folder.getOriginalBasePath() + "locations.json";
 		}
 		public void handleJsonObject(JsonObject obj) throws ParseException {
 			RecordType type = RecordType.LOCAL;
@@ -73,7 +73,7 @@ public class Importer {
 			this.portfolio = new Portfolio();
 		}
 		public String getFileName() {
-			return Repository.getFileName();
+			return Folder.getFileName();
 		}
 		public void handleJsonObject(JsonObject obj) throws ParseException {
 			String account = null;
@@ -87,7 +87,7 @@ public class Importer {
 					path = entry.getValue().getAsString();
 				} else if (key.equals("pictures")) {
 					if (account != null && path != null && entry.getValue().isJsonArray()) {
-						Repository repository = new Repository(account, path);
+						Folder repository = new Folder(account, path);
 						portfolioDeserializer = new PortfolioDeserializer(this.portfolio, PortfolioType.PICTURES);
 						portfolioDeserializer.repository = repository;
 						importJsonRecords(entry.getValue().getAsJsonArray(), portfolioDeserializer);
@@ -109,7 +109,7 @@ public class Importer {
 		WORDS, PICTURES, TRASH
 	}
 	private class PortfolioDeserializer implements Deserializer {
-		public Repository repository;
+		public Folder repository;
 		public Portfolio portfolio;
 		public PortfolioType type;
 		public PortfolioDeserializer(Portfolio portfolio, PortfolioType type) {
@@ -268,13 +268,13 @@ public class Importer {
 			if (rec.type == RecordType.REMOTE){
 				continue;
 			}
-			Repository repository = null;
+			Folder repository = null;
 			if (rec.path.equals("images")) {
-				repository = new Repository("tjwillekes", "images");
+				repository = new Folder("tjwillekes", "images");
 			} else if (rec.path.equals("images_2")) {
-				repository = new Repository("tomjwillekes", "images_2");
+				repository = new Folder("tomjwillekes", "images_2");
 			} else if (rec.path.equals("newImages")) {
-				repository = new Repository("twillekes", "newImages");
+				repository = new Folder("twillekes", "newImages");
 			} else if (rec.path.equals("words")) {
 				// TODO: Set portfolio type to WORDS...
 				continue;

@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.Shell;
 import com.twillekes.portfolio.Metadata;
 import com.twillekes.portfolio.Picture;
 import com.twillekes.portfolio.Portfolio;
-import com.twillekes.portfolio.Repository;
+import com.twillekes.portfolio.Folder;
 import com.twillekes.repoExporter.FileSystemExporter;
 import com.twillekes.userInteraction.Selection;
 import com.twillekes.userInteraction.Trash;
@@ -130,10 +130,10 @@ public class PortfolioUserInterface implements Observer {
 //		group.pack();
 	}
 	public void setupRepositoryCategories(Composite parent) {
-		List<Repository> repos = Repository.get();
-		Iterator<Repository> it = repos.iterator();
+		List<Folder> repos = Folder.get();
+		Iterator<Folder> it = repos.iterator();
 		while(it.hasNext()) {
-			Repository repo = it.next();
+			Folder repo = it.next();
 			new CategoryUserInterface(parent, repo.getPictures(), repo.getPath() + " (" + FileSystemExporter.getPercent(repo) + "% of 20Meg)");
 		}
 		List<Picture> trash = Trash.instance().collect();
