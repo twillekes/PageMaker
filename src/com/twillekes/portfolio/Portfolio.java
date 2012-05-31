@@ -145,4 +145,8 @@ public class Portfolio extends Observable {
 		this.setChanged();
 		this.notifyObservers();
 	}
+	public void replace(Picture orig, Picture clon) {
+		pictures.remove(orig);
+		pictures.add(clon);
+	}
 }

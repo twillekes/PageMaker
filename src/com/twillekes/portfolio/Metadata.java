@@ -45,6 +45,33 @@ public class Metadata extends Observable implements Cloneable, Observer {
 			schema.addObserver(this);
 		}
 	}
+	public boolean equals(Metadata metadata) {
+		if (title.equals(metadata.title) &&
+			description.equals(metadata.description) &&
+			rating.equals(metadata.rating) &&
+			orientation.equals(metadata.orientation) &&
+			subject.equals(metadata.subject) &&
+			season.equals(metadata.season) &&
+			camera.equals(metadata.camera) &&
+			lens.equals(metadata.lens) &&
+			film.equals(metadata.film) &&
+			chrome.equals(metadata.chrome) &&
+			format.equals(metadata.format) &&
+			date.equals(metadata.date) &&
+			realDate.equals(metadata.realDate) &&
+			year.equals(metadata.year) &&
+			month.equals(metadata.month) &&
+			direction.equals(metadata.direction) &&
+			((filters != null && filters.equals(metadata.filters)) || (filters == null && metadata.filters == null)) &&
+			((doNotShow != null && doNotShow.equals(metadata.doNotShow)) || (doNotShow == null && metadata.doNotShow == null)) &&
+			((isNew != null && isNew.equals(metadata.isNew)) || (isNew == null && metadata.isNew == null)) &&
+			((isDiscarded != null && isDiscarded.equals(metadata.isDiscarded)) || (isDiscarded == null && metadata.isDiscarded == null)) &&
+			((isFavorite != null && isFavorite.equals(metadata.isFavorite)) || (isFavorite == null && metadata.isFavorite == null)) &&
+			((isInFeed != null && isInFeed.equals(metadata.isInFeed)) || (isInFeed == null && metadata.isInFeed == null))) {
+			return true;
+		}
+		return false;
+	}
 	public Metadata clone() throws CloneNotSupportedException {
 	    Metadata clone = (Metadata)super.clone();
 	    if (realDate != null) {

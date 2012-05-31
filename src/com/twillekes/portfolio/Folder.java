@@ -89,4 +89,9 @@ public class Folder extends Observable implements Observer {
 		this.setChanged();
 		this.notifyObservers();
 	}
+	public void replace(Picture orig, Picture clon) {
+		pictures.remove(orig);
+		pictures.add(clon);
+		update(null, null);
+	}
 }

@@ -64,7 +64,7 @@ public class Repository extends Observable implements Observer {
 				return folder;
 			}
 		}
-		throw new Exception("Could not find repository for picture " + picture.getRepositoryFilePath());
+		throw new Exception("Could not find folder for picture " + picture.getRepositoryFilePath());
 	}
 	public String getFolderNameForPicture(Picture picture) throws Exception {
 		return getFolderForPicture(picture).getPath();
@@ -105,5 +105,9 @@ public class Repository extends Observable implements Observer {
 	}
 	public boolean getIsDirty() {
 		return this.isDirty;
+	}
+	public void replace(Picture orig, Picture clon) throws Exception {
+		Folder folder = getFolderForPicture(orig);
+		folder.replace(orig, clon);
 	}
 }

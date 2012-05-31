@@ -19,7 +19,6 @@ public class Picture extends Observable implements Comparable<Picture>, Cloneabl
 	private String localFilePath;
 	private Metadata metadata;
 	private List<String> tags;
-	
 	// Constructor
 	public Picture() {
 		filePath = "undefined";
@@ -91,6 +90,7 @@ public class Picture extends Observable implements Comparable<Picture>, Cloneabl
 	public String toString() {
 		return "File path: " + this.filePath + " Metadata: " + this.metadata.toString();
 	}
+	// For purposes of ordering the set of pictures in the portfolio...
 	public int compareTo(Picture o) {
 		if (!(o instanceof Picture)) {
 			throw new ClassCastException("A picture object was expected");
@@ -103,6 +103,12 @@ public class Picture extends Observable implements Comparable<Picture>, Cloneabl
 			return 1;
 		}
 		return result;
+	}
+	// An equality checker...
+	public boolean equals(Picture picture) {
+		return this.metadata.equals(picture.metadata) &&
+				filePath.equals(picture.filePath) &&
+				localFilePath.equals(picture.localFilePath);
 	}
 	public static String getThumbName(String filePath) {
 		int dotPos = filePath.lastIndexOf(".");

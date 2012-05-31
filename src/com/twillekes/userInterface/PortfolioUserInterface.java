@@ -9,10 +9,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
@@ -22,7 +19,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Shell;
 
 import com.twillekes.portfolio.Metadata;
 import com.twillekes.portfolio.Picture;
@@ -156,57 +152,6 @@ public class PortfolioUserInterface implements Observer {
 			List<Picture> list = portfolio.getPictures(categorization, subject);
 			new CategoryUserInterface(parent, list, subject + " (" + list.size() + " images)");
 		}
-	}
-	public static Composite create(List<Picture> pictures) {
-		Rectangle rect = Application.getShell().getBounds();
-		final Shell shell = new Shell(Application.getShell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-		shell.setLayout(new GridLayout());
-		shell.setText("Edit Picture Metadata");
-		
-	    final Button done = new Button(shell, SWT.PUSH);
-	    done.setText("Done");
-	    done.addListener(SWT.Selection, new Listener(){
-	    	public void handleEvent(Event event) {
-	    		shell.close();
-	    	}
-	    });
-	    shell.setDefaultButton(done);
-
-		ScrolledComposite portfolioScroll = new ScrolledComposite(shell, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-		portfolioScroll.setLayout(new FillLayout());
-
-		Group portfolioGroup = new Group(portfolioScroll, SWT.SHADOW_ETCHED_OUT);
-		RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
-		portfolioGroup.setLayout(rowLayout);
-
-		portfolioScroll.setContent(portfolioGroup);
-
-		Iterator<Picture> it = pictures.iterator();
-		int count = 0;
-		while(it.hasNext()) {
-			Picture pic = it.next();
-			new PictureUserInterface(portfolioGroup, pic);
-			if (count++ == 10) {
-				break;
-			}
-		}
-		portfolioGroup.layout();
-		portfolioGroup.pack();
-		portfolioScroll.layout();
-		portfolioScroll.pack();
-		shell.layout();
-		shell.pack();
-		Rectangle pRect = portfolioScroll.getBounds();
-		final int HEIGHT_OFFSET = 100;
-		if (pRect.height > rect.height-HEIGHT_OFFSET) {
-			GridData layoutData = new GridData();
-			layoutData.heightHint = rect.height - HEIGHT_OFFSET;
-			portfolioScroll.setLayoutData(layoutData);
-			portfolioScroll.layout();
-			shell.pack();
-		}
-		shell.open();
-		return shell;
 	}
 	public void dispose() {
 		scroll.dispose();

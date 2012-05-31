@@ -1,11 +1,17 @@
 package com.twillekes.userInterface;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Observer;
+
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
@@ -23,7 +29,7 @@ import com.twillekes.portfolio.Picture;
 import com.twillekes.portfolio.Repository;
 
 public class PictureUserInterface {
-	interface TextChangeHandler {
+	private interface TextChangeHandler {
 		void textChanged(Picture picture, String value);
 	}
 	private class TextModifyListener implements ModifyListener {
@@ -67,15 +73,6 @@ public class PictureUserInterface {
 			}
 			text.setText(initialText);
 			text.addModifyListener(new TextModifyListener(text, picture, handler));
-//			text.addFocusListener(new FocusListener(){
-//				public void focusGained(FocusEvent e) {
-//					System.out.println("FOCUSED");
-//				}
-//				@Override
-//				public void focusLost(FocusEvent e) {
-//					System.out.println("FOCUS LOSTED");
-//				}
-//			});
 			
 			group.layout();
 		}
@@ -99,7 +96,6 @@ public class PictureUserInterface {
 			
 			combo = new Combo(group, SWT.DROP_DOWN | styles);
 			combo.setItems(items);
-			combo.addModifyListener(new TextModifyListener(combo, picture, handler));
 			
 			int selectedItem = 0;
 			for (selectedItem = 0; selectedItem < items.length; selectedItem++) {
@@ -112,29 +108,69 @@ public class PictureUserInterface {
 				return;
 			}
 			combo.select(selectedItem);
+			combo.addModifyListener(new TextModifyListener(combo, picture, handler));
 		}
 	}
 	private Group pictureGroup;
 	private Group metadataGroup;
 	private Group textGroup;
 	private Group uberGroup;
-	public static PictureUserInterface create(Picture picture) {
+	public static Composite create(List<Picture> pictures, final Observer observer) {
+		Rectangle rect = Application.getShell().getBounds();
 		final Shell shell = new Shell(Application.getShell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell.setLayout(new GridLayout());
 		shell.setText("Edit Picture Metadata");
+		
 	    final Button done = new Button(shell, SWT.PUSH);
 	    done.setText("Done");
 	    done.addListener(SWT.Selection, new Listener(){
 	    	public void handleEvent(Event event) {
+				Application.getDisplay().asyncExec(new Runnable(){
+					@Override
+					public void run() {
+						observer.update(null, null);
+					}
+				});
 	    		shell.close();
 	    	}
 	    });
 	    shell.setDefaultButton(done);
-		PictureUserInterface picUi = new PictureUserInterface(shell, picture);
+
+		ScrolledComposite portfolioScroll = new ScrolledComposite(shell, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+		portfolioScroll.setLayout(new FillLayout());
+
+		Group portfolioGroup = new Group(portfolioScroll, SWT.SHADOW_ETCHED_OUT);
+		RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
+		portfolioGroup.setLayout(rowLayout);
+
+		portfolioScroll.setContent(portfolioGroup);
+
+		Iterator<Picture> it = pictures.iterator();
+		int count = 0;
+		while(it.hasNext()) {
+			Picture pic = it.next();
+			new PictureUserInterface(portfolioGroup, pic);
+			if (count++ == 10) {
+				break;
+			}
+		}
+		portfolioGroup.layout();
+		portfolioGroup.pack();
+		portfolioScroll.layout();
+		portfolioScroll.pack();
 		shell.layout();
 		shell.pack();
+		Rectangle pRect = portfolioScroll.getBounds();
+		final int HEIGHT_OFFSET = 100;
+		if (pRect.height > rect.height-HEIGHT_OFFSET) {
+			GridData layoutData = new GridData();
+			layoutData.heightHint = rect.height - HEIGHT_OFFSET;
+			portfolioScroll.setLayoutData(layoutData);
+			portfolioScroll.layout();
+			shell.pack();
+		}
 		shell.open();
-		return picUi;
+		return shell;
 	}
 	public Composite getTopLevel() {
 		return this.pictureGroup;

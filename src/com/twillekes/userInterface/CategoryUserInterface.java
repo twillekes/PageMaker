@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 
 import com.twillekes.portfolio.Picture;
+import com.twillekes.userInteraction.EditProperties;
 import com.twillekes.userInteraction.Selection;
 
 public class CategoryUserInterface {
@@ -69,7 +70,7 @@ public class CategoryUserInterface {
 				@Override
 				public void click(MouseEvent mouseEvent) {
 					if (mouseEvent.button != 1) {
-						PictureUserInterface.create(pic);
+						(new EditProperties()).perform(pic);
 					} else {
 						prevUi.toggleSelected();
 					}
