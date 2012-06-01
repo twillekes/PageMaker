@@ -46,22 +46,22 @@ public class Metadata extends Observable implements Cloneable, Observer {
 		}
 	}
 	public boolean equals(Metadata metadata) {
-		if (title.equals(metadata.title) &&
-			description.equals(metadata.description) &&
-			rating.equals(metadata.rating) &&
-			orientation.equals(metadata.orientation) &&
-			subject.equals(metadata.subject) &&
-			season.equals(metadata.season) &&
-			camera.equals(metadata.camera) &&
-			lens.equals(metadata.lens) &&
-			film.equals(metadata.film) &&
-			chrome.equals(metadata.chrome) &&
-			format.equals(metadata.format) &&
-			date.equals(metadata.date) &&
-			realDate.equals(metadata.realDate) &&
-			year.equals(metadata.year) &&
-			month.equals(metadata.month) &&
-			direction.equals(metadata.direction) &&
+		if (((title != null && title.equals(metadata.title)) || (title == null && metadata.title == null)) &&
+			((description != null && description.equals(metadata.description)) || (description == null && metadata.description == null)) &&
+			((rating != null && rating.equals(metadata.rating)) || (rating == null && metadata.rating == null)) &&
+			((orientation != null && orientation.equals(metadata.orientation)) || (orientation == null && metadata.orientation == null)) &&
+			((subject != null && subject.equals(metadata.subject)) || (subject == null && metadata.subject == null)) &&
+			((season != null && season.equals(metadata.season)) || (season == null && metadata.season == null)) &&
+			((camera != null && camera.equals(metadata.camera)) || (camera == null && metadata.camera == null)) &&
+			((lens != null && lens.equals(metadata.lens)) || (lens == null && metadata.lens == null)) &&
+			((film != null && film.equals(metadata.film)) || (film == null && metadata.film == null)) &&
+			((chrome != null && chrome.equals(metadata.chrome)) || (chrome == null && metadata.chrome == null)) &&
+			((format != null && format.equals(metadata.format)) || (format == null && metadata.format == null)) &&
+			((date != null && date.equals(metadata.date)) || (date == null && metadata.date == null)) &&
+			((realDate != null && realDate.equals(metadata.realDate)) || (realDate == null && metadata.realDate == null)) &&
+			((year != null && year.equals(metadata.year)) || (year == null && metadata.year == null)) &&
+			((month != null && month.equals(metadata.month)) || (month == null && metadata.month == null)) &&
+			((direction != null && direction.equals(metadata.direction)) || (direction == null && metadata.direction == null)) &&
 			((filters != null && filters.equals(metadata.filters)) || (filters == null && metadata.filters == null)) &&
 			((doNotShow != null && doNotShow.equals(metadata.doNotShow)) || (doNotShow == null && metadata.doNotShow == null)) &&
 			((isNew != null && isNew.equals(metadata.isNew)) || (isNew == null && metadata.isNew == null)) &&

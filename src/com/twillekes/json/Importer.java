@@ -37,7 +37,7 @@ public class Importer {
 	
 	private interface Deserializer {
 		public String getFileName();
-		public void handleJsonObject(JsonObject obj) throws ParseException;
+		public void handleJsonObject(JsonObject obj) throws Exception;
 	}
 	
 	private class LocationDeserializer implements Deserializer {
@@ -48,7 +48,7 @@ public class Importer {
 		public String getFileName() {
 			return Repository.instance().getOriginalBasePath() + "locations.json";
 		}
-		public void handleJsonObject(JsonObject obj) throws ParseException {
+		public void handleJsonObject(JsonObject obj) throws Exception {
 			RecordType type = RecordType.LOCAL;
 			String path = "undefined";
 			for (final Entry<String, JsonElement> entry : obj.entrySet()) {
@@ -76,7 +76,7 @@ public class Importer {
 		public String getFileName() {
 			return Repository.instance().getFileName();
 		}
-		public void handleJsonObject(JsonObject obj) throws ParseException {
+		public void handleJsonObject(JsonObject obj) throws Exception {
 			String account = null;
 			String path = null;
 			PortfolioDeserializer portfolioDeserializer = null;
@@ -117,7 +117,7 @@ public class Importer {
 			this.portfolio = portfolio;
 			this.type = type;
 		}
-		public void handleJsonObject(JsonObject obj) throws ParseException {
+		public void handleJsonObject(JsonObject obj) throws Exception {
 			if (this.type == PortfolioType.WORDS) {
 				handleJsonWordsObject(obj);
 			} else {
@@ -131,7 +131,7 @@ public class Importer {
 				}
 			}
 		}
-		public void handleJsonWordsObject(JsonObject obj) throws ParseException {
+		public void handleJsonWordsObject(JsonObject obj) throws Exception {
 			Words words = new Words();
 			for (final Entry<String, JsonElement> entry : obj.entrySet()) {
 				final String key = entry.getKey();
@@ -150,13 +150,13 @@ public class Importer {
 			}
 			portfolio.addWords(words);
 		}
-		public void handleJsonPictureObject(JsonObject obj, Picture picture) throws ParseException {
+		public void handleJsonPictureObject(JsonObject obj, Picture picture) throws Exception {
 			this.folder.add(picture);
 			iterateThroughPictureJsonObject(obj, picture);
 			this.portfolio.addPicture(picture);
 			//System.out.println("Added picture: " + picture.toString());
 		}
-		public void handleJsonTrashObject(JsonObject obj, Picture picture) throws ParseException {
+		public void handleJsonTrashObject(JsonObject obj, Picture picture) throws Exception {
 			this.folder.addToTrash(picture);
 			iterateThroughPictureJsonObject(obj, picture);
 			//System.out.println("Added picture: " + picture.toString());
@@ -230,7 +230,7 @@ public class Importer {
 				} else if (key.equals("isFavorite")) {
 					metadata.setIsFavorite(val);
 				} else {
-					throw new ParseException("Unknown JSON key ('" + key + "') in items array", 0);
+					throw new Exception("Unknown JSON key ('" + key + "') in items array");
 				}
 			} catch (Exception e) {
 				System.out.println("Encounted exception in file " + this.getFileName() + " error: " + e.getMessage());
@@ -304,14 +304,14 @@ public class Importer {
 				final JsonArray jsonArray = jsonElement.getAsJsonArray();
 				importJsonRecords(jsonArray, deserializer);
 			} else {
-				throw new ParseException("Unhandled JSON data type", 0);
+				throw new Exception("Unhandled JSON data type");
 			}
-		} catch(ParseException e) {
+		} catch(Exception e) {
 			e.printStackTrace();
 			return;
 		}
 	}
-	public static void importJsonRecords(JsonObject jsonObject, Deserializer deserializer) throws ParseException {
+	public static void importJsonRecords(JsonObject jsonObject, Deserializer deserializer) throws Exception {
 		final Iterator<Map.Entry<String,JsonElement>> iter = jsonObject.entrySet().iterator();
 		Entry<String, JsonElement> itemsEntry = null;
 		while(iter.hasNext()) {
@@ -322,20 +322,16 @@ public class Importer {
 			}
 		}
 		if (itemsEntry == null) {
-			throw new ParseException("Could not find items list in JSON", 0);
+			throw new Exception("Could not find items list in JSON");
 		}
 		final JsonArray jsonArray = itemsEntry.getValue().getAsJsonArray();
 		importJsonRecords(jsonArray, deserializer);
 	}
-	public static void importJsonRecords(JsonArray jsonArray, Deserializer deserializer) throws ParseException {
+	public static void importJsonRecords(JsonArray jsonArray, Deserializer deserializer) throws Exception {
 		final Iterator<JsonElement> it = jsonArray.iterator();
 		while (it.hasNext()) {
 			JsonObject obj = it.next().getAsJsonObject();
-			try {
-				deserializer.handleJsonObject(obj);
-			} catch (ParseException e) {
-				System.out.println("Exception: " + e.getMessage());
-			}
+			deserializer.handleJsonObject(obj);
 		}
 	}
 }

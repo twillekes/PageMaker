@@ -25,7 +25,12 @@ public class PortfolioTest extends TestCase {
 	public void testAddPicture() {
 		Portfolio p = new Portfolio();
 		Picture pic = new Picture();
-		p.addPicture(pic);
+		try {
+			p.addPicture(pic);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		assertEquals(p.getPictures().size(), 1);
 	}
 }

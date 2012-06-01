@@ -10,6 +10,18 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class Portfolio extends Observable {
+	public enum ChangeType {
+		ADDED,
+		REMOVED
+	}
+	public class Changed {
+		public ChangeType type;
+		public Picture picture;
+		public Changed(ChangeType type, Picture picture) {
+			this.type = type;
+			this.picture = picture;
+		}
+	}
 	public class CategoryRecord {
 		public String categoryValue;
 		public List<Integer> imageIndexes;
@@ -35,8 +47,12 @@ public class Portfolio extends Observable {
 	public SortedSet<Picture> getPictures() {
 		return pictures;
 	}
-	public void addPicture(Picture p) {
-		pictures.add(p);
+	public void addPicture(Picture p) throws Exception {
+		if (!pictures.add(p)) {
+			throw new Exception("addPicture could not add " + p.getRepositoryFilePath());
+		}
+		this.setChanged();
+		this.notifyObservers(new Changed(ChangeType.ADDED, p));
 	}
 	// Top level is a map of string (category name: subject, season, etc.) to...
 	// Next level is a map of string (category value: houses, winter, etc.) = 'categoryValue' to...
@@ -143,10 +159,10 @@ public class Portfolio extends Observable {
 			throw new Exception("Unable to remove picture " + picture.getRepositoryFilePath());
 		}
 		this.setChanged();
-		this.notifyObservers();
+		this.notifyObservers(new Changed(ChangeType.REMOVED, picture));
 	}
-	public void replace(Picture orig, Picture clon) {
-		pictures.remove(orig);
-		pictures.add(clon);
+	public void replace(Picture orig, Picture clon) throws Exception {
+		remove(orig);
+		addPicture(clon);
 	}
 }

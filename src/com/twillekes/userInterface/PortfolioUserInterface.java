@@ -158,6 +158,8 @@ public class PortfolioUserInterface implements Observer {
 	}
 	@Override
 	public void update(Observable o, Object arg) {
-		buildCategoryUserInterface(currentCategorization);
+		if (((Portfolio.Changed)arg).type == Portfolio.ChangeType.ADDED) {
+			buildCategoryUserInterface(currentCategorization);
+		}
 	}
 }

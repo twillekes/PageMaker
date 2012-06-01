@@ -58,7 +58,12 @@ public class ImportPicture {
 			return;
 		}
         pic.getMetadata().setIsNew("1");
-        Application.getPortfolio().addPicture(pic);
+        try {
+			Application.getPortfolio().addPicture(pic);
+		} catch (Exception e2) {
+			e2.printStackTrace();
+			return;
+		}
 		
 		Shell shell = new Shell(Application.getShell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		shell.setLayout(new GridLayout());
