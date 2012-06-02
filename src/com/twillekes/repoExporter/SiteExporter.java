@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
@@ -21,7 +22,7 @@ import com.twillekes.userInterface.Application;
 
 public class SiteExporter {
 	private static final String SERVER = "ftp.shaw.ca";
-	public static boolean forReal = false;
+	public static boolean forReal = true;
 	public interface Logger {
 		public void log(String message);
 	}
@@ -60,17 +61,17 @@ public class SiteExporter {
 			int reply = client.getReplyCode();
 			if (!FTPReply.isPositiveCompletion(reply)) {
 				client.disconnect();
-				logger.log("  Server refused connection");
+				logger.log("  ***ERROR*** Server refused connection, reply: "+reply);
 				throw new Exception("Server refused connection");
 			}
 			if (!client.login(account, password)) {
-				logger.log("  Unable to log in");
+				logger.log("  ***ERROR*** Unable to log in");
 				throw new Exception("Unable to log in");
 			}
 			if (destDir.length() > 0 && !client.changeWorkingDirectory(destDir)) {
 				client.makeDirectory(destDir);
 				if (!client.changeWorkingDirectory(destDir)) {
-					logger.log("  Could not create destination directory " + destDir);
+					logger.log("  ***ERROR*** Could not create destination directory " + destDir);
 					throw new Exception("Could not create destination directory " + destDir);
 				}
 			}
@@ -118,6 +119,7 @@ public class SiteExporter {
 			}
 		}
 		public void uploadPicture(String filePath) throws Exception {
+			client.setFileType(FTP.BINARY_FILE_TYPE);
 	        String thumbPath = Picture.getThumbName(filePath);
 	        upload(filePath);
 	        upload(thumbPath);
@@ -132,7 +134,7 @@ public class SiteExporter {
 			}
 			local.close();
 			if (!success) {
-				logger.log("    Unable to upload "+filePath);
+				logger.log("    ***ERROR*** Unable to upload "+filePath+" reply: "+client.getReplyCode());
 				throw new Exception("Unable to upload "+filePath);
 			}
 		}
@@ -147,10 +149,10 @@ public class SiteExporter {
 				logger.log("    Deleting files "+this.files[i].getName()+" and "+thumbName);
 				try {
 					if (forReal && !client.deleteFile(this.files[i].getName())) {
-						logger.log("    Unable to delete "+this.files[i].getName());
+						logger.log("    ***ERROR*** Unable to delete "+this.files[i].getName());
 					}
 					if (forReal && !client.deleteFile(thumbName)) {
-						logger.log("    Unable to delete "+thumbName);
+						logger.log("    ***ERROR*** Unable to delete "+thumbName);
 					}
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -210,7 +212,7 @@ public class SiteExporter {
 			ftpExporter.upload(Repository.instance().getPagePath() + "scripts.js");
 			ftpExporter.terminate();
 		} catch (Exception e) {
-			logger.log("Unable to upload feed and imageList files");
+			logger.log("***ERROR*** Unable to upload feed and imageList files");
 			e.printStackTrace();
 			return;
 		}
