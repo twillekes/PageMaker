@@ -374,7 +374,7 @@ function buildMenu()
         
         $("#viewitems").append(adiv);
         
-        setupPopupMenu('viewMenuButton', $viewMenu, function(theHTML){
+        new PopupMenu('viewMenuButton', $viewMenu, function(theHTML){
             setThumbView(theHTML);
         } );
     }
@@ -386,7 +386,7 @@ function buildMenu()
         
         $("#viewitems").append(adiv);
         
-        setupPopupMenu('pivotMenuButton', $pivotMenu, function(theHTML){
+        new PopupMenu('pivotMenuButton', $pivotMenu, function(theHTML){
             currentCategorization = theHTML;
             findCategories();
             buildMenu();
@@ -659,7 +659,7 @@ function toImageView_original(categoryValue, imageToShow)
     theElement.innerHTML = theHTML;
 
     buildCategoryPopupMenu(categoryValue);
-    setupPopupMenu('categoryPopupMenuButton', $categoryPopupMenu, function(theHTML){
+    new PopupMenu('categoryPopupMenuButton', $categoryPopupMenu, function(theHTML){
         toImageView(theHTML);
     }, true );
 
@@ -846,7 +846,7 @@ function toStatsView()
 // Tooltip and popup menu support
 // ******************************************************************
 
-this.initializeButtonHover = function()
+function initializeButtonHover()
 {
     $("a.tooltip").hover(function(e)
     {        
@@ -858,81 +858,91 @@ this.initializeButtonHover = function()
 	});
 };
 
-function setupPopupMenu( buttonDivName, $theMenuDiv, clickHandler, popToLeft )
-{
+var PopupMenu = function ( buttonDivName, $theMenuDiv, clickHandler, popToLeft ) {
     if ( popToLeft == null )
         popToLeft = false;
-        
-    $('#'+ buttonDivName + '.popupMenuSource').hover(function(e)
-    {
-        if ( this.$popupMenu == null )
-        {
-            this.$popupMenu = $("<div id='popupMenu_" + buttonDivName + "' class=\"popupMenu roundedButton\" style=\"width: 100px;\"></div>");
-            this.$popupMenu.append($theMenuDiv);
-        
-            $("body").append(this.$popupMenu);
-        }
-        this.$popupMenu.show();
-        
-        this.loc = getPopupLocation(buttonDivName, $theMenuDiv, popToLeft);
-        this.$popupMenu.offset({left:this.loc.left,top:this.loc.top});
-        
-        initializePopupMenuItems($theMenuDiv, this.loc, this.$popupMenu);
-        
-        $(this).removeClass('buttonColors').addClass('buttonHoveredColors');
-    },
-	function(e)
-    {
-        if ( !isInRect( { left: e.pageX, top: e.pageY }, this.loc ) )
-            this.$popupMenu.hide();
-
-        $(this).removeClass('buttonHoveredColors').addClass('buttonColors');
-	});
     
-    $theMenuDiv.children().click(function()
-    {
-        $("#popupMenu_"+buttonDivName).remove();
-        $theMenuDiv.children().removeClass('buttonSelectedColors').addClass('buttonColors');
-        $(this).addClass('buttonSelectedColors');
-        if ( clickHandler != null )
-            clickHandler(this.innerHTML);
-    });
-}
-
-function initializePopupMenuItems($theMenuDiv, rect, $popupMenu)
-{
-    $popupMenu.hover(function(e){
-    },
-    function(e){
-        $popupMenu.hide();
-    });
-    
-    $theMenuDiv.children().hover(function(e) {
-        $(this).removeClass('buttonColors').addClass('buttonHoveredColors');
-    },
-    function(e) {
-        $(this).removeClass('buttonOveredColors').addClass('buttonColors');
-    });
-}
-
-function getPopupLocation(buttonDivName, $theMenuDiv, popToLeft)
-{
-    var buttonX = $('#'+buttonDivName).offset().left;
-    if ( !popToLeft )
-        buttonX += $('#'+buttonDivName).outerWidth();
-    else
-        buttonX -= $theMenuDiv.outerWidth();
-        
-    var rightExtent = buttonX + $theMenuDiv.width();
-    if ( rightExtent > $(window).width() )
-        buttonX -= (rightExtent - $(window).width());
-        
-    var buttonY = $('#'+buttonDivName).offset().top;
-    var topExtent = buttonY + $theMenuDiv.height();
-    if ( topExtent > $(window).height() )
-        buttonY -= (topExtent - $(window).height());
-        
-    return { top: buttonY, left: buttonX, height: $theMenuDiv.height(), width: $theMenuDiv.width() };
+	this.$popupMenu = null;
+	this.loc = null;
+	var self = this;
+	
+	var setupPopupMenu = function( buttonDivName, $theMenuDiv, clickHandler, popToLeft ) { 
+	    $('#'+ buttonDivName + '.popupMenuSource').hover(function(e) {
+		        if ( self.$popupMenu == null ) {
+		            self.$popupMenu = $("<div id='popupMenu_" + buttonDivName + "' class=\"popupMenu roundedButton\" style=\"width: 100px;\"></div>");
+		            self.$popupMenu.append($theMenuDiv);
+		            $("body").append(self.$popupMenu);
+		        }
+		        self.$popupMenu.show();
+		        
+		        self.loc = getPopupLocation(buttonDivName, $theMenuDiv, popToLeft);
+		        self.$popupMenu.offset({left:self.loc.left,top:self.loc.top});
+		        
+		        initializePopupMenuItems($theMenuDiv, self.loc, self.$popupMenu);
+		        
+		        $(this).removeClass('buttonColors').addClass('buttonHoveredColors');
+		    }, function(e) {
+		        if ( !isInRect( { left: e.pageX, top: e.pageY }, self.loc ) ) {
+		            //self.$popupMenu.hide();
+		        	// Chrome has issues with just hiding, so turf the div instead:
+		        	self.$popupMenu.remove();
+		        	self.$popupMenu = null;
+		        }
+		        $(this).removeClass('buttonHoveredColors').addClass('buttonColors');
+		});
+		    
+	    $theMenuDiv.children().click(function() {
+	        $("#popupMenu_"+buttonDivName).remove();
+	        $theMenuDiv.children().removeClass('buttonSelectedColors').addClass('buttonColors');
+	        $(this).addClass('buttonSelectedColors');
+	        if ( clickHandler != null ) {
+	            clickHandler(this.innerHTML);
+	        }
+        	// Chrome has issues with just hiding, so turf the div instead:
+        	self.$popupMenu.remove();
+        	self.$popupMenu = null;
+	    });
+	}
+	
+	var initializePopupMenuItems = function ($theMenuDiv, rect, $popupMenu) {
+	    $popupMenu.hover(function(e){
+		    },
+		    function(e) {
+		        //$popupMenu.hide();
+	        	// Chrome has issues with just hiding, so turf the div instead:
+	        	self.$popupMenu.remove();
+	        	self.$popupMenu = null;
+		});
+		    
+		$theMenuDiv.children().hover(function(e) {
+		        $(this).removeClass('buttonColors').addClass('buttonHoveredColors');
+		    },
+		    function(e) {
+		        $(this).removeClass('buttonHoveredColors').addClass('buttonColors');
+	    });
+	}
+	
+	var getPopupLocation = function (buttonDivName, $theMenuDiv, popToLeft)
+	{
+	    var buttonX = $('#'+buttonDivName).offset().left;
+	    if ( !popToLeft )
+	        buttonX += $('#'+buttonDivName).outerWidth();
+	    else
+	        buttonX -= $theMenuDiv.outerWidth();
+	        
+	    var rightExtent = buttonX + $theMenuDiv.width();
+	    if ( rightExtent > $(window).width() )
+	        buttonX -= (rightExtent - $(window).width());
+	        
+	    var buttonY = $('#'+buttonDivName).offset().top;
+	    var topExtent = buttonY + $theMenuDiv.height();
+	    if ( topExtent > $(window).height() )
+	        buttonY -= (topExtent - $(window).height());
+	        
+	    return { top: buttonY, left: buttonX, height: $theMenuDiv.height(), width: $theMenuDiv.width() };
+	}
+	
+	setupPopupMenu( buttonDivName, $theMenuDiv, clickHandler, popToLeft );
 }
 
 function isInRect(point,rect)
