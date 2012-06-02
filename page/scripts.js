@@ -872,6 +872,18 @@ var PopupMenu = function ( buttonDivName, $theMenuDiv, clickHandler, popToLeft )
 		            self.$popupMenu = $("<div id='popupMenu_" + buttonDivName + "' class=\"popupMenu roundedButton\" style=\"width: 100px;\"></div>");
 		            self.$popupMenu.append($theMenuDiv);
 		            $("body").append(self.$popupMenu);
+				    
+		    	    $theMenuDiv.children().click(function() {
+		    	        $("#popupMenu_"+buttonDivName).remove();
+		    	        $theMenuDiv.children().removeClass('buttonSelectedColors').addClass('buttonColors');
+		    	        $(this).addClass('buttonSelectedColors');
+		    	        if ( clickHandler != null ) {
+		    	            clickHandler(this.innerHTML);
+		    	        }
+		            	// Chrome has issues with just hiding, so turf the div instead:
+		            	self.$popupMenu.remove();
+		            	self.$popupMenu = null;
+		    	    });
 		        }
 		        self.$popupMenu.show();
 		        
@@ -890,18 +902,6 @@ var PopupMenu = function ( buttonDivName, $theMenuDiv, clickHandler, popToLeft )
 		        }
 		        $(this).removeClass('buttonHoveredColors').addClass('buttonColors');
 		});
-		    
-	    $theMenuDiv.children().click(function() {
-	        $("#popupMenu_"+buttonDivName).remove();
-	        $theMenuDiv.children().removeClass('buttonSelectedColors').addClass('buttonColors');
-	        $(this).addClass('buttonSelectedColors');
-	        if ( clickHandler != null ) {
-	            clickHandler(this.innerHTML);
-	        }
-        	// Chrome has issues with just hiding, so turf the div instead:
-        	self.$popupMenu.remove();
-        	self.$popupMenu = null;
-	    });
 	}
 	
 	var initializePopupMenuItems = function ($theMenuDiv, rect, $popupMenu) {
