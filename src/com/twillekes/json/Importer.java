@@ -120,6 +120,7 @@ public class Importer {
 		}
 	}
 	public enum PortfolioType {
+		METADATA_WORDS, METADATA_PICTURES,
 		WORDS, PICTURES, TRASH
 	}
 	private class PortfolioDeserializer implements Deserializer {
@@ -132,13 +133,13 @@ public class Importer {
 			this.type = type;
 		}
 		public void handleJsonObject(JsonObject obj) throws Exception {
-			if (this.type == PortfolioType.WORDS) {
+			if (this.type == PortfolioType.WORDS || this.type == PortfolioType.METADATA_WORDS) {
 				handleJsonWordsObject(obj);
 			} else {
 				Picture picture = new Picture();
 				Metadata metadata = new Metadata();
 				picture.setMetadata(metadata);
-				if (this.type == PortfolioType.PICTURES) {
+				if (this.type == PortfolioType.PICTURES || this.type == PortfolioType.METADATA_PICTURES) {
 					handleJsonPictureObject(obj, picture);
 				} else {
 					handleJsonTrashObject(obj, picture);
@@ -247,6 +248,11 @@ public class Importer {
 				} else if (key.equals("isDiscarded")) {
 					metadata.setIsDiscarded(val);
 				} else if (key.equals("isNew")) {
+					// If initializing from the original metadata format, assume
+					// all new pictures should be in the RSS feed
+					if (this.type == PortfolioType.METADATA_PICTURES) {
+						metadata.setIsInFeed(val);
+					}
 					metadata.setIsNew(val);
 				} else if (key.equals("isInFeed")) {
 					metadata.setIsInFeed(val);
@@ -294,7 +300,7 @@ public class Importer {
 				continue;
 			}
 			Folder folder = null;
-			portfolioDeserializer.type = PortfolioType.PICTURES;
+			portfolioDeserializer.type = PortfolioType.METADATA_PICTURES;
 			if (rec.path.equals("images")) {
 				folder = Repository.instance().createFolder("tjwillekes", "images");
 			} else if (rec.path.equals("images_2")) {
@@ -303,7 +309,7 @@ public class Importer {
 				folder = Repository.instance().createFolder("twillekes", "newImages");
 			} else if (rec.path.equals("words")) {
 				folder = Repository.instance().createFolder("twillekes", "words");
-				portfolioDeserializer.type = PortfolioType.WORDS;
+				portfolioDeserializer.type = PortfolioType.METADATA_WORDS;
 			}
 			portfolioDeserializer.folder = folder;
 			this.importJson(portfolioDeserializer);
