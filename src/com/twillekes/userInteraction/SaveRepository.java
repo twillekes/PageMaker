@@ -10,7 +10,7 @@ public class SaveRepository implements SelectionListener {
 	@Override
 	public void widgetSelected(SelectionEvent e) {
 		Exporter exporter = new Exporter();
-		exporter.export();
+		exporter.saveRepository();
 	}
 	@Override
 	public void widgetDefaultSelected(SelectionEvent e) {

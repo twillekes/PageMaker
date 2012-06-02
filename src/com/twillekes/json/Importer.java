@@ -84,20 +84,33 @@ public class Importer {
 				final String key = entry.getKey();
 				if (key.equals("account")) {
 					account = entry.getValue().getAsString();
+					path = null;
+					portfolioDeserializer = null;
 				} else if (key.equals("path")) {
 					path = entry.getValue().getAsString();
-				} else if (key.equals("pictures")) {
-					if (account != null && path != null && entry.getValue().isJsonArray()) {
+					if (account != null && path != null) {
 						Folder folder = Repository.instance().createFolder(account, path);
 						portfolioDeserializer = new PortfolioDeserializer(this.portfolio, PortfolioType.PICTURES);
 						portfolioDeserializer.folder = folder;
+					} else {
+						throw new Exception("Control flow error, missing account/path");
+					}
+				} else if (key.equals("pictures")) {
+					if (portfolioDeserializer != null && entry.getValue().isJsonArray()) {
 						importJsonRecords(entry.getValue().getAsJsonArray(), portfolioDeserializer);
 					} else {
-						throw new ParseException("Unable to parse, missing account/path", 0);
+						throw new ParseException("Unable to parse, not an array", 0);
 					}
 				} else if (key.equals("trash")) {
 					if (portfolioDeserializer != null) {
 						portfolioDeserializer.type = PortfolioType.TRASH;
+						importJsonRecords(entry.getValue().getAsJsonArray(), portfolioDeserializer);
+					} else {
+						throw new ParseException("Missing portfolio deserializer", 0);
+					}
+				} else if (key.equals("words")) {
+					if (portfolioDeserializer != null) {
+						portfolioDeserializer.type = PortfolioType.WORDS;
 						importJsonRecords(entry.getValue().getAsJsonArray(), portfolioDeserializer);
 					} else {
 						throw new ParseException("Missing portfolio deserializer", 0);
@@ -150,6 +163,7 @@ public class Importer {
 				}
 			}
 			portfolio.addWords(words);
+			this.folder.addWords(words);
 		}
 		public void handleJsonPictureObject(JsonObject obj, Picture picture) throws Exception {
 			this.folder.add(picture);
@@ -280,6 +294,7 @@ public class Importer {
 				continue;
 			}
 			Folder folder = null;
+			portfolioDeserializer.type = PortfolioType.PICTURES;
 			if (rec.path.equals("images")) {
 				folder = Repository.instance().createFolder("tjwillekes", "images");
 			} else if (rec.path.equals("images_2")) {
@@ -287,8 +302,8 @@ public class Importer {
 			} else if (rec.path.equals("newImages")) {
 				folder = Repository.instance().createFolder("twillekes", "newImages");
 			} else if (rec.path.equals("words")) {
-				// TODO: Set portfolio type to WORDS...
-				continue;
+				folder = Repository.instance().createFolder("twillekes", "words");
+				portfolioDeserializer.type = PortfolioType.WORDS;
 			}
 			portfolioDeserializer.folder = folder;
 			this.importJson(portfolioDeserializer);

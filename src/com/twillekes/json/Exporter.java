@@ -23,9 +23,10 @@ public class Exporter {
     }
 	public static void main(String[] args) {
 		Importer importer = new Importer();
-		Portfolio portfolio = importer.createPortfolioFromMetadata();
+		//Portfolio portfolio = 
+				importer.createPortfolioFromMetadata();
 		Exporter exporter = new Exporter();
-		exporter.export();
+		exporter.saveRepository();
 		//exporter.export(portfolio);
 		//exporter.exportToJS(portfolio);
 		
@@ -47,7 +48,7 @@ public class Exporter {
 			e.printStackTrace();
 		}
 	}
-	public void export() {
+	public void saveRepository() {
 		Gson gson = new GsonBuilder().setExclusionStrategies(new RepositoryExclusionStrategy()).create();
 		String json = gson.toJson(Repository.instance().getFolders());
 		try {

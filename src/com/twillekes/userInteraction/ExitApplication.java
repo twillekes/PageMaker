@@ -21,7 +21,7 @@ public class ExitApplication implements SelectionListener {
 					int value = mBox.open();
 					if (value == SWT.YES) {
 						Exporter exporter = new Exporter();
-						exporter.export();
+						exporter.saveRepository();
 					} else if (value == SWT.CANCEL) {
 						return;
 					}

@@ -15,11 +15,13 @@ public class Folder extends Observable implements Observer {
 	private String path;
 	private List<Picture> pictures;
 	private List<Picture> trash;
+	private List<Words> words;
 	public Folder(String account, String path) {
 		this.account = account;
 		this.path = path;
 		this.pictures = new ArrayList<Picture>();
 		this.trash = new ArrayList<Picture>();
+		this.words = new ArrayList<Words>();
 	}
 	public String getAccount() {
 		return this.account;
@@ -57,6 +59,9 @@ public class Folder extends Observable implements Observer {
 	}
 	public String getPath() {
 		return this.path;
+	}
+	public void addWords(Words words) {
+		this.words.add(words);
 	}
 	public boolean containsPicture(Picture picture) {
 		Iterator<Picture> it = this.pictures.iterator();

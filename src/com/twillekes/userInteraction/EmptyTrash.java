@@ -17,7 +17,7 @@ public class EmptyTrash implements SelectionListener {
 		if (value == SWT.OK) {
 			Trash.instance().empty();
 			Exporter exporter = new Exporter();
-			exporter.export();
+			exporter.saveRepository();
 		}
 	}
 	@Override

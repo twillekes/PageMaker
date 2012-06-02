@@ -1,0 +1,8 @@
+{
+    "_comment" : "Use doNotShow=1 to avoid articles showing up on the page",
+    "type" : "words",
+    "items":
+    [
+        { "filename" : "seasons.htm", "title" : "Seasons", "doNotShow" : 1 }
+    ]
+}
