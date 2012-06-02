@@ -213,6 +213,7 @@ public class SiteExporter {
 			ftpExporter.initiate("twillekes", "");
 			ftpExporter.upload(Repository.instance().getPagePath() + "feed.xml");
 			ftpExporter.upload(Repository.instance().getPagePath() + "imageList.js");
+			ftpExporter.upload(Repository.instance().getPagePath() + "scripts.js");
 			ftpExporter.terminate();
 		} catch (Exception e) {
 			logger.log("Unable to upload feed and imageList files");
