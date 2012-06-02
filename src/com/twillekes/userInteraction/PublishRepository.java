@@ -18,12 +18,12 @@ public class PublishRepository implements SelectionListener {
 				SiteExporter siteExporter = new SiteExporter();
 				final PublishDialog publishDialog = new PublishDialog();
 				siteExporter.export(password, publishDialog, new CompletionObserver(){
+				//siteExporter.test(password, publishDialog, new CompletionObserver(){
 					@Override
 					public void complete() {
 						publishDialog.CanBeDisposed();
 					}
 				});
-//				siteExporter.test(password, new PublishDialog());
 			}
 			@Override
 			public void DialogCancelled() {

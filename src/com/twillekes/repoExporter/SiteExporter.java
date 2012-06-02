@@ -74,6 +74,7 @@ public class SiteExporter {
 					throw new Exception("Could not create destination directory " + destDir);
 				}
 			}
+			client.setUseEPSVwithIPv4(true);
 			files = client.listFiles();
 			logger.log("  Account (" + account + ") has " + files.length + " files");
 		}
@@ -117,27 +118,20 @@ public class SiteExporter {
 			}
 		}
 		public void uploadPicture(String filePath) throws Exception {
-			String destFilePath = Picture.getFileName(filePath);
 	        String thumbPath = Picture.getThumbName(filePath);
-	        String destThumbFilePath = Picture.getFileName(thumbPath);
-
-	        logger.log("    Uploading from "+filePath+" to "+destFilePath+" and "+thumbPath+" to "+destThumbFilePath);
-			InputStream local = new FileInputStream(filePath);
-			if (forReal && !client.storeFile(destFilePath, local)) {
-				logger.log("    Unable to upload "+filePath);
-				throw new Exception("Unable to upload "+filePath);
-			}
-			local = new FileInputStream(thumbPath);
-			if (forReal && !client.storeFile(destThumbFilePath, local)) {
-				logger.log("    Unable to upload "+thumbPath);
-				throw new Exception("Unable to upload "+thumbPath);
-			}
+	        upload(filePath);
+	        upload(thumbPath);
 		}
 		public void upload(String filePath) throws Exception {
 	        logger.log("    Uploading "+filePath);
 	        String destFilePath = Picture.getFileName(filePath);
 			InputStream local = new FileInputStream(filePath);
-			if (forReal && !client.storeFile(destFilePath, local)) {
+			boolean success = true;
+			if (forReal) {
+				success = client.storeFile(destFilePath, local);
+			}
+			local.close();
+			if (!success) {
 				logger.log("    Unable to upload "+filePath);
 				throw new Exception("Unable to upload "+filePath);
 			}
@@ -222,22 +216,34 @@ public class SiteExporter {
 		}
 		logger.log("The site has been published successfully");
 	}
-	public void test(String pw, Logger logger) {
-		FtpExporter ftpExporter = new FtpExporter(pw, logger);
-		try {
-			ftpExporter.initiate("photonwrangler", "testUpload/");
-			if (ftpExporter.needsUpload("repository/TESTIMAGE.jpg")) {
-				ftpExporter.upload("repository/TESTIMAGE.jpg");
+	public void test(final String password, final Logger logger, final CompletionObserver completionObserver) {
+		forReal = true;
+		final LoggerProxy loggerProxy = new LoggerProxy(logger);
+		new Thread() {
+			public void run() {
+				FtpExporter ftpExporter = new FtpExporter(password, loggerProxy);
+				try {
+					ftpExporter.initiate("photonwrangler", "testUpload/");
+					if (ftpExporter.needsUpload("repository/TESTIMAGE.jpg")) {
+						ftpExporter.upload("repository/TESTIMAGE.jpg");
+					}
+					List<String> files = new ArrayList<String>();
+					files.add("TESTIMAGE.jpg");
+					files.add("TESTIMAGE_thumb.jpg");
+					ftpExporter.purge(files);
+					ftpExporter.terminate();
+				} catch (Exception e) {
+					e.printStackTrace();
+					return;
+				}
+				loggerProxy.log("The test has completed successfully");
+				Application.getDisplay().asyncExec(new Runnable(){
+					@Override
+					public void run() {
+						completionObserver.complete();
+					}
+				});
 			}
-			List<String> files = new ArrayList<String>();
-			files.add("TESTIMAGE.jpg");
-			files.add("TESTIMAGE_thumb.jpg");
-			ftpExporter.purge(files);
-			ftpExporter.terminate();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return;
-		}
-		logger.log("The test has completed successfully");
+		}.start();
 	}
 }
