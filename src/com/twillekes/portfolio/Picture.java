@@ -19,6 +19,17 @@ public class Picture extends Observable implements Comparable<Picture>, Cloneabl
 	private String localFilePath;
 	private Metadata metadata;
 	private List<String> tags;
+	public enum ChangeType {
+		CHANGED, REPLACING
+	}
+	public class Changed {
+		public ChangeType type;
+		public Picture picture;
+		public Changed(ChangeType type, Picture picture) {
+			this.type = type;
+			this.picture = picture;
+		}
+	}
 	// Constructor
 	public Picture() {
 		filePath = "undefined";
@@ -119,6 +130,10 @@ public class Picture extends Observable implements Comparable<Picture>, Cloneabl
 	@Override
 	public void update(Observable o, Object arg) {
 		this.setChanged();
-		this.notifyObservers();
+		this.notifyObservers(new Changed(ChangeType.CHANGED, this));
+	}
+	public void willBeReplacedBy(Picture picture) {
+		this.setChanged();
+		this.notifyObservers(new Changed(ChangeType.REPLACING, picture));
 	}
 }

@@ -184,11 +184,11 @@ public class PictureUserInterface {
 		PreviewUserInterface prevUi = new PreviewUserInterface(pictureGroup, picture, picture.getRepositoryThumbFilePath());
 		prevUi.setClickObserver(new PreviewUserInterface.ClickObserver() {
 			@Override
-			public void click(MouseEvent mouseEvent) {
+			public void click(MouseEvent mouseEvent, Picture pic) {
 				Shell shell = new Shell(Application.getShell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 				shell.setLayout(new GridLayout());
 				shell.setText("View Image");
-				new PreviewUserInterface(shell, picture, picture.getRepositoryFilePath());
+				new PreviewUserInterface(shell, pic, pic.getRepositoryFilePath());
 				shell.layout();
 				shell.pack();
 				shell.open();
@@ -372,7 +372,7 @@ public class PictureUserInterface {
 				}
 			}, SWT.READ_ONLY);
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 		}
 		metadataGroup.layout();
 		pictureGroup.layout();

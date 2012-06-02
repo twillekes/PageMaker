@@ -68,9 +68,9 @@ public class CategoryUserInterface {
 			previewUserInterfaces.add(prevUi);
 			prevUi.setClickObserver(new PreviewUserInterface.ClickObserver() {
 				@Override
-				public void click(MouseEvent mouseEvent) {
+				public void click(MouseEvent mouseEvent, Picture picture) {
 					if (mouseEvent.button != 1) {
-						(new EditProperties()).perform(pic);
+						(new EditProperties()).perform(picture);
 					} else {
 						prevUi.toggleSelected();
 					}

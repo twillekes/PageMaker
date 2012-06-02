@@ -238,96 +238,120 @@ public class Metadata extends Observable implements Cloneable, Observer {
 		return title;
 	}
 	public void setTitle(String title) {
-		this.title = title;
-		this.setChanged();
-		this.notifyObservers();
+		if (this.title == null || !this.title.equals(title)) {
+			this.title = title;
+			this.setChanged();
+			this.notifyObservers();
+		}
 	}
 	
 	public String getDescription() {
 		return description;
 	}
 	public void setDescription(String description) {
-		this.description = description;
-		this.setChanged();
-		this.notifyObservers();
+		if (this.description == null || !this.description.equals(description)) {
+			this.description = description;
+			this.setChanged();
+			this.notifyObservers();
+		}
 	}
 	
 	public String getRating() {
 		return rating;
 	}
 	public void setRating(String rating) {
-		this.rating = rating;
-		schema.update(rating, schema.ratings);
+		if (this.rating == null || !this.rating.equals(rating)) {
+			this.rating = rating;
+			schema.update(rating, schema.ratings);
+		}
 	}
 	
 	public String getOrientation() {
 		return orientation;
 	}
 	public void setOrientation(String orientation) {
-		this.orientation = orientation;
-		schema.update(orientation, schema.orientations);
+		if (this.orientation == null || !this.orientation.equals(orientation)) {
+			this.orientation = orientation;
+			schema.update(orientation, schema.orientations);
+		}
 	}
 
 	public String getSubject() {
 		return subject;
 	}
 	public void setSubject(String subject) {
-		this.subject = subject;
-		schema.update(subject, schema.subjects);
+		if (this.subject == null || !this.subject.equals(subject)) {
+			this.subject = subject;
+			schema.update(subject, schema.subjects);
+		}
 	}
 
 	public String getSeason() {
 		return season;
 	}
 	public void setSeason(String season) {
-		this.season = season;
-		schema.update(season, schema.seasons);
+		if (this.season == null || !this.season.equals(season)) {
+			this.season = season;
+			schema.update(season, schema.seasons);
+		}
 	}
 	
 	public String getCamera() {
 		return camera;
 	}
 	public void setCamera(String camera) {
-		this.camera = camera;
-		schema.update(camera, schema.cameras);
+		if (this.camera == null || !this.camera.equals(camera)) {
+			this.camera = camera;
+			schema.update(camera, schema.cameras);
+		}
 	}
 	
 	public String getLens() {
 		return lens;
 	}
 	public void setLens(String lens) {
-		this.lens = lens;
-		schema.update(lens, schema.lenses);
+		if (this.lens == null || !this.lens.equals(lens)) {
+			this.lens = lens;
+			schema.update(lens, schema.lenses);
+		}
 	}
 	
 	public String getFilm() {
 		return film;
 	}
 	public void setFilm(String film) {
-		this.film = film;
-		schema.update(film, schema.films);
+		if (this.film == null || !this.film.equals(film)) {
+			this.film = film;
+			schema.update(film, schema.films);
+		}
 	}
 
 	public String getChrome() {
 		return chrome;
 	}
 	public void setChrome(String chrome) {
-		this.chrome = chrome;
-		schema.update(chrome, schema.chromes);
+		if (this.chrome == null || !this.chrome.equals(chrome)) {
+			this.chrome = chrome;
+			schema.update(chrome, schema.chromes);
+		}
 	}
 
 	public String getFormat() {
 		return format;
 	}
 	public void setFormat(String format) {
-		this.format = format;
-		schema.update(format, schema.formats);
+		if (this.format == null || !this.format.equals(format)) {
+			this.format = format;
+			schema.update(format, schema.formats);
+		}
 	}
 	public String getTime() {
 		return time;
 	}
 	public void setTime(String time) {
-		this.time = time;
+		if (this.time == null || !this.time.equals(time)) {
+			this.time = time;
+		}
 	}
 	public void setTime(long hour, long minute, String amPm) {
 		this.time = String.valueOf(hour) + ":" + String.valueOf(minute) + " " + amPm;
@@ -336,17 +360,19 @@ public class Metadata extends Observable implements Cloneable, Observer {
 		return date;
 	}
 	public void setDate(String date) {
-		this.date = date;
-		
-		try {
-			this.realDate = this.validateDate(this.date, this.time);
-		} catch (Exception e) {
-			this.realDate = null;
+		if (this.date == null || !this.date.equals(date)) {
+			this.date = date;
+			
+			try {
+				this.realDate = this.valiDate(this.date, this.time);
+			} catch (Exception e) {
+				this.realDate = null;
+			}
+			this.setChanged();
+			this.notifyObservers();
 		}
-		this.setChanged();
-		this.notifyObservers();
 	}
-	public Date validateDate(String date, String time) throws Exception {
+	public Date valiDate(String date, String time) throws Exception {
 		Date dat = null;
 		if (date.equals("Unknown")) {
 			throw new Exception("No date provided");
@@ -381,16 +407,20 @@ public class Metadata extends Observable implements Cloneable, Observer {
 		return year;
 	}
 	public void setYear(String year) {
-		this.year = year;
-		schema.update(year, schema.years);
+		if (this.year == null || !this.year.equals(year)) {
+			this.year = year;
+			schema.update(year, schema.years);
+		}
 	}
 	
 	public String getMonth() {
 		return month;
 	}
 	public void setMonth(String month) {
-		this.month = month;
-		schema.update(month, schema.months);
+		if (this.month == null || !this.month.equals(month)) {
+			this.month = month;
+			schema.update(month, schema.months);
+		}
 	}
 
 	public enum Direction {
@@ -400,16 +430,20 @@ public class Metadata extends Observable implements Cloneable, Observer {
 		return direction;
 	}
 	public void setDirection(String direction) {
-		this.direction = direction;
-		schema.update(direction, schema.directions);
+		if (this.direction == null || !this.direction.equals(direction)) {
+			this.direction = direction;
+			schema.update(direction, schema.directions);
+		}
 	}
 
 	public String getFilters() {
 		return filters;
 	}
 	public void setFilters(String filters) {
-		this.filters = filters;
-		schema.update(filters, schema.filterss);
+		if (this.filters == null || !this.filters.equals(filters)) {
+			this.filters = filters;
+			schema.update(filters, schema.filterss);
+		}
 	}
 
 	public String getDoNotShow() {
@@ -419,8 +453,10 @@ public class Metadata extends Observable implements Cloneable, Observer {
 		if (doNotShow.equals("")) {
 			this.doNotShow = null;
 		} else {
-			this.doNotShow = doNotShow;
-			schema.update(doNotShow, schema.doNotShows);
+			if (this.doNotShow == null || !this.doNotShow.equals(doNotShow)) {
+				this.doNotShow = doNotShow;
+				schema.update(doNotShow, schema.doNotShows);
+			}
 		}
 	}
 
@@ -431,8 +467,10 @@ public class Metadata extends Observable implements Cloneable, Observer {
 		if (isNew.equals("")) {
 			isNew = null;
 		} else {
-			this.isNew = isNew;
-			schema.update(isNew, schema.isNews);
+			if (this.isNew == null || !this.isNew.equals(isNew)) {
+				this.isNew = isNew;
+				schema.update(isNew, schema.isNews);
+			}
 		}
 	}
 
@@ -443,8 +481,10 @@ public class Metadata extends Observable implements Cloneable, Observer {
 		if (isDiscarded.equals("")) {
 			this.isDiscarded = null;
 		} else {
-			this.isDiscarded = isDiscarded;
-			schema.update(isDiscarded, schema.isDiscardeds);
+			if (this.isDiscarded == null || !this.isDiscarded.equals(isDiscarded)) {
+				this.isDiscarded = isDiscarded;
+				schema.update(isDiscarded, schema.isDiscardeds);
+			}
 		}
 	}
 	public String getIsFavorite() {
@@ -454,8 +494,10 @@ public class Metadata extends Observable implements Cloneable, Observer {
 		if (isFavorite.equals("")) {
 			this.isFavorite = null;
 		} else {
-			this.isFavorite = isFavorite;
-			schema.update(isFavorite, schema.isFavorites);
+			if (this.isFavorite == null || !this.isFavorite.equals(isFavorite)) {
+				this.isFavorite = isFavorite;
+				schema.update(isFavorite, schema.isFavorites);
+			}
 		}
 	}
 	
@@ -480,8 +522,10 @@ public class Metadata extends Observable implements Cloneable, Observer {
 		if (isInFeed.equals("")) {
 			this.isInFeed = null;
 		} else {
-			this.isInFeed = isInFeed;
-			schema.update(isInFeed, schema.isInFeeds);
+			if (this.isInFeed == null || !this.isInFeed.equals(isInFeed)) {
+				this.isInFeed = isInFeed;
+				schema.update(isInFeed, schema.isInFeeds);
+			}
 		}
 	}
 	@Override

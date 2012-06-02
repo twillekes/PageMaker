@@ -12,14 +12,21 @@ import java.util.TreeSet;
 public class Portfolio extends Observable {
 	public enum ChangeType {
 		ADDED,
-		REMOVED
+		REMOVED,
+		REPLACING
 	}
 	public class Changed {
 		public ChangeType type;
 		public Picture picture;
+		public Picture clone;
 		public Changed(ChangeType type, Picture picture) {
 			this.type = type;
 			this.picture = picture;
+		}
+		public Changed(Picture picture, Picture clone) {
+			this.type = ChangeType.REPLACING;
+			this.picture = picture;
+			this.clone = clone;
 		}
 	}
 	public class CategoryRecord {
@@ -48,11 +55,14 @@ public class Portfolio extends Observable {
 		return pictures;
 	}
 	public void addPicture(Picture p) throws Exception {
+		_addPicture(p);
+		this.setChanged();
+		this.notifyObservers(new Changed(ChangeType.ADDED, p));
+	}
+	public void _addPicture(Picture p) throws Exception {
 		if (!pictures.add(p)) {
 			throw new Exception("addPicture could not add " + p.getRepositoryFilePath());
 		}
-		this.setChanged();
-		this.notifyObservers(new Changed(ChangeType.ADDED, p));
 	}
 	// Top level is a map of string (category name: subject, season, etc.) to...
 	// Next level is a map of string (category value: houses, winter, etc.) = 'categoryValue' to...
@@ -144,6 +154,11 @@ public class Portfolio extends Observable {
 		return list;
 	}
 	public void remove(Picture picture) throws Exception {
+		_remove(picture);
+		this.setChanged();
+		this.notifyObservers(new Changed(ChangeType.REMOVED, picture));
+	}
+	public void _remove(Picture picture) throws Exception {
 		// Cannot use pictures.remove() because the comparitor is overridden for pictures
 		Iterator<Picture> it = this.pictures.iterator();
 		boolean found = false;
@@ -158,11 +173,13 @@ public class Portfolio extends Observable {
 		if (!found) {
 			throw new Exception("Unable to remove picture " + picture.getRepositoryFilePath());
 		}
-		this.setChanged();
-		this.notifyObservers(new Changed(ChangeType.REMOVED, picture));
 	}
 	public void replace(Picture orig, Picture clon) throws Exception {
-		remove(orig);
-		addPicture(clon);
+		this.setChanged();
+		this.notifyObservers(new Changed(orig, clon));
+		orig.willBeReplacedBy(clon);
+		_remove(orig);
+		_addPicture(clon);
+		this.setChanged();
 	}
 }

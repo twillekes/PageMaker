@@ -22,7 +22,7 @@ import com.twillekes.portfolio.Portfolio;
 // Need to run JAR as:
 // java -XstartOnFirstThread -jar PageMaker.jar
 
-// TODO: Track dirtiness state
+// TODO: Next/Cancel while editing images
 // TODO: Application icon/tray icon
 // TODO: Package as application
 // TODO: Ability to auto-FTP page template files

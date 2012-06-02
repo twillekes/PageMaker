@@ -1,5 +1,8 @@
 package com.twillekes.userInterface;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -15,27 +18,33 @@ import org.eclipse.swt.widgets.Composite;
 import com.twillekes.portfolio.Picture;
 import com.twillekes.userInteraction.Selection;
 
-public class PreviewUserInterface {
+public class PreviewUserInterface implements Observer {
 	private Image previewImage;
 	private Canvas canvas;
 	private static int WIDTH = 125;
 	private static int HEIGHT = 125;
 	private boolean isSelected = false;
 	private Picture picture;
+	private PreviewMouseListener previewMouseListener;
 	public interface ClickObserver {
-		void click(MouseEvent mouseEvent);
+		void click(MouseEvent mouseEvent, Picture picture);
 	}
 	private class PreviewMouseListener implements MouseListener {
 		private ClickObserver clickObserver;
-		public PreviewMouseListener(ClickObserver clickObserver) {
+		private Picture picture;
+		public PreviewMouseListener(ClickObserver clickObserver, Picture picture) {
 			this.clickObserver = clickObserver;
+			this.picture = picture;
+		}
+		public void setPicture(Picture picture) {
+			this.picture = picture;
 		}
 		@Override
 		public void mouseDoubleClick(MouseEvent e) {
 		}
 		@Override
 		public void mouseDown(MouseEvent e) {
-			clickObserver.click(e);
+			clickObserver.click(e, picture);
 		}
 		@Override
 		public void mouseUp(MouseEvent e) {
@@ -83,10 +92,12 @@ public class PreviewUserInterface {
 				}
 			}
 		});
+		this.picture.addObserver(this);
 		//canvas.layout();
 	}
 	public void setClickObserver(ClickObserver clickObserver) {
-		canvas.addMouseListener(new PreviewMouseListener(clickObserver));
+		this.previewMouseListener = new PreviewMouseListener(clickObserver, this.picture);
+		canvas.addMouseListener(this.previewMouseListener);
 	}
 	public void setSelected(boolean isSelected) {
 		this.isSelected = isSelected;
@@ -108,5 +119,15 @@ public class PreviewUserInterface {
 	}
 	public Picture getPicture() {
 		return this.picture;
+	}
+	@Override
+	public void update(Observable o, Object arg) {
+		Picture.Changed change = (Picture.Changed)arg;
+		if (change.type == Picture.ChangeType.REPLACING) {
+			this.picture = change.picture;
+			this.previewMouseListener.setPicture(this.picture);
+			change.picture.deleteObserver(this);
+			this.picture.addObserver(this);
+		}
 	}
 }
