@@ -111,7 +111,7 @@ public class Exporter {
 			item.appendChild(descrip);
 			
 			Node link_ = doc.createElement("link");
-			link_.setTextContent(pic.getFilePath());
+			link_.setTextContent("http://members.shaw.ca/twillekes/default.htm?showImage=" + Picture.getFileName(pic.getFilePath()));
 			item.appendChild(link_);
 			
 			channel.appendChild(item);
