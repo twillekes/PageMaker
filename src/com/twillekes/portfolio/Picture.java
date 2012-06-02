@@ -98,11 +98,7 @@ public class Picture extends Observable implements Comparable<Picture>, Cloneabl
 		if (this.metadata.getRealDate() == null || o.metadata.getRealDate() == null) {
 			return 1;
 		}
-		int result = o.metadata.getRealDate().compareTo(this.metadata.getRealDate());
-		if (result == 0) {
-			return 1;
-		}
-		return result;
+		return o.metadata.getRealDate().compareTo(this.metadata.getRealDate());
 	}
 	// An equality checker...
 	public boolean equals(Picture picture) {

@@ -26,6 +26,7 @@ public class Metadata extends Observable implements Cloneable, Observer {
 	private String film;
 	private String chrome;
 	private String format;
+	private String time;
 	private String date;
 	private Date realDate;
 	private String year;
@@ -58,6 +59,7 @@ public class Metadata extends Observable implements Cloneable, Observer {
 			((chrome != null && chrome.equals(metadata.chrome)) || (chrome == null && metadata.chrome == null)) &&
 			((format != null && format.equals(metadata.format)) || (format == null && metadata.format == null)) &&
 			((date != null && date.equals(metadata.date)) || (date == null && metadata.date == null)) &&
+			((time != null && time.equals(metadata.time)) || (time == null && metadata.time == null)) &&
 			((realDate != null && realDate.equals(metadata.realDate)) || (realDate == null && metadata.realDate == null)) &&
 			((year != null && year.equals(metadata.year)) || (year == null && metadata.year == null)) &&
 			((month != null && month.equals(metadata.month)) || (month == null && metadata.month == null)) &&
@@ -321,7 +323,15 @@ public class Metadata extends Observable implements Cloneable, Observer {
 		this.format = format;
 		schema.update(format, schema.formats);
 	}
-	
+	public String getTime() {
+		return time;
+	}
+	public void setTime(String time) {
+		this.time = time;
+	}
+	public void setTime(long hour, long minute, String amPm) {
+		this.time = String.valueOf(hour) + ":" + String.valueOf(minute) + " " + amPm;
+	}
 	public String getDate() {
 		return date;
 	}
@@ -329,30 +339,36 @@ public class Metadata extends Observable implements Cloneable, Observer {
 		this.date = date;
 		
 		try {
-			this.realDate = this.validateDate(date);
+			this.realDate = this.validateDate(this.date, this.time);
 		} catch (Exception e) {
 			this.realDate = null;
 		}
 		this.setChanged();
 		this.notifyObservers();
 	}
-	public Date validateDate(String date) throws Exception {
+	public Date validateDate(String date, String time) throws Exception {
 		Date dat = null;
 		if (date.equals("Unknown")) {
 			throw new Exception("No date provided");
 		}
-		DateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyyy");
+		String hourFormat = "";
+		String dateToParse = date;
+		if (time != null) {
+			hourFormat = "hh:mm aa ";
+			dateToParse = time + " " + dateToParse;
+		}
+		DateFormat dateFormat = new SimpleDateFormat(hourFormat + "MMM dd, yyyyy");
 		try {
-			dat = (Date)dateFormat.parse(date);
+			dat = (Date)dateFormat.parse(dateToParse);
 		} catch (ParseException e) {
-			this.date = null;
+			dat = null;
 		}
 		if (dat != null) {
 			return dat;
 		}
-		dateFormat = new SimpleDateFormat("MMM, yyyy");
+		dateFormat = new SimpleDateFormat(hourFormat + "MMM, yyyy");
 		try {
-			dat = (Date)dateFormat.parse(date);
+			dat = (Date)dateFormat.parse(dateToParse);
 		} catch (ParseException e) {
 			System.out.println("Date/month parse exception: " + e.getMessage());
 		}

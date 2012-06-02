@@ -27,7 +27,7 @@ public class Exporter {
 		Exporter exporter = new Exporter();
 		exporter.export();
 		//exporter.export(portfolio);
-		exporter.exportToJS(portfolio);
+		//exporter.exportToJS(portfolio);
 		
 		System.out.println("Created portfolio");
 	}

@@ -113,6 +113,7 @@ public class Importer {
 		public Folder folder;
 		public Portfolio portfolio;
 		public PortfolioType type;
+		private long minuteIncrement = 0;
 		public PortfolioDeserializer(Portfolio portfolio, PortfolioType type) {
 			this.portfolio = portfolio;
 			this.type = type;
@@ -211,7 +212,15 @@ public class Importer {
 					metadata.setYear(val);;
 				} else if (key.equals("month")) {
 					metadata.setMonth(val);
+				} else if (key.equals("time")) {
+					metadata.setTime(val);
 				} else if (key.equals("date")) {
+					if (metadata.getTime() == null) {
+						// When reading from original metadata, just pad some times to ensure sortedSet behaves.
+						// I.e. Comparable in metadata behaves.
+						metadata.setTime(minuteIncrement / 60, minuteIncrement % 60, "AM");
+						minuteIncrement++;
+					}
 					metadata.setDate(val);
 				} else if (key.equals("realDate")) {
 					// This is derived from date in the metadata class

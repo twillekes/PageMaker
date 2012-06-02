@@ -104,7 +104,7 @@ public class PictureUserInterface {
 				}
 			}
 			if (selectedItem == items.length){
-				System.out.println("Could not find initial string (" + initialText + ") in " + sLabel);
+				//System.out.println("Could not find initial string (" + initialText + ") in " + sLabel);
 				return;
 			}
 			combo.select(selectedItem);
@@ -285,6 +285,13 @@ public class PictureUserInterface {
 				@Override
 				public void textChanged(Picture picture, String value) {
 					picture.getMetadata().setFormat(value);
+				}
+			});
+			new PictureTextField(metadataGroup, picture, "Time:", picture.getMetadata().getTime(), 10, new TextChangeHandler(){
+				@Override
+				public void textChanged(Picture picture, String value) {
+					picture.getMetadata().setTime(value);
+					uberGroup.layout();
 				}
 			});
 			new PictureTextField(metadataGroup, picture, "Date:", picture.getMetadata().getDate(), 10, new TextChangeHandler(){
