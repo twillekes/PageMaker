@@ -232,7 +232,6 @@ public class Importer {
 				} else if (key.equals("date")) {
 					if (metadata.getTime() == null) {
 						// When reading from original metadata, just pad some times to ensure sortedSet behaves.
-						// I.e. Comparable in metadata behaves.
 						metadata.setTime(minuteIncrement / 60, minuteIncrement % 60, "AM");
 						minuteIncrement++;
 					}
@@ -308,8 +307,9 @@ public class Importer {
 			} else if (rec.path.equals("newImages")) {
 				folder = Repository.instance().createFolder("twillekes", "newImages");
 			} else if (rec.path.equals("words")) {
-				folder = Repository.instance().createFolder("twillekes", "words");
-				portfolioDeserializer.type = PortfolioType.METADATA_WORDS;
+//				folder = Repository.instance().createFolder("twillekes", "words");
+//				portfolioDeserializer.type = PortfolioType.METADATA_WORDS;
+				continue;
 			}
 			portfolioDeserializer.folder = folder;
 			this.importJson(portfolioDeserializer);
