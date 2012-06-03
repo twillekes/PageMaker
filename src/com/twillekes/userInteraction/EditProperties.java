@@ -17,7 +17,6 @@ public class EditProperties implements SelectionListener, PictureEditDelegate {
 	private Picture currentPicture;
 	private Picture currentClone;
 	private List<Picture> pictures;
-//	private List<Picture> clones;
 	@Override
 	public void widgetSelected(SelectionEvent e) {
 		pictures = Selection.instance().getPictures();
@@ -55,6 +54,11 @@ public class EditProperties implements SelectionListener, PictureEditDelegate {
 			try {
 				Repository.instance().replace(currentPicture, currentClone);
 				Application.getPortfolio().replace(currentPicture, currentClone);
+				int idx = this.pictures.indexOf(currentPicture);
+				if (!this.pictures.remove(currentPicture)) {
+					throw new Exception("Unable to remove " + currentPicture.getRepositoryFilePath());
+				}
+				this.pictures.add(idx, currentClone);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

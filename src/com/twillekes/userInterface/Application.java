@@ -22,10 +22,8 @@ import com.twillekes.portfolio.Portfolio;
 // Need to run JAR as:
 // java -XstartOnFirstThread -jar PageMaker.jar
 
-// TODO: Next/Cancel while editing images
 // TODO: Application icon/tray icon
 // TODO: Package as application
-// TODO: Ability to auto-FTP page template files
 // TODO: Drag and drop images in/out
 // TODO: Drag and drop images between categories
 // TODO: See how windows behaves
