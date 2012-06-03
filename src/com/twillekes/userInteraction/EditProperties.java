@@ -59,6 +59,8 @@ public class EditProperties implements SelectionListener, PictureEditDelegate {
 					throw new Exception("Unable to remove " + currentPicture.getRepositoryFilePath());
 				}
 				this.pictures.add(idx, currentClone);
+				currentPicture = currentClone;
+				currentClone = null;
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
