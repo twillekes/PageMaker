@@ -35,32 +35,11 @@ public class PictureUserInterface {
 	private interface TextChangeHandler {
 		void textChanged(String value);
 	}
-	private class TextModifyListener implements ModifyListener {
-		Text text;
-		Combo combo;
-		TextChangeHandler handler;
-		public TextModifyListener(Text textField, TextChangeHandler changeHandler) {
-			text = textField;
-			handler = changeHandler;
-		}
-		public TextModifyListener(Combo textField, TextChangeHandler changeHandler) {
-			combo = textField;
-			handler = changeHandler;
-		}
-		@Override
-		public void modifyText(ModifyEvent e) {
-			if (text != null) {
-				handler.textChanged(text.getText());
-			} else if (combo != null) {
-				handler.textChanged(combo.getText());
-			}
-		}
-	}
 	private class PictureTextField {
 		public Group group;
 		private Label label;
 		private Text text;
-		public PictureTextField(Composite parent, String sLabel, String initialText, int textFieldSize, TextChangeHandler handler) {
+		public PictureTextField(Composite parent, String sLabel, String initialText, int textFieldSize, final TextChangeHandler handler) {
 			group = new Group(parent, SWT.SHADOW_NONE);
 			group.setLayout(new RowLayout(SWT.HORIZONTAL));
 			
@@ -69,7 +48,11 @@ public class PictureUserInterface {
 			
 			text = new Text(group, SWT.LEFT);
 			setText(initialText);
-			text.addModifyListener(new TextModifyListener(text, handler));
+			text.addModifyListener(new ModifyListener() {
+				@Override
+				public void modifyText(ModifyEvent e) {
+					handler.textChanged(text.getText());
+				}});
 			
 			group.layout();
 		}
@@ -81,6 +64,9 @@ public class PictureUserInterface {
 			text.pack();
 			group.layout();
 			group.pack();
+		}
+		public String getText() {
+			return text.getText();
 		}
 	}
 	private class PictureComboBox {
@@ -94,8 +80,7 @@ public class PictureUserInterface {
 		public PictureComboBox(Composite parent, String sLabel, String initialText, String[] items, TextChangeHandler handler, int styles) throws Exception {
 			create(parent, sLabel, initialText, items, handler, styles);
 		}
-		public void create(Composite parent, String sLabel, String initialText, String[] items, TextChangeHandler handler, int styles) throws Exception {
-			this.items = items;
+		public void create(Composite parent, String sLabel, String initialText, String[] items, final TextChangeHandler handler, int styles) throws Exception {
 			group = new Group(parent, SWT.SHADOW_NONE);
 			group.setLayout(new RowLayout(SWT.HORIZONTAL));
 			
@@ -103,10 +88,18 @@ public class PictureUserInterface {
 			label.setText(sLabel);
 			
 			combo = new Combo(group, SWT.DROP_DOWN | styles);
-			combo.setItems(items);
+			setItems(items);
 			
 			setItem(initialText);
-			combo.addModifyListener(new TextModifyListener(combo, handler));
+			combo.addModifyListener(new ModifyListener() {
+				@Override
+				public void modifyText(ModifyEvent e) {
+					handler.textChanged(combo.getText());
+				}});
+		}
+		public void setItems(String[] items) {
+			this.items = items;
+			combo.setItems(this.items);
 		}
 		public void setItem(String initialText) {
 			combo.clearSelection();
@@ -121,6 +114,9 @@ public class PictureUserInterface {
 				return;
 			}
 			combo.select(selectedItem);
+		}
+		public String getItem() {
+			return combo.getText();
 		}
 	}
 	public Composite getTopLevel() {
@@ -139,7 +135,7 @@ public class PictureUserInterface {
 	private PictureComboBox subjectComboBox, orientationComboBox, seasonComboBox, cameraComboBox, lensComboBox,
 							filtersComboBox, filmComboBox, chromeComboBox, formatComboBox, yearComboBox, 
 							monthComboBox, directionComboBox, ratingComboBox, isNewComboBox, isFavoriteComboBox,
-							doNotShowComboBox, isDiscardedComboBox, isInFeedComboBox, repositoryComboBox;
+							doNotShowComboBox, isDiscardedComboBox, isInFeedComboBox, folderComboBox;
 	public PictureUserInterface(Composite parent, Picture pic) {
 		this.picture = pic;
 		createPictureUserInterface(parent);
@@ -168,6 +164,7 @@ public class PictureUserInterface {
 					@Override
 					public void run() {
 						try {
+							writeTo(picture);
 							switchTo(editDelegate.getPrevious());
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -184,10 +181,11 @@ public class PictureUserInterface {
 				Application.getDisplay().asyncExec(new Runnable(){
 					@Override
 					public void run() {
+						writeTo(picture);
 						editDelegate.done();
+						shell.close();
 					}
 				});
-	    		shell.close();
 	    	}
 	    });
 	    shell.setDefaultButton(done);
@@ -205,6 +203,7 @@ public class PictureUserInterface {
 					@Override
 					public void run() {
 						try {
+							writeTo(picture);
 							switchTo(editDelegate.getNext());
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -242,33 +241,81 @@ public class PictureUserInterface {
 		}
 		shell.open();
 	}
+	private void writeTo(Picture pic) {
+		pic.getMetadata().setTitle(titleTextField.getText());
+		pic.getMetadata().setDescription(descriptionTextField.getText());
+		pic.getMetadata().setTime(timeTextField.getText());
+		pic.getMetadata().setDate(dateTextField.getText());
+		pic.getMetadata().setSubject(subjectComboBox.getItem());
+		pic.getMetadata().setOrientation(orientationComboBox.getItem());
+		pic.getMetadata().setSeason(seasonComboBox.getItem());
+		pic.getMetadata().setCamera(cameraComboBox.getItem());
+		pic.getMetadata().setLens(lensComboBox.getItem());
+		pic.getMetadata().setFilters(filtersComboBox.getItem());
+		pic.getMetadata().setFilm(filmComboBox.getItem());
+		pic.getMetadata().setChrome(chromeComboBox.getItem());
+		pic.getMetadata().setFormat(formatComboBox.getItem());
+		pic.getMetadata().setYear(yearComboBox.getItem());
+		pic.getMetadata().setMonth(monthComboBox.getItem());
+		pic.getMetadata().setDirection(directionComboBox.getItem());
+		pic.getMetadata().setRating(ratingComboBox.getItem());
+		pic.getMetadata().setIsNew(isNewComboBox.getItem());
+		pic.getMetadata().setIsFavorite(isFavoriteComboBox.getItem());
+		pic.getMetadata().setDoNotShow(doNotShowComboBox.getItem());
+		pic.getMetadata().setIsDiscarded(isDiscardedComboBox.getItem());
+		pic.getMetadata().setIsInFeed(isInFeedComboBox.getItem());
+		try {
+			Repository.instance().movePictureToFolder(pic, folderComboBox.getItem());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	private void switchTo(Picture pic) {
 		this.picture = pic;
-		previewUI.changeImage(pic, pic.getRepositoryThumbFilePath());
-		titleTextField.setText(picture.getMetadata().getTitle());
-		descriptionTextField.setText(picture.getMetadata().getDescription());
-		timeTextField.setText(picture.getMetadata().getTime());
-		dateTextField.setText(picture.getMetadata().getDate());
-		subjectComboBox.setItem(picture.getMetadata().getSubject());
-		orientationComboBox.setItem(picture.getMetadata().getOrientation());
-		seasonComboBox.setItem(picture.getMetadata().getSeason());
-		cameraComboBox.setItem(picture.getMetadata().getCamera());
-		lensComboBox.setItem(picture.getMetadata().getLens());
-		filtersComboBox.setItem(picture.getMetadata().getFilters());
-		filmComboBox.setItem(picture.getMetadata().getFilm());
-		chromeComboBox.setItem(picture.getMetadata().getChrome());
-		formatComboBox.setItem(picture.getMetadata().getFormat());
-		yearComboBox.setItem(picture.getMetadata().getYear());
-		monthComboBox.setItem(picture.getMetadata().getMonth());
-		directionComboBox.setItem(picture.getMetadata().getDirection());
-		ratingComboBox.setItem(picture.getMetadata().getRating());
-		isNewComboBox.setItem(picture.getMetadata().getIsNew());
-		isFavoriteComboBox.setItem(picture.getMetadata().getIsFavorite());
-		doNotShowComboBox.setItem(picture.getMetadata().getDoNotShow());
-		isDiscardedComboBox.setItem(picture.getMetadata().getIsDiscarded());
-		isInFeedComboBox.setItem(picture.getMetadata().getIsInFeed());
 		try {
-			repositoryComboBox.setItem(Repository.instance().getFolderNameForPicture(picture));
+			previewUI.changeImage(picture, picture.getRepositoryThumbFilePath());
+			titleTextField.setText(picture.getMetadata().getTitle());
+			descriptionTextField.setText(picture.getMetadata().getDescription());
+			timeTextField.setText(picture.getMetadata().getTime());
+			dateTextField.setText(picture.getMetadata().getDate());
+			subjectComboBox.setItems(Metadata.schema.getCategoryValues("subject"));
+			subjectComboBox.setItem(picture.getMetadata().getSubject());
+			orientationComboBox.setItems(Metadata.schema.getCategoryValues("orientation"));
+			orientationComboBox.setItem(picture.getMetadata().getOrientation());
+			seasonComboBox.setItems(Metadata.schema.getCategoryValues("season"));
+			seasonComboBox.setItem(picture.getMetadata().getSeason());
+			cameraComboBox.setItems(Metadata.schema.getCategoryValues("camera"));
+			cameraComboBox.setItem(picture.getMetadata().getCamera());
+			lensComboBox.setItems(Metadata.schema.getCategoryValues("lens"));
+			lensComboBox.setItem(picture.getMetadata().getLens());
+			filtersComboBox.setItems(Metadata.schema.getCategoryValues("filters"));
+			filtersComboBox.setItem(picture.getMetadata().getFilters());
+			filmComboBox.setItems(Metadata.schema.getCategoryValues("film"));
+			filmComboBox.setItem(picture.getMetadata().getFilm());
+			chromeComboBox.setItems(Metadata.schema.getCategoryValues("chrome"));
+			chromeComboBox.setItem(picture.getMetadata().getChrome());
+			formatComboBox.setItems(Metadata.schema.getCategoryValues("format"));
+			formatComboBox.setItem(picture.getMetadata().getFormat());
+			yearComboBox.setItems(Metadata.schema.getCategoryValues("year"));
+			yearComboBox.setItem(picture.getMetadata().getYear());
+			monthComboBox.setItems(Metadata.schema.getCategoryValues("month"));
+			monthComboBox.setItem(picture.getMetadata().getMonth());
+			directionComboBox.setItems(Metadata.schema.getCategoryValues("direction"));
+			directionComboBox.setItem(picture.getMetadata().getDirection());
+			ratingComboBox.setItems(Metadata.schema.getCategoryValues("rating"));
+			ratingComboBox.setItem(picture.getMetadata().getRating());
+			isNewComboBox.setItems(Metadata.schema.getCategoryValues("isNew"));
+			isNewComboBox.setItem(picture.getMetadata().getIsNew());
+			isFavoriteComboBox.setItems(Metadata.schema.getCategoryValues("isFavorite"));
+			isFavoriteComboBox.setItem(picture.getMetadata().getIsFavorite());
+			doNotShowComboBox.setItems(Metadata.schema.getCategoryValues("doNotShow"));
+			doNotShowComboBox.setItem(picture.getMetadata().getDoNotShow());
+			isDiscardedComboBox.setItems(Metadata.schema.getCategoryValues("isDiscarded"));
+			isDiscardedComboBox.setItem(picture.getMetadata().getIsDiscarded());
+			isInFeedComboBox.setItems(Metadata.schema.getCategoryValues("isInFeed"));
+			isInFeedComboBox.setItem(picture.getMetadata().getIsInFeed());
+			folderComboBox.setItems(Repository.instance().getFolderNames().toArray(new String[Repository.instance().getFolderNames().size()]));
+			folderComboBox.setItem(Repository.instance().getFolderNameForPicture(picture));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -316,14 +363,14 @@ public class PictureUserInterface {
 		titleTextField = new PictureTextField(textGroup, "Title:", picture.getMetadata().getTitle(), 30, new TextChangeHandler(){
 			@Override
 			public void textChanged(String value) {
-				picture.getMetadata().setTitle(value);
+				//picture.getMetadata().setTitle(value);
 				uberGroup.layout();
 			}
 		});
 		descriptionTextField = new PictureTextField(textGroup, "Description:", picture.getMetadata().getDescription(), 30, new TextChangeHandler(){
 			@Override
 			public void textChanged(String value) {
-				picture.getMetadata().setDescription(value);
+				//picture.getMetadata().setDescription(value);
 				uberGroup.layout();
 			}
 		});
@@ -335,150 +382,150 @@ public class PictureUserInterface {
 		
 		try {
 			subjectComboBox = new PictureComboBox(metadataGroup, "Subject:", picture.getMetadata().getSubject(),
-					Metadata.schema.subjects.toArray(new String[Metadata.schema.subjects.size()]), new TextChangeHandler(){
+					Metadata.schema.getCategoryValues("subject"), new TextChangeHandler(){
 				@Override
 				public void textChanged(String value) {
-					picture.getMetadata().setSubject(value);
+					//picture.getMetadata().setSubject(value);
 				}
 			});
 			orientationComboBox = new PictureComboBox(metadataGroup, "Orientation:", picture.getMetadata().getOrientation(),
-					Metadata.schema.orientations.toArray(new String[Metadata.schema.orientations.size()]), new TextChangeHandler(){
+					Metadata.schema.getCategoryValues("orientation"), new TextChangeHandler(){
 				@Override
 				public void textChanged(String value) {
-					picture.getMetadata().setOrientation(value);
+					//picture.getMetadata().setOrientation(value);
 				}
 			});
 			seasonComboBox = new PictureComboBox(metadataGroup, "Season:", picture.getMetadata().getSeason(),
-					Metadata.schema.seasons.toArray(new String[Metadata.schema.seasons.size()]), new TextChangeHandler(){
+					Metadata.schema.getCategoryValues("season"), new TextChangeHandler(){
 				@Override
 				public void textChanged(String value) {
-					picture.getMetadata().setSeason(value);
+					//picture.getMetadata().setSeason(value);
 				}
 			});
 			cameraComboBox = new PictureComboBox(metadataGroup, "Camera:", picture.getMetadata().getCamera(),
-					Metadata.schema.cameras.toArray(new String[Metadata.schema.cameras.size()]), new TextChangeHandler(){
+					Metadata.schema.getCategoryValues("camera"), new TextChangeHandler(){
 				@Override
 				public void textChanged(String value) {
-					picture.getMetadata().setCamera(value);
+					//picture.getMetadata().setCamera(value);
 				}
 			});
 			lensComboBox = new PictureComboBox(metadataGroup, "Lens:", picture.getMetadata().getLens(),
-					Metadata.schema.lenses.toArray(new String[Metadata.schema.lenses.size()]), new TextChangeHandler(){
+					Metadata.schema.getCategoryValues("lens"), new TextChangeHandler(){
 				@Override
 				public void textChanged(String value) {
-					picture.getMetadata().setLens(value);
+					//picture.getMetadata().setLens(value);
 				}
 			});
 			filtersComboBox = new PictureComboBox(metadataGroup, "Filters:", picture.getMetadata().getFilters(),
-					Metadata.schema.filterss.toArray(new String[Metadata.schema.filterss.size()]), new TextChangeHandler(){
+					Metadata.schema.getCategoryValues("filters"), new TextChangeHandler(){
 				@Override
 				public void textChanged(String value) {
-					picture.getMetadata().setFilters(value);
+					//picture.getMetadata().setFilters(value);
 				}
 			});
 			filmComboBox = new PictureComboBox(metadataGroup, "Film:", picture.getMetadata().getFilm(),
-					Metadata.schema.films.toArray(new String[Metadata.schema.films.size()]), new TextChangeHandler(){
+					Metadata.schema.getCategoryValues("film"), new TextChangeHandler(){
 				@Override
 				public void textChanged(String value) {
-					picture.getMetadata().setFilm(value);
+					//picture.getMetadata().setFilm(value);
 				}
 			});
 			chromeComboBox = new PictureComboBox(metadataGroup, "Chrome:", picture.getMetadata().getChrome(),
-					Metadata.schema.chromes.toArray(new String[Metadata.schema.chromes.size()]), new TextChangeHandler(){
+					Metadata.schema.getCategoryValues("chrome"), new TextChangeHandler(){
 				@Override
 				public void textChanged(String value) {
-					picture.getMetadata().setChrome(value);
+					//picture.getMetadata().setChrome(value);
 				}
 			});
 			formatComboBox = new PictureComboBox(metadataGroup, "Format:", picture.getMetadata().getFormat(),
-					Metadata.schema.formats.toArray(new String[Metadata.schema.formats.size()]), new TextChangeHandler(){
+					Metadata.schema.getCategoryValues("format"), new TextChangeHandler(){
 				@Override
 				public void textChanged(String value) {
-					picture.getMetadata().setFormat(value);
+					//picture.getMetadata().setFormat(value);
 				}
 			});
 			timeTextField = new PictureTextField(metadataGroup, "Time:", picture.getMetadata().getTime(), 10, new TextChangeHandler(){
 				@Override
 				public void textChanged(String value) {
-					picture.getMetadata().setTime(value);
+					//picture.getMetadata().setTime(value);
 					uberGroup.layout();
 				}
 			});
 			dateTextField = new PictureTextField(metadataGroup, "Date:", picture.getMetadata().getDate(), 10, new TextChangeHandler(){
 				@Override
 				public void textChanged(String value) {
-					picture.getMetadata().setDate(value);
+					//picture.getMetadata().setDate(value);
 					uberGroup.layout();
 				}
 			});
 			yearComboBox = new PictureComboBox(metadataGroup, "Year:", picture.getMetadata().getYear(),
-					Metadata.schema.years.toArray(new String[Metadata.schema.years.size()]), new TextChangeHandler(){
+					Metadata.schema.getCategoryValues("year"), new TextChangeHandler(){
 				@Override
 				public void textChanged(String value) {
-					picture.getMetadata().setYear(value);
+					//picture.getMetadata().setYear(value);
 				}
 			});
 			monthComboBox = new PictureComboBox(metadataGroup, "Month:", picture.getMetadata().getMonth(),
-					Metadata.schema.months.toArray(new String[Metadata.schema.months.size()]), new TextChangeHandler(){
+					Metadata.schema.getCategoryValues("month"), new TextChangeHandler(){
 				@Override
 				public void textChanged(String value) {
-					picture.getMetadata().setMonth(value);
+					//picture.getMetadata().setMonth(value);
 				}
 			});
 			directionComboBox = new PictureComboBox(metadataGroup, "Direction:", picture.getMetadata().getDirection(),
-					Metadata.schema.directions.toArray(new String[Metadata.schema.directions.size()]), new TextChangeHandler(){
+					Metadata.schema.getCategoryValues("direction"), new TextChangeHandler(){
 				@Override
 				public void textChanged(String value) {
-					picture.getMetadata().setDirection(value);
+					//picture.getMetadata().setDirection(value);
 				}
 			});
 			ratingComboBox = new PictureComboBox(metadataGroup, "Rating:", picture.getMetadata().getRating(),
-					Metadata.schema.ratings.toArray(new String[Metadata.schema.ratings.size()]), new TextChangeHandler(){
+					Metadata.schema.getCategoryValues("rating"), new TextChangeHandler(){
 				@Override
 				public void textChanged(String value) {
-					picture.getMetadata().setRating(value);
+					//picture.getMetadata().setRating(value);
 				}
 			});
 			isNewComboBox = new PictureComboBox(metadataGroup, "Is new:", picture.getMetadata().getIsNew(),
-					Metadata.schema.isNews.toArray(new String[Metadata.schema.isNews.size()]), new TextChangeHandler(){
+					Metadata.schema.getCategoryValues("isNew"), new TextChangeHandler(){
 				@Override
 				public void textChanged(String value) {
-					picture.getMetadata().setIsNew(value);
+					//picture.getMetadata().setIsNew(value);
 				}
 			});
 			isFavoriteComboBox = new PictureComboBox(metadataGroup, "Is Favorite:", picture.getMetadata().getIsFavorite(),
-					Metadata.schema.isFavorites.toArray(new String[Metadata.schema.isFavorites.size()]), new TextChangeHandler(){
+					Metadata.schema.getCategoryValues("isFavorite"), new TextChangeHandler(){
 				@Override
 				public void textChanged(String value) {
-					picture.getMetadata().setIsFavorite(value);
+					//picture.getMetadata().setIsFavorite(value);
 				}
 			});
 			doNotShowComboBox = new PictureComboBox(metadataGroup, "Do Not Show:", picture.getMetadata().getDoNotShow(),
-					Metadata.schema.doNotShows.toArray(new String[Metadata.schema.doNotShows.size()]), new TextChangeHandler(){
+					Metadata.schema.getCategoryValues("doNotShow"), new TextChangeHandler(){
 				@Override
 				public void textChanged(String value) {
-					picture.getMetadata().setDoNotShow(value);
+					//picture.getMetadata().setDoNotShow(value);
 				}
 			});
 			isDiscardedComboBox = new PictureComboBox(metadataGroup, "Is Discarded:", picture.getMetadata().getIsDiscarded(),
-					Metadata.schema.isDiscardeds.toArray(new String[Metadata.schema.isDiscardeds.size()]), new TextChangeHandler(){
+					Metadata.schema.getCategoryValues("isDiscarded"), new TextChangeHandler(){
 				@Override
 				public void textChanged(String value) {
-					picture.getMetadata().setIsDiscarded(value);
+					//picture.getMetadata().setIsDiscarded(value);
 				}
 			});
 			isInFeedComboBox = new PictureComboBox(metadataGroup, "Is in Feed:", picture.getMetadata().getIsInFeed(),
-					Metadata.schema.isInFeeds.toArray(new String[Metadata.schema.isInFeeds.size()]), new TextChangeHandler(){
+					Metadata.schema.getCategoryValues("isInFeed"), new TextChangeHandler(){
 				@Override
 				public void textChanged(String value) {
-					picture.getMetadata().setIsInFeed(value);
+					//picture.getMetadata().setIsInFeed(value);
 				}
 			});
-			repositoryComboBox = new PictureComboBox(metadataGroup, "Repository:", Repository.instance().getFolderNameForPicture(picture),
+			folderComboBox = new PictureComboBox(metadataGroup, "Repository:", Repository.instance().getFolderNameForPicture(picture),
 					Repository.instance().getFolderNames().toArray(new String[Repository.instance().getFolderNames().size()]), new TextChangeHandler(){
 				@Override
 				public void textChanged(String value) {
-					Repository.instance().movePictureToRepository(picture, value);
+					//Repository.instance().movePictureToFolder(picture, value);
 				}
 			}, SWT.READ_ONLY);
 		} catch (Exception e) {

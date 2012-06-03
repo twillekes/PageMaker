@@ -83,7 +83,7 @@ public class Metadata extends Observable implements Cloneable, Observer {
 	}
 	
 	public class MetadataSchema extends Observable {
-		public List<String> orientations, subjects, seasons, cameras, lenses, films,
+		private List<String> orientations, subjects, seasons, cameras, lenses, films,
 			chromes, formats, directions, filterss, doNotShows, isNews, isDiscardeds,
 			isFavorites, ratings, years, months, isInFeeds;
 		public MetadataSchema() {
@@ -122,7 +122,11 @@ public class Metadata extends Observable implements Cloneable, Observer {
 			this.setChanged();
 			this.notifyObservers();
 		}
-		public List<String> getCategoryValues(String categoryName) throws Exception {
+		public String[] getCategoryValues(String categoryName) throws Exception {
+			List<String> catValues = getCategoryValuesAsList(categoryName);
+			return catValues.toArray(new String[catValues.size()]);
+		}
+		public List<String> getCategoryValuesAsList(String categoryName) throws Exception {
 			if (categoryName.equals("subject")) {
 				return this.subjects;
 			} else if (categoryName.equals("orientation")) {
@@ -178,7 +182,7 @@ public class Metadata extends Observable implements Cloneable, Observer {
 		while(it.hasNext()) {
 			String cat = it.next();
 			try {
-				if (Metadata.schema.getCategoryValues(cat).size() > 0) {
+				if (Metadata.schema.getCategoryValuesAsList(cat).size() > 0) {
 					populated.add(cat);
 				}
 			} catch (Exception e) {

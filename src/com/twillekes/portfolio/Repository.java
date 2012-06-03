@@ -54,7 +54,8 @@ public class Repository extends Observable implements Observer {
 				return rep;
 			}
 		}
-		throw new Exception("Unable to find folder with path " + path);
+		//throw new Exception("Unable to find folder with path " + path);
+		return null;
 	}
 	public Folder getFolderForPicture(Picture picture) throws Exception {
 		Iterator<Folder> it = folders.iterator();
@@ -69,8 +70,16 @@ public class Repository extends Observable implements Observer {
 	public String getFolderNameForPicture(Picture picture) throws Exception {
 		return getFolderForPicture(picture).getPath();
 	}
-	public void movePictureToRepository(Picture picture, String repoName) {
-		// TODO
+	public void movePictureToFolder(Picture picture, String folderName) throws Exception {
+		Folder currentFolder = getFolderForPicture(picture);
+		if (!currentFolder.getPath().equals(folderName)) {
+			currentFolder.remove(picture);
+			Folder newFolder = getFolder(folderName);
+			if (newFolder == null) {
+				newFolder = createFolder("photonwrangler", folderName);
+			}
+			newFolder.add(picture);
+		}
 	}
 	public String getOriginalBasePath() {
 		return ORIG_PATH;

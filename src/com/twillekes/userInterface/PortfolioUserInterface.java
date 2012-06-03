@@ -141,7 +141,7 @@ public class PortfolioUserInterface implements Observer {
 	public void setupCategories(String categorization, Composite parent) {
 		List<String> catValues;
 		try {
-			catValues = Metadata.schema.getCategoryValues(categorization);
+			catValues = Metadata.schema.getCategoryValuesAsList(categorization);
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 			return;
