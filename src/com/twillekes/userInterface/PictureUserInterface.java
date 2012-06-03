@@ -242,6 +242,11 @@ public class PictureUserInterface {
 		shell.open();
 	}
 	private void writeTo(Picture pic) {
+		try {
+			Repository.instance().movePictureToFolder(pic, folderComboBox.getItem());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		pic.getMetadata().setTitle(titleTextField.getText());
 		pic.getMetadata().setDescription(descriptionTextField.getText());
 		pic.getMetadata().setTime(timeTextField.getText());
@@ -264,11 +269,6 @@ public class PictureUserInterface {
 		pic.getMetadata().setDoNotShow(doNotShowComboBox.getItem());
 		pic.getMetadata().setIsDiscarded(isDiscardedComboBox.getItem());
 		pic.getMetadata().setIsInFeed(isInFeedComboBox.getItem());
-		try {
-			Repository.instance().movePictureToFolder(pic, folderComboBox.getItem());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 	private void switchTo(Picture pic) {
 		this.picture = pic;
