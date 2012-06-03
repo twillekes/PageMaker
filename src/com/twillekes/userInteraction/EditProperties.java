@@ -1,10 +1,6 @@
 package com.twillekes.userInteraction;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -15,10 +11,13 @@ import com.twillekes.portfolio.Picture;
 import com.twillekes.portfolio.Repository;
 import com.twillekes.userInterface.Application;
 import com.twillekes.userInterface.PictureUserInterface;
+import com.twillekes.userInterface.PictureUserInterface.PictureEditDelegate;
 
-public class EditProperties implements SelectionListener, Observer {
-	List<Picture> pictures;
-	List<Picture> clones;
+public class EditProperties implements SelectionListener, PictureEditDelegate {
+	private Picture currentPicture;
+	private Picture currentClone;
+	private List<Picture> pictures;
+//	private List<Picture> clones;
 	@Override
 	public void widgetSelected(SelectionEvent e) {
 		pictures = Selection.instance().getPictures();
@@ -28,46 +27,75 @@ public class EditProperties implements SelectionListener, Observer {
 			mBox.open();
 			return;
 		}
+		currentPicture = pictures.iterator().next();
 		editProperties();
 	}
 	@Override
 	public void widgetDefaultSelected(SelectionEvent e) {
 	}
-	public void perform(Picture picture) {
-		pictures = Selection.instance().getPictures();
-		if (pictures.size() == 0) {
-			pictures.add(picture);
-		}
+	public void perform(Picture picture, List<Picture> pictureList) {
+		currentPicture = picture;
+		pictures = pictureList;
 		editProperties();
 	}
 	private void editProperties() {
-		clones = new ArrayList<Picture>();
-		Iterator<Picture> it = pictures.iterator();
-		while(it.hasNext()) {
-			Picture pic = it.next();
+		new PictureUserInterface(cloneCurrent(), this);
+	}
+	private Picture cloneCurrent() {
+		try {
+			currentClone = currentPicture.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return currentClone;
+	}
+	public void completeEditing() {
+		if (!currentPicture.equals(currentClone)) {
 			try {
-				clones.add(pic.clone());
-			} catch (CloneNotSupportedException e) {
+				Repository.instance().replace(currentPicture, currentClone);
+				Application.getPortfolio().replace(currentPicture, currentClone);
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		PictureUserInterface.create(clones, this);
 	}
 	@Override
-	public void update(Observable o, Object arg) {
-		Iterator<Picture> origIt = pictures.iterator();
-		Iterator<Picture> clonIt = clones.iterator();
-		while(origIt.hasNext() && clonIt.hasNext()) {
-			Picture orig = origIt.next();
-			Picture clon = clonIt.next();
-			if (!orig.equals(clon)) {
-				try {
-					Repository.instance().replace(orig, clon);
-					Application.getPortfolio().replace(orig, clon);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
+	public boolean hasPrevious() {
+		int currentIndex = pictures.indexOf(currentPicture);
+		if (currentIndex > 0) {
+			return true;
 		}
+		return false;
+	}
+	@Override
+	public boolean hasNext() {
+		int currentIndex = pictures.indexOf(currentPicture);
+		if (currentIndex < (pictures.size()-1)) {
+			return true;
+		}
+		return false;
+	}
+	@Override
+	public Picture getPrevious() throws Exception {
+		completeEditing();
+		if (!hasPrevious()) {
+			throw new Exception("No previous element");
+		}
+		currentPicture = pictures.get(pictures.indexOf(currentPicture)-1);
+		return cloneCurrent();
+	}
+	@Override
+	public Picture getNext() throws Exception {
+		completeEditing();
+		if (!hasNext()) {
+			throw new Exception("No next element");
+		}
+		currentPicture = pictures.get(pictures.indexOf(currentPicture)+1);
+		return cloneCurrent();
+	}
+	@Override
+	public void done() {
+		completeEditing();
 	}
 }

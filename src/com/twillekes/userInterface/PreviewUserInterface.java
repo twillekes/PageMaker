@@ -95,6 +95,11 @@ public class PreviewUserInterface implements Observer {
 		this.picture.addObserver(this);
 		//canvas.layout();
 	}
+	public void changeImage(Picture picture, String filePath) {
+		this.picture = picture;
+		previewImage = new Image(Application.getDevice(), filePath);
+		this.canvas.redraw();
+	}
 	public void setClickObserver(ClickObserver clickObserver) {
 		this.previewMouseListener = new PreviewMouseListener(clickObserver, this.picture);
 		canvas.addMouseListener(this.previewMouseListener);

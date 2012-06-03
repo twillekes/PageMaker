@@ -70,7 +70,7 @@ public class CategoryUserInterface {
 				@Override
 				public void click(MouseEvent mouseEvent, Picture picture) {
 					if (mouseEvent.button != 1) {
-						(new EditProperties()).perform(picture);
+						(new EditProperties()).perform(picture, pictures);
 					} else {
 						prevUi.toggleSelected();
 					}
