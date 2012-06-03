@@ -444,9 +444,17 @@ public class Metadata extends Observable implements Cloneable, Observer {
 		return filters;
 	}
 	public void setFilters(String filters) {
-		if (this.filters == null || !this.filters.equals(filters)) {
-			this.filters = filters;
-			schema.update(filters, schema.filterss);
+		if (filters.equals("")) {
+			if (this.filters != null) {
+				this.setChanged();
+				this.notifyObservers();
+			}
+			this.filters = null;
+		} else {
+			if (this.filters == null || !this.filters.equals(filters)) {
+				this.filters = filters;
+				schema.update(filters, schema.filterss);
+			}
 		}
 	}
 
