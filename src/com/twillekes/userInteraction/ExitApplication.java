@@ -15,22 +15,25 @@ public class ExitApplication implements SelectionListener {
 		Application.getDisplay().asyncExec(new Runnable(){
 			@Override
 			public void run() {
-				if (Repository.instance().getIsDirty()) {
-					MessageBox mBox = new MessageBox(Application.getShell(), SWT.ICON_QUESTION | SWT.YES | SWT.NO | SWT.CANCEL);
-					mBox.setMessage("There are unsaved changes.\nSave the changes before exiting?");
-					int value = mBox.open();
-					if (value == SWT.YES) {
-						Exporter exporter = new Exporter();
-						exporter.saveRepository();
-					} else if (value == SWT.CANCEL) {
-						return;
-					}
-				}
+				checkForSave();
 	    		Application.getShell().close();
 			}
 		});
 	}
 	@Override
 	public void widgetDefaultSelected(SelectionEvent e) {
+	}
+	public static void checkForSave() {
+		if (Repository.instance().getIsDirty()) {
+			MessageBox mBox = new MessageBox(Application.getShell(), SWT.ICON_QUESTION | SWT.YES | SWT.NO | SWT.CANCEL);
+			mBox.setMessage("There are unsaved changes.\nSave the changes before exiting?");
+			int value = mBox.open();
+			if (value == SWT.YES) {
+				Exporter exporter = new Exporter();
+				exporter.saveRepository();
+			} else if (value == SWT.CANCEL) {
+				return;
+			}
+		}
 	}
 }

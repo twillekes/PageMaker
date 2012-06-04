@@ -31,13 +31,8 @@ public class PreviewUserInterface implements Observer {
 	}
 	private class PreviewMouseListener implements MouseListener {
 		private ClickObserver clickObserver;
-		private Picture picture;
-		public PreviewMouseListener(ClickObserver clickObserver, Picture picture) {
+		public PreviewMouseListener(ClickObserver clickObserver) {
 			this.clickObserver = clickObserver;
-			this.picture = picture;
-		}
-		public void setPicture(Picture picture) {
-			this.picture = picture;
 		}
 		@Override
 		public void mouseDoubleClick(MouseEvent e) {
@@ -101,7 +96,7 @@ public class PreviewUserInterface implements Observer {
 		this.canvas.redraw();
 	}
 	public void setClickObserver(ClickObserver clickObserver) {
-		this.previewMouseListener = new PreviewMouseListener(clickObserver, this.picture);
+		this.previewMouseListener = new PreviewMouseListener(clickObserver);
 		canvas.addMouseListener(this.previewMouseListener);
 	}
 	public void setSelected(boolean isSelected) {
@@ -130,7 +125,6 @@ public class PreviewUserInterface implements Observer {
 		Picture.Changed change = (Picture.Changed)arg;
 		if (change.type == Picture.ChangeType.REPLACING) {
 			this.picture = change.picture;
-			this.previewMouseListener.setPicture(this.picture);
 			change.picture.deleteObserver(this);
 			this.picture.addObserver(this);
 		}

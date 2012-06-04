@@ -9,6 +9,8 @@ import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.DropTargetListener;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -18,6 +20,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.twillekes.json.Importer;
 import com.twillekes.portfolio.Portfolio;
+import com.twillekes.userInteraction.ExitApplication;
 
 // Need to run JAR as:
 // java -XstartOnFirstThread -jar PageMaker.jar
@@ -66,6 +69,11 @@ public class Application {
 		shell.layout();
 		shell.pack();
         shell.open();
+        shell.addDisposeListener(new DisposeListener(){
+			@Override
+			public void widgetDisposed(DisposeEvent e) {
+				ExitApplication.checkForSave();
+			}});
         
 //        shell.addDragDetectListener(new DragDetectListener() {
 //			@Override
