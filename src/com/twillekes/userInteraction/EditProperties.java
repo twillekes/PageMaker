@@ -34,7 +34,11 @@ public class EditProperties implements SelectionListener, PictureEditDelegate {
 	}
 	public void perform(Picture picture, List<Picture> pictureList) {
 		currentPicture = picture;
-		pictures = pictureList;
+		if (Selection.instance().getPictures().size() > 0) {
+			pictures = Selection.instance().getPictures();
+		} else {
+			pictures = pictureList;
+		}
 		editProperties();
 	}
 	private void editProperties() {
