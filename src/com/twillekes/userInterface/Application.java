@@ -12,11 +12,14 @@ import org.eclipse.swt.dnd.DropTargetListener;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Tray;
+import org.eclipse.swt.widgets.TrayItem;
 
 import com.twillekes.json.Importer;
 import com.twillekes.portfolio.Portfolio;
@@ -44,18 +47,14 @@ public class Application {
         Display.setAppName("Page Maker");
         Display.setAppVersion("Alpha.0");
         display = new Display();
-        
-//        image = new Image(display, BalloonExample.class.getResourceAsStream("tray_icon.gif"));
-//		 Tray tray = display.getSystemTray();
-//		 if(tray != null) {
-//		 	TrayItem trayItem = new TrayItem(tray, SWT.NONE);
-//		 	trayItem.setImage(image);
-//		 }
+		 
         shell = new Shell(display, SWT.SHELL_TRIM);
         FillLayout layout = new FillLayout();
         shell.setLayout(layout);
         shell.setText("Page Maker");
         
+        Image image = new Image(display, Application.class.getResourceAsStream("appIcon.jpg"));
+        shell.setImage(image);
         //center(shell);
 
 		Importer importer = new Importer();
