@@ -477,7 +477,7 @@ public class Metadata extends Observable implements Cloneable, Observer {
 	}
 	public void setIsNew(String isNew) {
 		if (isNew.equals("")) {
-			isNew = null;
+			this.isNew = null;
 		} else {
 			if (this.isNew == null || !this.isNew.equals(isNew)) {
 				this.isNew = isNew;

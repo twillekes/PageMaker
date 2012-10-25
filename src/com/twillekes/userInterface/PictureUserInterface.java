@@ -2,8 +2,6 @@ package com.twillekes.userInterface;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
@@ -32,14 +30,11 @@ public class PictureUserInterface {
 		public Picture getNext() throws Exception;
 		public void done();
 	}
-	private interface TextChangeHandler {
-		void textChanged(String value);
-	}
 	private class PictureTextField {
 		public Group group;
 		private Label label;
 		private Text text;
-		public PictureTextField(Composite parent, String sLabel, String initialText, int textFieldSize, final TextChangeHandler handler) {
+		public PictureTextField(Composite parent, String sLabel, String initialText, int textFieldSize) {
 			group = new Group(parent, SWT.SHADOW_NONE);
 			group.setLayout(new RowLayout(SWT.HORIZONTAL));
 			
@@ -48,11 +43,6 @@ public class PictureUserInterface {
 			
 			text = new Text(group, SWT.LEFT);
 			setText(initialText);
-			text.addModifyListener(new ModifyListener() {
-				@Override
-				public void modifyText(ModifyEvent e) {
-					handler.textChanged(text.getText());
-				}});
 			
 			group.layout();
 		}
@@ -74,13 +64,13 @@ public class PictureUserInterface {
 		private Label label;
 		private Combo combo;
 		private String[] items;
-		public PictureComboBox(Composite parent, String sLabel, String initialText, String[] items, TextChangeHandler handler) throws Exception {
-			create(parent, sLabel, initialText, items, handler, 0);
+		public PictureComboBox(Composite parent, String sLabel, String initialText, String[] items) throws Exception {
+			create(parent, sLabel, initialText, items, 0);
 		}
-		public PictureComboBox(Composite parent, String sLabel, String initialText, String[] items, TextChangeHandler handler, int styles) throws Exception {
-			create(parent, sLabel, initialText, items, handler, styles);
+		public PictureComboBox(Composite parent, String sLabel, String initialText, String[] items, int styles) throws Exception {
+			create(parent, sLabel, initialText, items, styles);
 		}
-		public void create(Composite parent, String sLabel, String initialText, String[] items, final TextChangeHandler handler, int styles) throws Exception {
+		public void create(Composite parent, String sLabel, String initialText, String[] items, int styles) throws Exception {
 			group = new Group(parent, SWT.SHADOW_NONE);
 			group.setLayout(new RowLayout(SWT.HORIZONTAL));
 			
@@ -91,11 +81,6 @@ public class PictureUserInterface {
 			setItems(items);
 			
 			setItem(initialText);
-			combo.addModifyListener(new ModifyListener() {
-				@Override
-				public void modifyText(ModifyEvent e) {
-					handler.textChanged(combo.getText());
-				}});
 		}
 		public void setItems(String[] items) {
 			this.items = items;
@@ -232,13 +217,15 @@ public class PictureUserInterface {
 		shell.pack();
 		Rectangle pRect = portfolioScroll.getBounds();
 		final int HEIGHT_OFFSET = 100;
-		if (pRect.height > rect.height-HEIGHT_OFFSET) {
-			GridData layoutData = new GridData();
-			layoutData.heightHint = rect.height - HEIGHT_OFFSET;
-			portfolioScroll.setLayoutData(layoutData);
-			portfolioScroll.layout();
-			shell.pack();
-		}
+// The following was causing the "isNew" shell/dialog to be too short.
+// I don't remember why it was here...
+//		if (pRect.height > rect.height-HEIGHT_OFFSET) {
+//			GridData layoutData = new GridData();
+//			layoutData.heightHint = rect.height - HEIGHT_OFFSET;
+//			portfolioScroll.setLayoutData(layoutData);
+//			portfolioScroll.layout();
+//			shell.pack();
+//		}
 		shell.open();
 	}
 	private void writeTo(Picture pic) {
@@ -360,20 +347,8 @@ public class PictureUserInterface {
 		textGroup = new Group(uberGroup, SWT.NONE);
 		textGroup.setLayout(new RowLayout(SWT.HORIZONTAL));
 		
-		titleTextField = new PictureTextField(textGroup, "Title:", picture.getMetadata().getTitle(), 30, new TextChangeHandler(){
-			@Override
-			public void textChanged(String value) {
-				//picture.getMetadata().setTitle(value);
-				uberGroup.layout();
-			}
-		});
-		descriptionTextField = new PictureTextField(textGroup, "Description:", picture.getMetadata().getDescription(), 30, new TextChangeHandler(){
-			@Override
-			public void textChanged(String value) {
-				//picture.getMetadata().setDescription(value);
-				uberGroup.layout();
-			}
-		});
+		titleTextField = new PictureTextField(textGroup, "Title:", picture.getMetadata().getTitle(), 30);
+		descriptionTextField = new PictureTextField(textGroup, "Description:", picture.getMetadata().getDescription(), 30);
 
 		metadataGroup = new Group(uberGroup, SWT.NONE);
 		GridLayout gridLayout = new GridLayout();
@@ -382,152 +357,45 @@ public class PictureUserInterface {
 		
 		try {
 			subjectComboBox = new PictureComboBox(metadataGroup, "Subject:", picture.getMetadata().getSubject(),
-					Metadata.schema.getCategoryValues("subject"), new TextChangeHandler(){
-				@Override
-				public void textChanged(String value) {
-					//picture.getMetadata().setSubject(value);
-				}
-			});
+					Metadata.schema.getCategoryValues("subject"));
 			orientationComboBox = new PictureComboBox(metadataGroup, "Orientation:", picture.getMetadata().getOrientation(),
-					Metadata.schema.getCategoryValues("orientation"), new TextChangeHandler(){
-				@Override
-				public void textChanged(String value) {
-					//picture.getMetadata().setOrientation(value);
-				}
-			});
+					Metadata.schema.getCategoryValues("orientation"));
 			seasonComboBox = new PictureComboBox(metadataGroup, "Season:", picture.getMetadata().getSeason(),
-					Metadata.schema.getCategoryValues("season"), new TextChangeHandler(){
-				@Override
-				public void textChanged(String value) {
-					//picture.getMetadata().setSeason(value);
-				}
-			});
+					Metadata.schema.getCategoryValues("season"));
 			cameraComboBox = new PictureComboBox(metadataGroup, "Camera:", picture.getMetadata().getCamera(),
-					Metadata.schema.getCategoryValues("camera"), new TextChangeHandler(){
-				@Override
-				public void textChanged(String value) {
-					//picture.getMetadata().setCamera(value);
-				}
-			});
+					Metadata.schema.getCategoryValues("camera"));
 			lensComboBox = new PictureComboBox(metadataGroup, "Lens:", picture.getMetadata().getLens(),
-					Metadata.schema.getCategoryValues("lens"), new TextChangeHandler(){
-				@Override
-				public void textChanged(String value) {
-					//picture.getMetadata().setLens(value);
-				}
-			});
+					Metadata.schema.getCategoryValues("lens"));
 			filtersComboBox = new PictureComboBox(metadataGroup, "Filters:", picture.getMetadata().getFilters(),
-					Metadata.schema.getCategoryValues("filters"), new TextChangeHandler(){
-				@Override
-				public void textChanged(String value) {
-					//picture.getMetadata().setFilters(value);
-				}
-			});
+					Metadata.schema.getCategoryValues("filters"));
 			filmComboBox = new PictureComboBox(metadataGroup, "Film:", picture.getMetadata().getFilm(),
-					Metadata.schema.getCategoryValues("film"), new TextChangeHandler(){
-				@Override
-				public void textChanged(String value) {
-					//picture.getMetadata().setFilm(value);
-				}
-			});
+					Metadata.schema.getCategoryValues("film"));
 			chromeComboBox = new PictureComboBox(metadataGroup, "Chrome:", picture.getMetadata().getChrome(),
-					Metadata.schema.getCategoryValues("chrome"), new TextChangeHandler(){
-				@Override
-				public void textChanged(String value) {
-					//picture.getMetadata().setChrome(value);
-				}
-			});
+					Metadata.schema.getCategoryValues("chrome"));
 			formatComboBox = new PictureComboBox(metadataGroup, "Format:", picture.getMetadata().getFormat(),
-					Metadata.schema.getCategoryValues("format"), new TextChangeHandler(){
-				@Override
-				public void textChanged(String value) {
-					//picture.getMetadata().setFormat(value);
-				}
-			});
-			timeTextField = new PictureTextField(metadataGroup, "Time:", picture.getMetadata().getTime(), 10, new TextChangeHandler(){
-				@Override
-				public void textChanged(String value) {
-					//picture.getMetadata().setTime(value);
-					uberGroup.layout();
-				}
-			});
-			dateTextField = new PictureTextField(metadataGroup, "Date:", picture.getMetadata().getDate(), 10, new TextChangeHandler(){
-				@Override
-				public void textChanged(String value) {
-					//picture.getMetadata().setDate(value);
-					uberGroup.layout();
-				}
-			});
+					Metadata.schema.getCategoryValues("format"));
+			timeTextField = new PictureTextField(metadataGroup, "Time:", picture.getMetadata().getTime(), 10);
+			dateTextField = new PictureTextField(metadataGroup, "Date:", picture.getMetadata().getDate(), 10);
 			yearComboBox = new PictureComboBox(metadataGroup, "Year:", picture.getMetadata().getYear(),
-					Metadata.schema.getCategoryValues("year"), new TextChangeHandler(){
-				@Override
-				public void textChanged(String value) {
-					//picture.getMetadata().setYear(value);
-				}
-			});
+					Metadata.schema.getCategoryValues("year"));
 			monthComboBox = new PictureComboBox(metadataGroup, "Month:", picture.getMetadata().getMonth(),
-					Metadata.schema.getCategoryValues("month"), new TextChangeHandler(){
-				@Override
-				public void textChanged(String value) {
-					//picture.getMetadata().setMonth(value);
-				}
-			});
+					Metadata.schema.getCategoryValues("month"));
 			directionComboBox = new PictureComboBox(metadataGroup, "Direction:", picture.getMetadata().getDirection(),
-					Metadata.schema.getCategoryValues("direction"), new TextChangeHandler(){
-				@Override
-				public void textChanged(String value) {
-					//picture.getMetadata().setDirection(value);
-				}
-			});
+					Metadata.schema.getCategoryValues("direction"));
 			ratingComboBox = new PictureComboBox(metadataGroup, "Rating:", picture.getMetadata().getRating(),
-					Metadata.schema.getCategoryValues("rating"), new TextChangeHandler(){
-				@Override
-				public void textChanged(String value) {
-					//picture.getMetadata().setRating(value);
-				}
-			});
+					Metadata.schema.getCategoryValues("rating"));
 			isNewComboBox = new PictureComboBox(metadataGroup, "Is new:", picture.getMetadata().getIsNew(),
-					Metadata.schema.getCategoryValues("isNew"), new TextChangeHandler(){
-				@Override
-				public void textChanged(String value) {
-					//picture.getMetadata().setIsNew(value);
-				}
-			});
+					Metadata.schema.getCategoryValues("isNew"));
 			isFavoriteComboBox = new PictureComboBox(metadataGroup, "Is Favorite:", picture.getMetadata().getIsFavorite(),
-					Metadata.schema.getCategoryValues("isFavorite"), new TextChangeHandler(){
-				@Override
-				public void textChanged(String value) {
-					//picture.getMetadata().setIsFavorite(value);
-				}
-			});
+					Metadata.schema.getCategoryValues("isFavorite"));
 			doNotShowComboBox = new PictureComboBox(metadataGroup, "Do Not Show:", picture.getMetadata().getDoNotShow(),
-					Metadata.schema.getCategoryValues("doNotShow"), new TextChangeHandler(){
-				@Override
-				public void textChanged(String value) {
-					//picture.getMetadata().setDoNotShow(value);
-				}
-			});
+					Metadata.schema.getCategoryValues("doNotShow"));
 			isDiscardedComboBox = new PictureComboBox(metadataGroup, "Is Discarded:", picture.getMetadata().getIsDiscarded(),
-					Metadata.schema.getCategoryValues("isDiscarded"), new TextChangeHandler(){
-				@Override
-				public void textChanged(String value) {
-					//picture.getMetadata().setIsDiscarded(value);
-				}
-			});
+					Metadata.schema.getCategoryValues("isDiscarded"));
 			isInFeedComboBox = new PictureComboBox(metadataGroup, "Is in Feed:", picture.getMetadata().getIsInFeed(),
-					Metadata.schema.getCategoryValues("isInFeed"), new TextChangeHandler(){
-				@Override
-				public void textChanged(String value) {
-					//picture.getMetadata().setIsInFeed(value);
-				}
-			});
+					Metadata.schema.getCategoryValues("isInFeed"));
 			folderComboBox = new PictureComboBox(metadataGroup, "Repository:", Repository.instance().getFolderNameForPicture(picture),
-					Repository.instance().getFolderNames().toArray(new String[Repository.instance().getFolderNames().size()]), new TextChangeHandler(){
-				@Override
-				public void textChanged(String value) {
-					//Repository.instance().movePictureToFolder(picture, value);
-				}
-			}, SWT.READ_ONLY);
+					Repository.instance().getFolderNames().toArray(new String[Repository.instance().getFolderNames().size()]), SWT.READ_ONLY);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
