@@ -16,8 +16,9 @@ import com.twillekes.portfolio.Repository;
 import com.twillekes.repoExporter.FileSystemExporter;
 import com.twillekes.userInterface.Application;
 import com.twillekes.userInterface.PictureUserInterface;
+import com.twillekes.userInterface.PictureUserInterface.PictureEditDelegate;
 
-public class ImportPicture {
+public class ImportPicture implements PictureEditDelegate {
 	static final String NEW_IMAGES_FOLDER = "newImages/";
 	static private Picture templatePicture = null;
 	public ImportPicture(String filePath){
@@ -58,29 +59,32 @@ public class ImportPicture {
 			return;
 		}
         pic.getMetadata().setIsNew("1");
+        pic.getMetadata().setIsInFeed("1");
         try {
 			Application.getPortfolio().addPicture(pic);
 		} catch (Exception e2) {
 			e2.printStackTrace();
 			return;
 		}
-		
-		Shell shell = new Shell(Application.getShell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-		shell.setLayout(new GridLayout());
-		shell.setText("Edit Picture Metadata");
-		PictureUserInterface picUi = new PictureUserInterface(shell, pic);
-		picUi.getTopLevel().addDisposeListener(new DisposeListener(){
-			@Override
-			public void widgetDisposed(DisposeEvent e) {
-				try {
-					templatePicture = pic.clone();
-				} catch (CloneNotSupportedException e1) {
-					e1.printStackTrace();
-				}
-			}
-		});
-		shell.layout();
-		shell.pack();
-		shell.open();
+        new PictureUserInterface(pic, this);
+	}
+	@Override
+	public boolean hasPrevious() {
+		return false;
+	}
+	@Override
+	public boolean hasNext() {
+		return false;
+	}
+	@Override
+	public Picture getPrevious() throws Exception {
+		return null;
+	}
+	@Override
+	public Picture getNext() throws Exception {
+		return null;
+	}
+	@Override
+	public void done() {
 	}
 }
