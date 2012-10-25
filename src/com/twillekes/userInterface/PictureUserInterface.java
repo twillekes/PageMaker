@@ -116,6 +116,7 @@ public class PictureUserInterface {
 	private Button previous, next;
 	private PictureEditDelegate editDelegate;
 	private PreviewUserInterface previewUI;
+	private Label filePathLabel;
 	private PictureTextField titleTextField, descriptionTextField, timeTextField, dateTextField;
 	private PictureComboBox subjectComboBox, orientationComboBox, seasonComboBox, cameraComboBox, lensComboBox,
 							filtersComboBox, filmComboBox, chromeComboBox, formatComboBox, yearComboBox, 
@@ -260,6 +261,7 @@ public class PictureUserInterface {
 	private void switchTo(Picture pic) {
 		this.picture = pic;
 		try {
+			filePathLabel.setText(picture.getRepositoryFilePath());
 			previewUI.changeImage(picture, picture.getRepositoryThumbFilePath());
 			titleTextField.setText(picture.getMetadata().getTitle());
 			descriptionTextField.setText(picture.getMetadata().getDescription());
@@ -341,7 +343,7 @@ public class PictureUserInterface {
 		
 		uberGroup = new Group(pictureGroup, SWT.NONE);
 		uberGroup.setLayout(new RowLayout(SWT.VERTICAL));
-		Label filePathLabel = new Label(uberGroup, SWT.SHADOW_OUT);
+		filePathLabel = new Label(uberGroup, SWT.SHADOW_OUT);
 		filePathLabel.setText(picture.getRepositoryFilePath());
 		
 		textGroup = new Group(uberGroup, SWT.NONE);
