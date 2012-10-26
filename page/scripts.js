@@ -1057,7 +1057,9 @@ function imageLoaded( theImage, index, byUser )
             $div.show();
             var theHeight = $div.height();
             $div.css( { height: 0 } );
-            $div.animate( { height: theHeight }, { duration: metadataAnimationDuration } ).css('overflow','visible');
+            $div.animate( { height: theHeight }, { duration: metadataAnimationDuration, complete: function(){
+            	$('#metadatadiv').css('overflow','visible');
+            } } );
         }
     }
     
@@ -1142,7 +1144,9 @@ function toggleMetadata()
             $div.show();
             var theHeight = $div.height();
             $div.css( { height: 0 } );
-            $div.animate( { height: theHeight }, { duration: metadataAnimationDuration } ).css('overflow','visible');
+            $div.animate( { height: theHeight }, { duration: metadataAnimationDuration, complete: function(){
+            	$('#metadatadiv').css('overflow','visible');
+            }});
         }
 
         $('#infobuttondiv').html('Hide Info');
