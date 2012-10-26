@@ -14,7 +14,7 @@ var currentMetadataItem = 0;
 //		imageRecord has two properties: filePath and metadata
 //		metadata has properties: title, subject, isNew, isFavorite, isDiscarded,
 //		season, camera, lens, filters, film, chrome, format, year, month, date, 
-//		direction, rating, caption, orientation
+//		direction, rating, description, orientation
 var totalNumImages = imageList.length;
 //var imageList = new Array();
 
@@ -1082,8 +1082,8 @@ function getMetadataDiv(index)
         theFilters = md.filters;
         
     var theNotes = "";
-    if ( md.caption != null && md.caption != "None" )
-        theNotes = md.caption;
+    if ( md.description != null && md.description != "None" )
+        theNotes = md.description;
         
     var theLens = "";
     if ( md.lens != null && md.lens != "Unknown" )
@@ -1407,7 +1407,7 @@ function findImage(filePath)
 //                        var md = new metadata( item.title, item.subject, item.isNew, item.isFavorite, item.isDiscarded,
 //                                               item.season, item.camera, item.lens, item.filters, item.film,
 //                                               item.chrome, item.format, item.year, item.month, item.date,
-//                                               item.direction, item.rating, item.caption, item.orientation );
+//                                               item.direction, item.rating, item.description, item.orientation );
 //                        var ir = new imageRecord( metadataFilePath + "/" + item.filename, md );
 //                        imageList[totalNumImages++] = ir;
 //                    }
@@ -1444,7 +1444,7 @@ function findImage(filePath)
 //}
 
 function metadata( title, subject, isNew, isFavorite, isDiscarded, season, camera, lens, filters,
-                   film, chrome, format, year, month, date, direction, rating, caption, orientation )
+                   film, chrome, format, year, month, date, direction, rating, description, orientation )
 {
     this.title = title;
     this.subject = subject;
@@ -1463,7 +1463,7 @@ function metadata( title, subject, isNew, isFavorite, isDiscarded, season, camer
     this.date = date;
     this.direction = direction;
     this.rating = rating;
-    this.caption = caption;
+    this.description = description;
     this.orientation = orientation;
     
     //this.getCategoryValue = getCategoryValue;
