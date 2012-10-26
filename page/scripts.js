@@ -610,7 +610,7 @@ function getImageDisplayHTML(topLevelDivName, prevNextButtonDivClass)
                     <div id=\"imagetitlediv\"></div>\n\
                     <div id=\"imagedisplaydiv\"></div>\n\
                     <div id=\"metadatadiv\"></div>\n\
-                    <h3 style=\"text-align: center;\">Image Copyright 2003-2011 Tom Willekes</h3>\n\
+                    <h3 style=\"text-align: center;\">Image Copyright 2003-2012 Tom Willekes</h3>\n\
                 </div>\n\
             </div>\n';  
             
