@@ -18,11 +18,11 @@ public class FileSystemExporter {
 			Iterator<Picture> picIt = repo.getPictures().iterator();
 			while(picIt.hasNext()) {
 				Picture picture = picIt.next();
-				copyFiles(picture.getRepositoryFilePath(), toPath + "/" + repoPath);
+				copyOrMoveFiles(picture.getRepositoryFilePath(), toPath + "/" + repoPath, false);
 			}
 		}
 	}
-	public static void copyFiles(String filePath, String toPath) throws Exception {
+	public static void copyOrMoveFiles(String filePath, String toPath, boolean move) throws Exception {
         String thumbPath = Picture.getThumbName(filePath);
         if (!(new File(thumbPath).isFile())) {
         	throw new Exception("Expected thumbnail (" + thumbPath + ")");
@@ -33,8 +33,13 @@ public class FileSystemExporter {
         File thumbFile = new File(thumbPath);
         String thumbFileName = thumbFile.getName();
         File destThumbFile = new File(toPath + thumbFileName);
-		FileUtils.copyFile(pictureFile, destPictureFile);
-		FileUtils.copyFile(thumbFile, destThumbFile);
+        if (move) {
+			FileUtils.moveFile(pictureFile, destPictureFile);
+			FileUtils.moveFile(thumbFile, destThumbFile);
+        } else {
+			FileUtils.copyFile(pictureFile, destPictureFile);
+			FileUtils.copyFile(thumbFile, destThumbFile);
+        }
 	}
 	public static long getPercent(Folder repository) {
 		long size = 0;

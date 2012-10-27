@@ -23,7 +23,7 @@ public class ImportPicture implements PictureEditDelegate {
 	static private Picture templatePicture = null;
 	public ImportPicture(String filePath){
 		try {
-			FileSystemExporter.copyFiles(filePath, Repository.instance().getBasePath());
+			FileSystemExporter.copyOrMoveFiles(filePath, Repository.instance().getBasePath(), false);
 		} catch (IOException e4) {
 			MessageBox mBox = new MessageBox(Application.getShell(), SWT.ICON_ERROR | SWT.OK);
 			mBox.setMessage("Could not copy image files");

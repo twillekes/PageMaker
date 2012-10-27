@@ -82,6 +82,12 @@ public class Picture extends Observable implements Comparable<Picture>, Cloneabl
 	public String getRepositoryThumbFilePath() {
 		return Picture.getThumbName(this.getRepositoryFilePath());
 	}
+	public String getDiscardedFilePath() {
+		return Repository.instance().getDiscardedPath() + getFileName(this.getLocalFilePath());
+	}
+	public String getDiscardedThumbFilePath() {
+		return Picture.getThumbName(this.getDiscardedFilePath());
+	}
 	public Metadata getMetadata() {
 		return metadata;
 	}

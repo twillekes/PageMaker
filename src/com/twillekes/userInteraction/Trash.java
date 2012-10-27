@@ -56,7 +56,8 @@ public class Trash extends Observable {
 		this.notifyObservers(0);
 	}
 	private static void deletePictureFiles(Picture picture) {
-		FileUtils.deleteQuietly(new File(picture.getRepositoryFilePath()));
-		FileUtils.deleteQuietly(new File(picture.getRepositoryThumbFilePath()));
+		FileUtils.deleteQuietly(new File(picture.getDiscardedFilePath() + ".json"));
+		FileUtils.deleteQuietly(new File(picture.getDiscardedFilePath()));
+		FileUtils.deleteQuietly(new File(picture.getDiscardedThumbFilePath()));
 	}
 }

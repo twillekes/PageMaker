@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import com.twillekes.json.Exporter;
+import com.twillekes.repoExporter.FileSystemExporter;
+
 // Change to "baseUrl", which is SITE_URL + account name and
 // "relativeUrl", which is the path (e.g. "newImages/")
 // Then for the local case, just set baseUrl to ""
@@ -77,6 +80,14 @@ public class Folder extends Observable implements Observer {
 		if (!pictures.remove(picture)) {
 			throw new Exception("Could not find picture " + picture.getRepositoryFilePath() + " in repository " + this.getPath());
 		}
+		FileSystemExporter.copyOrMoveFiles(picture.getRepositoryFilePath(),
+				Repository.instance().getDiscardedPath(),
+				true);
+		Exporter exp = new Exporter();
+        String fileName = Picture.getFileName(picture.getFilePath());
+		exp.exportToJS(picture,
+				Repository.instance().getDiscardedPath() +
+				fileName + ".json");
 		trash.add(picture);
 		this.setChanged();
 		this.notifyObservers();

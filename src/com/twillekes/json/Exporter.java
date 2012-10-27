@@ -8,6 +8,7 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.twillekes.portfolio.Picture;
 import com.twillekes.portfolio.Portfolio;
 import com.twillekes.portfolio.Repository;
 
@@ -83,6 +84,18 @@ public class Exporter {
 			out.close();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
+		}
+	}
+	public void exportToJS(Picture picture, String filePath) {
+		Gson gson = new GsonBuilder().setExclusionStrategies(new RepositoryExclusionStrategy()).create();
+		String json = gson.toJson(picture);
+		try {
+			FileWriter fstream = new FileWriter(filePath);
+			BufferedWriter out = new BufferedWriter(fstream);
+			out.write(json);
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }

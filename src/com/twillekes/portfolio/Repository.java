@@ -13,6 +13,7 @@ public class Repository extends Observable implements Observer {
 	private final String PAGE_PATH = "page/";
 	private final String FILE_NAME = BASE_PATH + "repository.json";
 	private final String SITE_URL = "http://members.shaw.ca/";
+	private final String DISCARDED_PATH = "discarded/";
 	private List<Folder> folders = null;
 	private static Repository theInstance = null;
 	private boolean isDirty = false;
@@ -98,6 +99,9 @@ public class Repository extends Observable implements Observer {
 	}
 	public String getSiteUrl() {
 		return SITE_URL;
+	}
+	public String getDiscardedPath() {
+		return DISCARDED_PATH;
 	}
 	@Override
 	public void update(Observable o, Object arg) {
