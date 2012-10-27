@@ -151,9 +151,10 @@ public class SiteExporter {
 					if (forReal && !client.deleteFile(this.files[i].getName())) {
 						logger.log("    ***ERROR*** Unable to delete "+this.files[i].getName());
 					}
-					if (forReal && !client.deleteFile(thumbName)) {
-						logger.log("    ***ERROR*** Unable to delete "+thumbName);
-					}
+					// "files" has thumb and non-thumb files, no need to do this.
+					//if (forReal && !client.deleteFile(thumbName)) {
+					//	logger.log("    ***ERROR*** Unable to delete "+thumbName);
+					//}
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
