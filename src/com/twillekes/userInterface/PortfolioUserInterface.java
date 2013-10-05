@@ -158,11 +158,12 @@ public class PortfolioUserInterface implements Observer {
 	}
 	@Override
 	public void update(Observable o, Object arg) {
-		Portfolio.Changed change = (Portfolio.Changed)arg;
-		if (change.type == Portfolio.ChangeType.ADDED) {
+		// The observer sends an integer! WTF?
+//		Portfolio.Changed change = (Portfolio.Changed)arg;
+//		if (change.type == Portfolio.ChangeType.ADDED) {
 			buildCategoryUserInterface(currentCategorization);
-		} else if (change.type == Portfolio.ChangeType.REPLACING) {
+//		} else if (change.type == Portfolio.ChangeType.REPLACING) {
 			//
-		}
+//		}
 	}
 }

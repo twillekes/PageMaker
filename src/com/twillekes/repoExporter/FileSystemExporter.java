@@ -43,13 +43,18 @@ public class FileSystemExporter {
 	}
 	public static long getPercent(Folder repository) {
 		long size = 0;
-		Iterator<Picture> it = repository.getPictures().iterator();
-		while(it.hasNext()) {
-			Picture picture = it.next();
-			File picFile = new File(picture.getRepositoryFilePath());
-			size += FileUtils.sizeOf(picFile);
-			File thumbFile = new File(picture.getRepositoryThumbFilePath());
-			size += FileUtils.sizeOf(thumbFile);
+		try {
+			Iterator<Picture> it = repository.getPictures().iterator();
+			while(it.hasNext()) {
+				Picture picture = it.next();
+				File picFile = new File(picture.getRepositoryFilePath());
+				size += FileUtils.sizeOf(picFile);
+				File thumbFile = new File(picture.getRepositoryThumbFilePath());
+				size += FileUtils.sizeOf(thumbFile);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
 		}
 		return size * 100 / (20 * 1024 * 1024);
 	}
